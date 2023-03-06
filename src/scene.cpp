@@ -18,8 +18,8 @@ TextItem::TextItem(QQuickItem* item)
 {
 }
 
-Scene::Scene(QQuickWindow *window)
-    : m_window{ window }
+Scene::Scene(QObject* rootObject)
+    : m_rootObject{ rootObject }
 {
 }
 

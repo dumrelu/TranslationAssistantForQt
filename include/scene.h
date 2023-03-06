@@ -29,7 +29,7 @@ class Scene : public QObject {
     Q_OBJECT
 
 public:
-    explicit Scene(QQuickWindow* window);
+    explicit Scene(QObject* rootObject);
 
     void start();
 
@@ -38,7 +38,7 @@ signals:
     void textChanged(TextItem* textItem);
     void textItemDestroyed(TextItem* textItem);
 private:
-    QQuickWindow* m_window = nullptr;
+    QObject* m_rootObject = nullptr;
 };
 
 }
