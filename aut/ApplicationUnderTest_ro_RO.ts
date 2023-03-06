@@ -2,10 +2,23 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ro_RO">
 <context>
+    <name>MyQmlType</name>
+    <message>
+        <location filename="MyQmlType.qml" line="11"/>
+        <source>Text2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
-        <location filename="main.qml" line="9"/>
+        <location filename="main.qml" line="11"/>
         <source>Hello World</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.qml" line="22"/>
+        <source>Text1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
