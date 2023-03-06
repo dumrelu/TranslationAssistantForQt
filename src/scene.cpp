@@ -39,6 +39,7 @@ void Scene::start()
 
     for(auto* textItem : m_textItems)
     {
+        emit textChanged(textItem);
         qDebug() << textItem->item();
     }
 }
