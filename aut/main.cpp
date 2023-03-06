@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
         
-        (new qta::Scene{ engine.rootObjects()[0] })->start();
+        (new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) })->start();
     }, Qt::QueuedConnection);
     engine.load(url);
 
