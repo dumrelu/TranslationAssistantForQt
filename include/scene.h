@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QObject>
-#include <QQuickWindow>
 #include <QQuickItem>
+#include <QSet>
 
 namespace qta
 {
@@ -10,16 +10,15 @@ namespace qta
 
 /// @brief Wrapper class for QQuickItem instances that
 ///represent text
-class TextItem {
+class TextItem : public QObject {
 public:
-
     QQuickItem* item();
     QString text();
 
 protected:
     friend class Scene;
 
-    explicit TextItem(QQuickItem* item);
+    explicit TextItem(QObject* parent, QQuickItem* item);
 
 private:
     QQuickItem* m_item = nullptr;
@@ -38,7 +37,14 @@ signals:
     void textChanged(TextItem* textItem);
     void textItemDestroyed(TextItem* textItem);
 private:
+    void findWindow();
+    void findAllTextItems(QObject* obj);
+    bool itemContainsText(QQuickItem* item) const;
+    
+
     QObject* m_rootObject = nullptr;
+    QQuickWindow* m_window = nullptr;
+    QSet<TextItem*> m_textItems;
 };
 
 }

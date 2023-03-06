@@ -28,4 +28,11 @@ target_compile_definitions(QTranslationAssistant
 target_link_libraries(QTranslationAssistant
   PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
 
+# Enable warnings
+if(MSVC)
+  target_compile_options(QTranslationAssistant PRIVATE /W4 /WX)
+else()
+  target_compile_options(QTranslationAssistant PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 add_subdirectory(aut)
