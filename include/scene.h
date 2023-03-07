@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QHash>
+#include <QTimer>
 
 #include "textitem.h"
 #include "textitemhandler.h"
@@ -66,6 +67,7 @@ private:
     QQuickWindow* m_window = nullptr;
     QHash<QQuickItem*, QList<TextItem*>> m_textItems;
     QList<std::shared_ptr<TextItemHandler>> m_textItemHandlers;
+    QTimer m_searchForTextItemsTimer;
 };
 
 }

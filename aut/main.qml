@@ -31,20 +31,12 @@ Window {
         
         color: "green"
         
-        Loader {
-            id: text3Loader
-            anchors.centerIn: parent
-            active: false
-            sourceComponent: Text {
-                text: qsTr("Text3")
-            }
-        }
+        ListView {
+            anchors.fill: parent
+            model: 100
 
-        Timer {
-            interval: 3000
-            running: true
-            onTriggered: {
-                text3Loader.active = true;
+            delegate: ItemDelegate {
+                text: "ListViewText#" + index
             }
         }
     }

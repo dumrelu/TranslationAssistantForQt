@@ -24,14 +24,17 @@ void Scene::start()
     //  3. Inside TextItem, connect and forward the appropriate signals when text changes
     //  4. Send textChanged signals for all TextItems
 
+    // TODO: connect to signals so that when QQuickItems get destroyed
+    //we also destroy the TextItem
     createTextItemsForEntireScene(m_window->contentItem());
-    for(auto& textItems : m_textItems)
-    {
-        for(auto* textItem : textItems)
+
+    connect(&m_searchForTextItemsTimer, &QTimer::timeout, [this]()
         {
-            textChanged(textItem);
+            createTextItemsForEntireScene(m_window->contentItem());
         }
-    }
+    );
+    m_searchForTextItemsTimer.setInterval(std::chrono::milliseconds{ 500 });
+    m_searchForTextItemsTimer.start();
 }
 
 bool Scene::eventFilter(QObject* obj, QEvent* event)
@@ -87,6 +90,8 @@ void Scene::createTextItemsIfRequired(QQuickItem *item)
                     emit textChanged(textItem);
                 }
             );
+
+            emit textChanged(textItem);
         }
 
         m_textItems.insert(item, std::move(textItems));
