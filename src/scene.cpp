@@ -166,6 +166,10 @@ void Scene::addQObjectHook(QObject* object)
             if(item)
             {
                 auto sceneIt = g_scenes.find(item->window());
+                // TODO: There are possible edge cases where the item
+                //was not yet constructed if there are multiple threads
+                Q_ASSERT(sceneIt != g_scenes.end());
+                
                 if(sceneIt != g_scenes.end())
                 {
                     auto* scene = sceneIt.value();
