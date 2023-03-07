@@ -9,6 +9,8 @@ Scene::Scene(QQuickWindow* window)
     : m_window{ window }
 {
     Q_ASSERT(m_window);
+    m_window->installEventFilter(this);
+    // TODO: qApp->installEventFilter(this);
 
     // TODO: These should be configured from outside
     m_textItemHandlers.push_back(std::make_shared<TextPropertyItemHandler>());
@@ -32,7 +34,22 @@ void Scene::start()
     }
 }
 
-void Scene::createTextItemsForEntireScene(QQuickItem* root)
+bool Scene::eventFilter(QObject* obj, QEvent* event)
+{
+    if(obj == m_window)
+    {
+        //TODO: clicks
+
+        // Continue to propagate event
+        return false;
+    }
+
+    // TODO: ChildAdded/ChildRemoved/ParentChanged??
+    
+    return QObject::eventFilter(obj, event);
+}
+
+void Scene::createTextItemsForEntireScene(QQuickItem *root)
 {
     createTextItemsIfRequired(root);
     for(auto* child : root->childItems())

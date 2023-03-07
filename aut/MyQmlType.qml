@@ -17,7 +17,7 @@ Item {
         interval: 1000
         running: true
         onTriggered: {
-            text.text = qsTr("Text3");
+            text.text = qsTr("Text2_changed");
         }
     }
 }

@@ -13,13 +13,39 @@ Window {
     Rectangle {
         id: rect1
         width: window.width / 2
-        height: parent.height
+        height: parent.height / 2
         color: "red"
 
         Label {
             anchors.centerIn: parent
             objectName: "text1"
             text: qsTr("Text1")
+        }
+    }
+
+    Rectangle {
+        id: rect3
+        anchors.top: rect1.bottom
+        width: window.width / 2
+        height: parent.height / 2
+        
+        color: "green"
+        
+        Loader {
+            id: text3Loader
+            anchors.centerIn: parent
+            active: false
+            sourceComponent: Text {
+                text: qsTr("Text3")
+            }
+        }
+
+        Timer {
+            interval: 3000
+            running: true
+            onTriggered: {
+                text3Loader.active = true;
+            }
         }
     }
 
@@ -33,5 +59,11 @@ Window {
         MyQmlType {
             objectName: "text2"
         }
+    }
+
+    BusyIndicator {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        running: true
     }
 }
