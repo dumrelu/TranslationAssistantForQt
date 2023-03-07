@@ -35,7 +35,7 @@ Window {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height
+            height: parent.height
             model: 1000
 
             delegate: ItemDelegate {
@@ -44,7 +44,7 @@ Window {
 
                 Timer {
                     interval: 2000
-                    running: index === 10
+                    running: index === 2
                     onTriggered: {
                         delegate.text = "ListViewText#" + index + "_changed"
                     }
@@ -58,10 +58,37 @@ Window {
         color: "blue"
         anchors.left: rect1.right
         anchors.right: parent.right
-        height: parent.height
+        height: parent.height / 2
 
         MyQmlType {
             objectName: "text2"
+        }
+    }
+
+    Rectangle {
+        id: rect4
+        color: "pink"
+        anchors.top: rect2.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: rect1.right
+        anchors.right: parent.right
+
+        Loader {
+            id: textLoader
+            anchors.centerIn: parent
+            active: false
+            sourceComponent: Text {
+                objectName: "text4"
+                text: qsTr("Text4")
+            }
+        }
+
+        Timer {
+            interval: 3000
+            running: true
+            onTriggered: {
+                textLoader.active = true;
+            }
         }
     }
 

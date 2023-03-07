@@ -75,11 +75,14 @@ private:
     void createTextItemsForAllItems(QQuickItem* item);
 
     // qhook related
-    static QList<Scene*> g_scenes;
+    static QHash<QQuickWindow*, Scene*> g_scenes;
     static bool g_hooksInstalled;
+    static QSet<QObject*> g_objectQueue;
     static void installHooks();
     static void addQObjectHook(QObject* object);
     static void removeQObjectHook(QObject* object);
+    void itemAdded(QQuickItem* item);
+    void itemRemoved(QQuickItem* item);
     
     QQuickWindow* m_window = nullptr;
     QHash<QQuickItem*, QList<TextItem*>> m_textItems;

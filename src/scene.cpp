@@ -12,15 +12,17 @@
 namespace qta
 {
 
-QList<Scene*> Scene::g_scenes;
+//TODO: synchonizing?
+QHash<QQuickWindow*, Scene*> Scene::g_scenes;
 bool Scene::g_hooksInstalled = false;
+QSet<QObject*> Scene::g_objectQueue;
 
 Scene::Scene(QQuickWindow* window)
     : m_window{ window }
 {
     Q_ASSERT(m_window);
 
-    g_scenes.push_back(this);
+    g_scenes.insert(m_window, this);
     m_window->installEventFilter(this);
 
     // TODO: These should be configured from outside
@@ -29,7 +31,7 @@ Scene::Scene(QQuickWindow* window)
 
 Scene::~Scene()
 {
-    g_scenes.removeAll(this);
+    g_scenes.remove(m_window);
 
     //TODO: call stop
 }
@@ -114,18 +116,70 @@ void Scene::installHooks()
     g_hooksInstalled = true;
 }
 
+void Scene::itemAdded(QQuickItem *item)
+{
+    Q_ASSERT(item);
+    createTextItemsIfRequired(item);
+}
+
+void Scene::itemRemoved(QQuickItem *item)
+{
+    Q_UNUSED(item);
+}
+
 void Scene::addQObjectHook(QObject* object)
 {
-    Q_UNUSED(object);
-    std::cout << "Object added\n";
-    //TODO: Check first if QQuickItem then fwd
+    if(g_scenes.empty())
+    {
+        return;
+    }
+
+    //TODO: sync
+    g_objectQueue.insert(object);
+
+    QMetaObject::invokeMethod(
+        // Use the first scene as a context for synchronization
+        g_scenes.begin().value(), 
+        [&, object]()
+        {
+            if(!g_objectQueue.contains(object))
+            {
+                return;
+            }
+            g_objectQueue.remove(object);
+
+            auto* item = dynamic_cast<QQuickItem*>(object);
+            if(item)
+            {
+                auto sceneIt = g_scenes.find(item->window());
+                if(sceneIt != g_scenes.end())
+                {
+                    auto* scene = sceneIt.value();
+                    // Invoke itemAdded from the Scene thread
+                    QMetaObject::invokeMethod(
+                        sceneIt.value(), 
+                        [item, scene]()
+                        {
+                            scene->itemAdded(item);
+                        }, 
+                        Qt::QueuedConnection
+                    );
+                }
+            }
+        }, 
+        Qt::QueuedConnection
+    );
 }
 
 void Scene::removeQObjectHook(QObject* object)
 {
-    Q_UNUSED(object);
-    std::cout << "Object removed\n";
-    //TODO: Check first if QQuickItem then fwd
+    if(g_scenes.empty())
+    {
+        return;
+    }
+
+    //TODO: sync
+    g_objectQueue.remove(object);
 }
 
 }
