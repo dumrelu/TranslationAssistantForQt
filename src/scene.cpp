@@ -36,11 +36,4 @@ void Scene::start()
     //  4. Send textChanged signals for all TextItems
 }
 
-QList<TextItem*> Scene::textItemsAt(QPoint position)
-{
-    //TODO
-    Q_UNUSED(position);
-    return QList<TextItem*>{};
-}
-
 }
