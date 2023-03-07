@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         
         QObject::connect(scene, &qta::Scene::textChanged, [](qta::TextItem* textItem)
             {
-                qDebug() << "Text changed: " << textItem->item();
+                qDebug() << "Text changed: " << textItem->text();
             }
         );
         

@@ -60,10 +60,16 @@ void Scene::createTextItemsIfRequired(QQuickItem *item)
 
     if(!textItems.empty())
     {
-        // Assign the scene as a parent for memory management
         for(auto* textItem : textItems)
         {
+            // For memory management
             textItem->setParent(this);
+
+            connect(textItem, &TextItem::textChanged, [this, textItem]()
+                {
+                    emit textChanged(textItem);
+                }
+            );
         }
 
         m_textItems.insert(item, std::move(textItems));
