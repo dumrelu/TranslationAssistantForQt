@@ -5,22 +5,6 @@
 namespace qta
 {
 
-QQuickItem* TextItem::item()
-{
-    return m_item;
-}
-
-QString TextItem::text()
-{
-    return "TODO: implement me!";
-}
-
-TextItem::TextItem(QObject* parent, QQuickItem* item)
-    : QObject{ parent }
-    , m_item{ item }
-{
-}
-
 Scene::Scene(QQuickWindow* window)
     : m_window{ window }
 {

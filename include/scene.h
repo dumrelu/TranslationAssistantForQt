@@ -5,23 +5,10 @@
 #include <QQuickWindow>
 #include <QSet>
 
+#include "textitem.h"
+
 namespace qta
 {
-
-
-class TextItem : public QObject {
-public:
-    QQuickItem* item();
-    QString text();
-
-protected:
-    friend class Scene;
-
-    explicit TextItem(QObject* parent, QQuickItem* item);
-
-private:
-    QQuickItem* m_item = nullptr;
-};
 
 //! Different flows
 /*
@@ -52,7 +39,8 @@ o Identifying TextItems
 */
 
 
-class Scene : public QObject {
+class Scene : public QObject 
+{
     Q_OBJECT
 
 public:

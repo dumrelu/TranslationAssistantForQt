@@ -17,6 +17,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools)
 set(QTRANSLATIONASSISTANT_SOURCES
     include/qtranslationassistant.h src/qtranslationassistant.cpp
     include/scene.h src/scene.cpp
+    include/textitem.h src/textitem.cpp
 )
 
 add_library(QTranslationAssistant ${QTRANSLATIONASSISTANT_SOURCES})
