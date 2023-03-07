@@ -88,6 +88,20 @@ void Scene::createTextItemsIfRequired(QQuickItem *item)
                     emit textChanged(textItem);
                 }
             );
+            connect(textItem, &TextItem::itemDestroyed, [this, textItem]()
+                {
+                    auto textItemsIt = m_textItems.find(textItem->item());
+                    if(textItemsIt != m_textItems.end())
+                    {
+                        for(auto* textItem : textItemsIt.value())
+                        {
+                            emit textItemDestroyed(textItem);
+                            textItem->deleteLater();
+                        }
+                        m_textItems.erase(textItemsIt);
+                    }
+                }
+            );
 
             // Emit textChanged when TextItems are initially created
             //instead of a textCreated signal for simplicity.
@@ -146,7 +160,6 @@ void Scene::addQObjectHook(QObject* object)
             {
                 return;
             }
-            g_objectQueue.remove(object);
 
             auto* item = dynamic_cast<QQuickItem*>(object);
             if(item)
@@ -160,7 +173,11 @@ void Scene::addQObjectHook(QObject* object)
                         sceneIt.value(), 
                         [item, scene]()
                         {
-                            scene->itemAdded(item);
+                            if(g_objectQueue.contains(static_cast<QObject*>(item)))
+                            {
+                                scene->itemAdded(item);
+                                g_objectQueue.remove(static_cast<QObject*>(item));
+                            }
                         }, 
                         Qt::QueuedConnection
                     );

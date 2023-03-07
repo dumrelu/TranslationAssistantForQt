@@ -39,6 +39,11 @@ int main(int argc, char *argv[])
                 qDebug() << "Text changed: " << textItem->text();
             }
         );
+        QObject::connect(scene, &qta::Scene::textItemDestroyed, [](qta::TextItem* textItem)
+            {
+                qDebug() << "Text item destroyed";
+            }
+        );
         
         scene->start();
     }, Qt::QueuedConnection);

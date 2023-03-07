@@ -27,6 +27,9 @@ signals:
     ///the text changes
     void textChanged();
 
+    /// @brief Underlaying QQuickItem got destroyed
+    void itemDestroyed();
+
 protected:
     QQuickItem* m_item = nullptr;
 };
