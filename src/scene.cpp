@@ -118,12 +118,14 @@ void Scene::addQObjectHook(QObject* object)
 {
     Q_UNUSED(object);
     std::cout << "Object added\n";
+    //TODO: Check first if QQuickItem then fwd
 }
 
 void Scene::removeQObjectHook(QObject* object)
 {
     Q_UNUSED(object);
     std::cout << "Object removed\n";
+    //TODO: Check first if QQuickItem then fwd
 }
 
 }
