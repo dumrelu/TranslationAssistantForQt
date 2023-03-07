@@ -28,7 +28,9 @@ target_include_directories(QTranslationAssistant PUBLIC include/)
 target_compile_definitions(QTranslationAssistant
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(QTranslationAssistant
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+  PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+target_link_libraries(QTranslationAssistant
+  PRIVATE Qt${QT_VERSION_MAJOR}::CorePrivate)
 
 # Enable warnings
 if(MSVC)

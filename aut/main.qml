@@ -32,11 +32,23 @@ Window {
         color: "green"
         
         ListView {
-            anchors.fill: parent
-            model: 100
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: childrenRect.height
+            model: 1000
 
             delegate: ItemDelegate {
+                id: delegate
                 text: "ListViewText#" + index
+
+                Timer {
+                    interval: 2000
+                    running: index === 10
+                    onTriggered: {
+                        delegate.text = "ListViewText#" + index + "_changed"
+                    }
+                }
             }
         }
     }

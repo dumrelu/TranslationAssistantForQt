@@ -40,13 +40,18 @@ o Identifying TextItems
     - Some factories: one for QQuickText(and label) specific, one for TextFields, ets
 */
 
-
+/**
+ * Implementation options:
+ *  - qhooks
+ *  - Connect to all relevant global events and rescan subtrees
+*/
 class Scene : public QObject 
 {
     Q_OBJECT
 
 public:
     explicit Scene(QQuickWindow* window);
+    ~Scene();
 
     /// @brief Start processing the scene described by the 
     ///rootObject. Until this method is called, no signals
@@ -54,20 +59,31 @@ public:
     //lack of data.
     void start();
 
+    //TODO: stop(remove hooks)
+
 signals:
     void textItemsClicked(QList<TextItem*> textItems);
     void textChanged(TextItem* textItem);
     void textItemDestroyed(TextItem* textItem);
 
 private:
+    // For clicks in the QQuickWindow
     bool eventFilter(QObject* obj, QEvent* ev) override;
-    void createTextItemsForEntireScene(QQuickItem* root);
+
+    // TextItem creation
     void createTextItemsIfRequired(QQuickItem* item);
+    void createTextItemsForAllItems(QQuickItem* item);
+
+    // qhook related
+    static QList<Scene*> g_scenes;
+    static bool g_hooksInstalled;
+    static void installHooks();
+    static void addQObjectHook(QObject* object);
+    static void removeQObjectHook(QObject* object);
     
     QQuickWindow* m_window = nullptr;
     QHash<QQuickItem*, QList<TextItem*>> m_textItems;
     QList<std::shared_ptr<TextItemHandler>> m_textItemHandlers;
-    QTimer m_searchForTextItemsTimer;
 };
 
 }
