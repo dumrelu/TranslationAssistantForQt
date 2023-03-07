@@ -15,7 +15,7 @@ namespace qta
 //TODO: synchonizing?
 QHash<QQuickWindow*, Scene*> Scene::g_scenes;
 bool Scene::g_hooksInstalled = false;
-QSet<QObject*> Scene::g_objectQueue;
+std::unordered_set<QObject*> Scene::g_objectQueue;
 
 Scene::Scene(QQuickWindow* window)
     : m_window{ window }
@@ -157,7 +157,7 @@ void Scene::addQObjectHook(QObject* object)
         g_scenes.begin().value(), 
         [&, object]()
         {
-            if(!g_objectQueue.contains(object))
+            if(g_objectQueue.count(object) == 0)
             {
                 return;
             }
@@ -178,10 +178,10 @@ void Scene::addQObjectHook(QObject* object)
                         sceneIt.value(), 
                         [item, scene]()
                         {
-                            if(g_objectQueue.contains(static_cast<QObject*>(item)))
+                            if(g_objectQueue.count(static_cast<QObject*>(item)) > 0)
                             {
                                 scene->itemAdded(item);
-                                g_objectQueue.remove(static_cast<QObject*>(item));
+                                g_objectQueue.erase(static_cast<QObject*>(item));
                             }
                         }, 
                         Qt::QueuedConnection
@@ -201,7 +201,7 @@ void Scene::removeQObjectHook(QObject* object)
     }
 
     //TODO: sync
-    g_objectQueue.remove(object);
+    g_objectQueue.erase(object);
 }
 
 }

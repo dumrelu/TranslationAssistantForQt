@@ -6,6 +6,8 @@
 #include <QHash>
 #include <QTimer>
 
+#include <unordered_set>
+
 #include "textitem.h"
 #include "textitemhandler.h"
 
@@ -77,7 +79,7 @@ private:
     // qhook related
     static QHash<QQuickWindow*, Scene*> g_scenes;
     static bool g_hooksInstalled;
-    static QSet<QObject*> g_objectQueue;
+    static std::unordered_set<QObject*> g_objectQueue;
     static void installHooks();
     static void addQObjectHook(QObject* object);
     static void removeQObjectHook(QObject* object);
