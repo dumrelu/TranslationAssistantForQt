@@ -6,6 +6,7 @@
 #include <QHash>
 
 #include "textitem.h"
+#include "textitemhandler.h"
 
 namespace qta
 {
@@ -58,9 +59,12 @@ signals:
     void textItemDestroyed(TextItem* textItem);
 
 private:
+    void createTextItemsForEntireScene(QQuickItem* root);
+    void createTextItemsIfRequired(QQuickItem* item);
     
     QQuickWindow* m_window = nullptr;
     QHash<QQuickItem*, QList<TextItem*>> m_textItems;
+    QList<std::shared_ptr<TextItemHandler>> m_textItemHandlers;
 };
 
 }

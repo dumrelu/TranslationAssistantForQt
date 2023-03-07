@@ -32,7 +32,15 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
         
-        (new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) })->start();
+        auto* scene = new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) };
+        
+        QObject::connect(scene, &qta::Scene::textChanged, [](qta::TextItem* textItem)
+            {
+                qDebug() << "Text changed: " << textItem->item();
+            }
+        );
+        
+        scene->start();
     }, Qt::QueuedConnection);
     engine.load(url);
 

@@ -12,6 +12,7 @@ class TextItem : public QObject
     Q_OBJECT
 public:
     explicit TextItem(QQuickItem* item);
+    
     virtual ~TextItem() = default;
 
     /// @brief Returns the actual QQuickItem associated with
