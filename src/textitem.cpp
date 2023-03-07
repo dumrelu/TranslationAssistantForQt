@@ -3,6 +3,9 @@
 namespace qta
 {
 
-
+QQuickItem* TextItem::item()
+{
+    return m_item;
+}
 
 }

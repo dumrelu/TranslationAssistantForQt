@@ -18,6 +18,7 @@ set(QTRANSLATIONASSISTANT_SOURCES
     include/qtranslationassistant.h src/qtranslationassistant.cpp
     include/scene.h src/scene.cpp
     include/textitem.h src/textitem.cpp
+    include/textitemhandler.h src/textitemhandler.cpp
 )
 
 add_library(QTranslationAssistant ${QTRANSLATIONASSISTANT_SOURCES})

@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QQuickItem>
 #include <QQuickWindow>
-#include <QSet>
+#include <QHash>
 
 #include "textitem.h"
 
@@ -60,7 +60,7 @@ signals:
 private:
     
     QQuickWindow* m_window = nullptr;
-    QSet<TextItem*> m_textItems;
+    QHash<QQuickItem*, QList<TextItem*>> m_textItems;
 };
 
 }
