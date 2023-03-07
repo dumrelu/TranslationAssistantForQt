@@ -125,6 +125,7 @@ void Scene::installHooks()
 {
     Q_ASSERT(qtHookData[QHooks::HookDataVersion] >= 1);
 
+    //TODO: Save existing hooks and call them from our hooks
     qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(Scene::addQObjectHook);
     qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(Scene::removeQObjectHook);
     g_hooksInstalled = true;
