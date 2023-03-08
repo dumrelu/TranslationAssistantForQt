@@ -42,11 +42,6 @@ o Identifying TextItems
     - Some factories: one for QQuickText(and label) specific, one for TextFields, ets
 */
 
-/**
- * Implementation options:
- *  - qhooks
- *  - Connect to all relevant global events and rescan subtrees
-*/
 class Scene : public QObject 
 {
     Q_OBJECT
