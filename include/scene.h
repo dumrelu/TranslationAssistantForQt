@@ -38,7 +38,7 @@ signals:
 
 private:
     // For clicks in the QQuickWindow
-    bool eventFilter(QObject* obj, QEvent* ev) override;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
     QQuickWindow* m_window = nullptr;
 };
