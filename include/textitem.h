@@ -12,25 +12,40 @@ class TextItem : public QObject
     Q_OBJECT
 public:
     explicit TextItem(QQuickItem* item);
-    
     virtual ~TextItem() = default;
 
-    /// @brief Returns the actual QQuickItem associated with
-    ///the TextItem
-    QQuickItem* item();
+    /// @brief Returns true if the underlying QQuickItem is
+    ///still valid.
+    /// @return 
+    bool isValid() const { return m_item != nullptr; }
 
-    /// @brief Returns the extracted text from the QQuickItem
-    virtual QString text() = 0;
+    /// @brief Returns the underlying QQuickItem
+    /**
+     *  If the item got destroyed, returns nullptr
+    */
+    QQuickItem* item() { return m_item; };
+
+    /// @brief Returns the current text of the underlying item
+    /**
+     *  If the text item is no longer valid, an empty string is returned
+    */
+    QString text();
 
 signals:
-    /// @brief Implementation should emit this signal when
-    ///the text changes
+    /// @brief Emitted when the underlaying text changed.
+    /**
+     *  Note: Subclasses should emit this signal when the text changes
+    */
     void textChanged();
 
-    /// @brief Underlaying QQuickItem got destroyed
-    void itemDestroyed();
+    /// @brief Emitted when the text item becomes invalid(isValid() == false)
+    void invalidated();
 
 protected:
+    /// @brief Subclass specific logic for extractig the 
+    ///text.
+    virtual QString doGetText() = 0;
+
     QQuickItem* m_item = nullptr;
 };
 

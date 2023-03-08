@@ -34,16 +34,16 @@ int main(int argc, char *argv[])
         
         auto* scene = new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) };
         
-        QObject::connect(scene, &qta::Scene::textChanged, [](qta::TextItem* textItem)
-            {
-                qDebug() << "Text changed: " << textItem->text();
-            }
-        );
-        QObject::connect(scene, &qta::Scene::textItemDestroyed, [](qta::TextItem* textItem)
-            {
-                qDebug() << "Text item destroyed";
-            }
-        );
+        // QObject::connect(scene, &qta::Scene::textChanged, [](qta::TextItem* textItem)
+        //     {
+        //         qDebug() << "Text changed: " << textItem->text();
+        //     }
+        // );
+        // QObject::connect(scene, &qta::Scene::textItemDestroyed, [](qta::TextItem* textItem)
+        //     {
+        //         qDebug() << "Text item destroyed";
+        //     }
+        // );
         
         scene->start();
     }, Qt::QueuedConnection);

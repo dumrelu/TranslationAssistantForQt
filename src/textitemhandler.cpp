@@ -10,6 +10,7 @@ public:
         : TextItem{ item }
     {
         Q_ASSERT(item);
+        Q_ASSERT(textProperty.isValid());
 
         connect(
             item, textProperty.notifySignal(), 
@@ -17,7 +18,7 @@ public:
         );
     }
 
-    QString text() override
+    QString doGetText() override
     {
         auto textProperty = m_item->property("text");
         Q_ASSERT(textProperty.canConvert<QString>());
@@ -26,7 +27,7 @@ public:
     }
 };
 
-QList<TextItem*> TextPropertyItemHandler::createTextItem(QQuickItem *item)
+QList<QSharedPointer<TextItem>> TextPropertyItemHandler::createTextItem(QQuickItem* item)
 {
     auto* metaObject = item->metaObject();
     const auto textPropertyIndex = metaObject->indexOfProperty("text");
@@ -41,7 +42,9 @@ QList<TextItem*> TextPropertyItemHandler::createTextItem(QQuickItem *item)
         return {};
     }
 
-    return { new TextPropertyTextItem{ item, textProperty } };
+    return {
+        QSharedPointer<TextPropertyTextItem>::create(item, std::move(textProperty))
+    };
 }
 
 }
