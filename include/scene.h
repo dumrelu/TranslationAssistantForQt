@@ -14,6 +14,8 @@
 namespace qta
 {
 
+class SceneHooks;
+
 class Scene : public QObject 
 {
     Q_OBJECT
@@ -21,6 +23,9 @@ class Scene : public QObject
 public:
     explicit Scene(QQuickWindow* window);
     ~Scene();
+
+    /// @brief Returns the window associated with this scene
+    QQuickWindow* window() { return m_window; }
 
     /// @brief Start processing the scene described by the 
     ///rootObject. Until this method is called, no signals
@@ -37,6 +42,10 @@ public:
 signals:
 
 private:
+    // Hook callback
+    friend class SceneHooks;
+    void addQQuickItemHook(QQuickItem* item);
+
     // For clicks in the QQuickWindow
     bool eventFilter(QObject* obj, QEvent* event) override;
 

@@ -65,9 +65,10 @@ void SceneHooks::subscribe(Scene *scene)
         installHooks();
     }
 
-    if(!m_subscribers.contains(scene))
+    auto& sceneList = m_subscribers[scene->window()];
+    if(!sceneList.contains(scene))
     {
-        m_subscribers.insert(scene);
+        sceneList.push_back(scene);
         QObject::connect(scene, &Scene::destroyed, scene, [this, scene]()
             {
                 unsubscribe(scene);
@@ -85,21 +86,84 @@ void SceneHooks::unsubscribe(Scene *scene)
 
     QMutexLocker lock{ &m_mutex };
 
-    //TODO: uninstall hooks if no more subscribers
+    auto sceneListIt = m_subscribers.find(scene->window());
+    if(sceneListIt != m_subscribers.end())
+    {
+        auto& sceneList = sceneListIt.value();
+        sceneList.removeAll(scene);
+        if(sceneList.empty())
+        {
+            m_subscribers.erase(sceneListIt);
+        }
+    }
 
-    m_subscribers.remove(scene);
+    // TODO: uninstall hooks if no more subscribers
+}
+
+SceneHooks::~SceneHooks()
+{
+    //TODO: uninstall hooks
 }
 
 void SceneHooks::addQObject(QObject* object)
 {
-    Q_UNUSED(object);
-    std::clog << __PRETTY_FUNCTION__ << std::endl;
+    // When the hooks get called, the objects are not
+    //yet fully constructed. We post them in a queue and
+    //process them at a later time.
+    QMutexLocker lock{ &m_mutex };
+    m_objectQueue.insert(object);
+
+    if(m_objectQueue.size() == 1)
+    {
+        QMetaObject::invokeMethod(this, 
+            [this]()
+            {
+                processObjectQueue();
+            }, 
+            Qt::QueuedConnection
+        );
+    }
 }
 
 void SceneHooks::removeQObject(QObject* object)
 {
-    Q_UNUSED(object);
-    std::clog << __PRETTY_FUNCTION__ << std::endl;
+    // Ensure we don't process the object if it
+    //was already deleted before processObjectQueue() was called.
+    QMutexLocker lock{ &m_mutex };
+    m_objectQueue.remove(object);
+}
+
+void SceneHooks::processObjectQueue()
+{
+    QMutexLocker lock{ &m_mutex };
+    
+    for(auto* object : m_objectQueue)
+    {
+        auto* item = qobject_cast<QQuickItem*>(object);
+        if(item)
+        {
+            auto sceneListIt = m_subscribers.find(item->window());
+            if(sceneListIt != m_subscribers.end())
+            {
+                auto& sceneList = sceneListIt.value();
+                for(auto* scene : sceneList)
+                {
+                    // 2 reasons this is done:
+                    //  - Don't call the callback while holding the mutex(will cause deadlock if the callback creates QObjects)
+                    //  - Invoke from the scene thread
+                    QMetaObject::invokeMethod(
+                        scene, 
+                        [scene, item]()
+                        {
+                            scene->addQQuickItemHook(item);
+                        }, 
+                        Qt::QueuedConnection
+                    );
+                }
+            }
+        }
+    }
+    m_objectQueue.clear();
 }
 
 }

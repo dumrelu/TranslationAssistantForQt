@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QMutex>
-#include <QSet>
+#include <QHash>
 #include <QTimer>
 
 #include "scene.h"
@@ -9,7 +9,7 @@
 namespace qta
 {
 
-class SceneHooks
+class SceneHooks : public QObject
 {
 public:
     /// @brief Returns the unique SceneHooks instance 
@@ -26,6 +26,7 @@ public:
 
 private:
     SceneHooks() = default;
+    ~SceneHooks();
     SceneHooks(const SceneHooks&) = delete;
     SceneHooks(SceneHooks&&) = delete;
     SceneHooks& operator=(const SceneHooks&) = delete;
@@ -37,10 +38,12 @@ private:
 
     void addQObject(QObject* object);
     void removeQObject(QObject* object);
+    void processObjectQueue();
 
     QMutex m_mutex;
     bool m_hooksInstalled = false;
-    QSet<Scene*> m_subscribers;
+    QHash<QQuickWindow*, QList<Scene*>> m_subscribers;
+    QSet<QObject*> m_objectQueue;
 };
 
 }

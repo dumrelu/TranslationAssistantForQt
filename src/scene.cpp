@@ -23,7 +23,12 @@ void Scene::stop()
 {
 }
 
-bool Scene::eventFilter(QObject* obj, QEvent* event)
+void Scene::addQQuickItemHook(QQuickItem *item)
+{
+    qDebug() << "QQuickItem added: " << item;
+}
+
+bool Scene::eventFilter(QObject *obj, QEvent *event)
 {
     return QObject::eventFilter(obj, event);
 }
