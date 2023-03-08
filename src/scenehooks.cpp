@@ -45,6 +45,12 @@ void SceneHooks::installHooks()
     qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(&SceneHooks::removeQObjectHook);
 }
 
+void SceneHooks::uninstallHooks()
+{
+    qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(g_existingAddQObjectHook);
+    qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(g_existingRemoveQObjectCallback);
+}
+
 SceneHooks &SceneHooks::instance()
 {
     static SceneHooks g_instance;
@@ -97,12 +103,16 @@ void SceneHooks::unsubscribe(Scene *scene)
         }
     }
 
-    // TODO: uninstall hooks if no more subscribers
+    if(m_subscribers.empty())
+    {
+        uninstallHooks();
+        m_hooksInstalled = false;
+    }
 }
 
 SceneHooks::~SceneHooks()
 {
-    //TODO: uninstall hooks
+    uninstallHooks();
 }
 
 void SceneHooks::addQObject(QObject* object)
@@ -139,6 +149,8 @@ void SceneHooks::processObjectQueue()
     
     for(auto* object : m_objectQueue)
     {
+        //TODO: technically, if on another thread, this QObject can still not
+        //be yet fully constructed. Maybe process the queue on the invoking thread?
         auto* item = qobject_cast<QQuickItem*>(object);
         if(item)
         {

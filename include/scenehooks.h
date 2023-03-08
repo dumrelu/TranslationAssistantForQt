@@ -33,6 +33,7 @@ private:
     SceneHooks& operator=(SceneHooks&&) = delete;
 
     static void installHooks();
+    static void uninstallHooks();
     static void addQObjectHook(QObject* object);
     static void removeQObjectHook(QObject* object);
 
