@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         QObject::connect(scene, &qta::Scene::textItemInvalidated, [](QSharedPointer<qta::TextItem> textItem)
             {
                 Q_UNUSED(textItem);
-                qDebug() << "Text item destroyed";
+                qDebug() << "Text item invalidated";
             }
         );
         
