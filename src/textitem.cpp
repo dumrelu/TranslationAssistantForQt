@@ -4,6 +4,7 @@
 
 namespace qta
 {
+
 TextItem::TextItem(QQuickItem *item)
     : m_item{ item }
 {
@@ -28,4 +29,5 @@ QString TextItem::text()
     }
     return doGetText();
 }
+
 }
