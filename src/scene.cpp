@@ -92,7 +92,11 @@ void Scene::insertTextItems(QQuickItem* item, QList<QSharedPointer<TextItem>> te
                 auto textItemsIt = m_textItems.find(item);
                 if(textItemsIt != m_textItems.end())
                 {
-                    //TODO: emit any signals??
+                    for(auto& textItem : textItemsIt.value())
+                    {
+                        emit textItemInvalidated(textItem);
+                    }
+
                     m_textItems.erase(textItemsIt);
                 }
             }
