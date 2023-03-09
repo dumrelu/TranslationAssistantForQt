@@ -5,11 +5,12 @@
 namespace qta
 {
 TextItem::TextItem(QQuickItem *item)
+    : m_item{ item }
 {
-    Q_ASSERT(item);
+    Q_ASSERT(m_item);
 
     connect(
-        item, &QQuickItem::destroyed, 
+        m_item, &QQuickItem::destroyed, 
         this, [this]()
         {
             m_item = nullptr;
@@ -22,7 +23,7 @@ QString TextItem::text()
 {
     if(!isValid())
     {
-        qDebug() << "Text item is invalid";
+        qDebug() << "Could not retrieve text. TextItem is invalid";
         return {};
     }
     return doGetText();

@@ -2,12 +2,13 @@
 
 #include <QObject>
 #include <QQuickItem>
+#include <QEnableSharedFromThis>
 
 namespace qta
 {
 
 /// @brief Interface to interact with QQuickItems that hold text
-class TextItem : public QObject 
+class TextItem : public QObject, public QEnableSharedFromThis<TextItem>
 {
     Q_OBJECT
 public:

@@ -40,6 +40,9 @@ public:
     void stop();
 
 signals:
+    /// @brief Emitted when a text item is created or when a text item's
+    ///text changes.
+    void textChanged(QSharedPointer<TextItem> textItem);
 
 private:
     // Hook callback
@@ -49,7 +52,13 @@ private:
     // For clicks in the QQuickWindow
     bool eventFilter(QObject* obj, QEvent* event) override;
 
+    // TextItem creation
+    void createTextItemIfRequired(QQuickItem* item);
+    void insertTextItems(QQuickItem* item, QList<QSharedPointer<TextItem>> textItems);
+
     QQuickWindow* m_window = nullptr;
+    QHash<QQuickItem*, QList<QSharedPointer<TextItem>>> m_textItems;
+    QList<QSharedPointer<TextItemHandler>> m_textItemHandlers;
 };
 
 }
