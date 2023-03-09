@@ -2,6 +2,8 @@
 
 #include <QPainter>
 
+#include <limits>
+
 namespace qta
 {
 
@@ -13,9 +15,8 @@ TextItemOverlay::TextItemOverlay(QQuickWindow *window)
     Q_ASSERT(contentItem);
     setParentItem(window->contentItem());
 
-    //TODO
     setSize(window->size());
-    setZ(999999); //TODO: traits::max()
+    setZ(std::numeric_limits<qreal>::max());
 
     auto updateCallback = [this, window]()
         {
