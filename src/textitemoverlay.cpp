@@ -9,16 +9,26 @@ TextItemOverlay::TextItemOverlay(QQuickWindow *window)
 {
     Q_ASSERT(window);
 
+    auto* contentItem = window->contentItem();
+    Q_ASSERT(contentItem);
+    setParentItem(window->contentItem());
+
     //TODO
-    setWidth(200);
-    setHeight(200);
+    setSize(window->size());
     setZ(999999); //TODO: traits::max()
 
-    setParentItem(window->contentItem());
+    auto updateCallback = [this, window]()
+        {
+            setSize(window->size());
+            update();
+        };
+    connect(window, &QQuickWindow::widthChanged, this, updateCallback);
+    connect(window, &QQuickWindow::heightChanged, this, updateCallback);
 }
 
 void TextItemOverlay::paint(QPainter *painter)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     // QBrush brush(QColor("#FFFFFF"), Qt::CrossPattern);
 
     // painter->setBrush(brush);
