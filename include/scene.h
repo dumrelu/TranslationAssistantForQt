@@ -53,6 +53,7 @@ private:
     bool eventFilter(QObject* obj, QEvent* event) override;
 
     // TextItem creation
+    void createTextItemsForSubtree(QQuickItem* root);
     void createTextItemIfRequired(QQuickItem* item);
     void insertTextItems(QQuickItem* item, QList<QSharedPointer<TextItem>> textItems);
 

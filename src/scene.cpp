@@ -21,6 +21,8 @@ Scene::~Scene()
 void Scene::start()
 {
     SceneHooks::instance().subscribe(this);
+    
+    createTextItemsForSubtree(m_window->contentItem());
 }
 
 void Scene::stop()
@@ -35,6 +37,15 @@ void Scene::addQQuickItemHook(QQuickItem *item)
 bool Scene::eventFilter(QObject *obj, QEvent *event)
 {
     return QObject::eventFilter(obj, event);
+}
+
+void Scene::createTextItemsForSubtree(QQuickItem *root)
+{
+    createTextItemIfRequired(root);
+    for(auto* child : root->childItems())
+    {
+        createTextItemsForSubtree(child);
+    }
 }
 
 void Scene::createTextItemIfRequired(QQuickItem *item)
