@@ -2,6 +2,7 @@
 
 #include <QQuickPaintedItem>
 #include <QQuickWindow>
+#include <QSharedPointer>
 
 #include "textitem.h"
 
@@ -16,6 +17,9 @@ public:
     explicit TextItemOverlay(QQuickWindow* window);
 
     void paint(QPainter* painter) override;
+
+private:
+    QList<QSharedPointer<TextItem>> m_textItems;
 };
 
 }
