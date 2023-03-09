@@ -32,7 +32,8 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
         
-        auto* scene = new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) };
+        auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
+        auto* scene = new qta::Scene{ window };
         
         QObject::connect(scene, &qta::Scene::textChanged, [](QSharedPointer<qta::TextItem> textItem)
             {
@@ -47,6 +48,8 @@ int main(int argc, char *argv[])
         );
         
         scene->start();
+
+        new qta::TextItemOverlay(window);
     }, Qt::QueuedConnection);
     engine.load(url);
 

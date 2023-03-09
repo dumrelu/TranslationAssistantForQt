@@ -20,6 +20,7 @@ set(QTRANSLATIONASSISTANT_SOURCES
     include/scenehooks.h src/scenehooks.cpp
     include/textitem.h src/textitem.cpp
     include/textitemhandler.h src/textitemhandler.cpp
+    include/textitemoverlay.h src/textitemoverlay.cpp
 )
 
 add_library(QTranslationAssistant ${QTRANSLATIONASSISTANT_SOURCES})
