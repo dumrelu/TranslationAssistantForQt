@@ -34,10 +34,17 @@ int main(int argc, char *argv[])
         
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
         auto* scene = new qta::Scene{ window };
+        auto* overlay = new qta::TextItemOverlay(window);
         
-        QObject::connect(scene, &qta::Scene::textChanged, [](QSharedPointer<qta::TextItem> textItem)
+        QObject::connect(scene, &qta::Scene::textChanged, [overlay](QSharedPointer<qta::TextItem> textItem)
             {
-                qDebug() << "Text changed: " << textItem->text();
+                const auto text = textItem->text();
+                qDebug() << "Text changed: " << text;
+
+                if(text.startsWith("Text"))
+                {
+                    overlay->addOverlayFor(textItem);
+                }
             }
         );
         QObject::connect(scene, &qta::Scene::textItemInvalidated, [](QSharedPointer<qta::TextItem> textItem)
@@ -48,8 +55,6 @@ int main(int argc, char *argv[])
         );
         
         scene->start();
-
-        new qta::TextItemOverlay(window);
     }, Qt::QueuedConnection);
     engine.load(url);
 
