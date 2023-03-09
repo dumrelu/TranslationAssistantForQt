@@ -21,12 +21,13 @@ Scene::~Scene()
 void Scene::start()
 {
     SceneHooks::instance().subscribe(this);
-    
+
     createTextItemsForSubtree(m_window->contentItem());
 }
 
 void Scene::stop()
 {
+    SceneHooks::instance().unsubscribe(this);
 }
 
 void Scene::addQQuickItemHook(QQuickItem *item)
