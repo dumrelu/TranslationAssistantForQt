@@ -79,7 +79,7 @@ void TextItemOverlay::textItemInvalidated(QSharedPointer<TextItem> textItem)
 
 void TextItemOverlay::drawOverlay(QPainter *painter, const QSharedPointer<TextItem>& textItem) const
 {
-    if(!textItem || !textItem->isValid() || !textItem->item()->isVisible())
+    if(!textItem || !textItem->isValid() || !textItem->item()->isVisible() || textItem->item()->opacity() == 0.0)
     {
         return;
     }
