@@ -31,7 +31,7 @@ void TextItemOverlay::paint(QPainter *painter)
     painter->setBrush(Qt::NoBrush);
     painter->setPen(Qt::white);
 
-    for(const auto& textItem : m_textItems.keys())
+    for(const auto& textItem : m_textItems)
     {
         drawOverlay(painter, textItem);
     }
@@ -45,16 +45,15 @@ bool TextItemOverlay::addOverlayFor(QSharedPointer<TextItem> textItem)
     }
 
     auto* textItemRawPointer = textItem.get();
-    QList<QMetaObject::Connection> connections;
-    connections.push_back(connect(
+    connect(
         textItemRawPointer, &TextItem::invalidated, 
         this, [this, textItemRawPointer]()
         {
             textItemInvalidated(textItemRawPointer->sharedFromThis());
         }
-    ));
+    );
 
-    m_textItems.insert(textItem, std::move(connections));
+    m_textItems.insert(std::move(textItem));
 
     return true;
 }
@@ -66,10 +65,7 @@ bool TextItemOverlay::removeOverlayFor(QSharedPointer<TextItem> textItem)
         return false;
     }
 
-    for(const auto& connection : m_textItems[textItem])
-    {
-        disconnect(connection);
-    }
+    disconnect(textItem.get(), nullptr, this, nullptr);
 
     m_textItems.remove(textItem);
 

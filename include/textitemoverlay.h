@@ -39,7 +39,7 @@ private:
     void textItemInvalidated(QSharedPointer<TextItem> textItem);
     void drawOverlay(QPainter* painter, const QSharedPointer<TextItem>& textItem) const;
 
-    QHash<QSharedPointer<TextItem>, QList<QMetaObject::Connection>> m_textItems;
+    QSet<QSharedPointer<TextItem>> m_textItems;
 };
 
 }
