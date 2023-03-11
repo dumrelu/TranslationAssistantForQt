@@ -20,6 +20,11 @@ TextItem::TextItem(QQuickItem *item)
     );
 }
 
+bool TextItem::isVisible() const
+{
+    return isValid() && m_item->isVisible() && m_item->opacity() > 0.0;
+}
+
 QString TextItem::text()
 {
     if(!isValid())

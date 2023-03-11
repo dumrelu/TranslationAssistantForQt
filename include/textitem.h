@@ -20,6 +20,10 @@ public:
     /// @return 
     bool isValid() const { return m_item != nullptr; }
 
+    /// @brief Retruns true if the item is valid and visible
+    /// @return 
+    bool isVisible() const;
+
     /// @brief Returns the underlying QQuickItem
     /**
      *  If the item got destroyed, returns nullptr
