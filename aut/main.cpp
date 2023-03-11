@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
                 const auto text = textItem->text();
                 qDebug() << "Text changed: " << text;
 
-                if(text.startsWith("Text"))
+                if(text.startsWith("Text") || text == "ListViewText#2_changed")
                 {
                     overlay->addOverlayFor(textItem);
                 }

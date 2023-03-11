@@ -30,16 +30,10 @@ TextItemOverlay::TextItemOverlay(QQuickWindow *window)
 void TextItemOverlay::paint(QPainter *painter)
 {
     qDebug() << __PRETTY_FUNCTION__;
-    // QBrush brush(QColor("#FFFFFF"), Qt::CrossPattern);
-
-    // painter->setBrush(brush);
-    // painter->setPen(Qt::NoPen);
+        
     painter->setBrush(Qt::NoBrush);
     painter->setPen(Qt::white);
     painter->setRenderHint(QPainter::Antialiasing);
-
-    QSizeF itemSize = size();
-    painter->drawRoundedRect(0, 0, itemSize.width(), itemSize.height() - 10, 10, 10);
 
     for(const auto& textItem : m_textItems.keys())
     {
@@ -63,7 +57,11 @@ bool TextItemOverlay::addOverlayFor(QSharedPointer<TextItem> textItem)
             textItemInvalidated(textItemRawPointer->sharedFromThis());
         }
     ));
-    //TODO: connect signals for position
+    connections.push_back(connect(textItem->item(), &QQuickItem::xChanged, this, [this](){ update(); }));
+    connections.push_back(connect(textItem->item(), &QQuickItem::yChanged, this, [this](){ update(); }));
+    connections.push_back(connect(textItem->item(), &QQuickItem::widthChanged, this, [this](){ update(); }));
+    connections.push_back(connect(textItem->item(), &QQuickItem::heightChanged, this, [this](){ update(); }));
+    connections.push_back(connect(textItem->item(), &QQuickItem::visibleChanged, this, [this](){ update(); }));
 
     m_textItems.insert(textItem, std::move(connections));
 
@@ -98,14 +96,13 @@ void TextItemOverlay::textItemInvalidated(QSharedPointer<TextItem> textItem)
 
 void TextItemOverlay::drawOverlay(QPainter *painter, const QSharedPointer<TextItem>& textItem) const
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(textItem);
-    if(!textItem || !textItem->isValid())
+    if(!textItem || !textItem->isValid() || !textItem->item()->isVisible())
     {
         return;
     }
 
-    qDebug() << "Should draw overlay for " << textItem->text();
+    const auto textItemBoundingRect = mapRectFromItem(textItem->item(), textItem->item()->boundingRect());
+    painter->drawRoundedRect(textItemBoundingRect, 10, 10);
 }
 
 }
