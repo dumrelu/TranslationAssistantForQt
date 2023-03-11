@@ -18,22 +18,18 @@ TextItemOverlay::TextItemOverlay(QQuickWindow *window)
     setSize(window->size());
     setZ(std::numeric_limits<qreal>::max());
 
-    auto updateCallback = [this, window]()
-        {
-            setSize(window->size());
-            update();
-        };
-    connect(window, &QQuickWindow::widthChanged, this, updateCallback);
-    connect(window, &QQuickWindow::heightChanged, this, updateCallback);
+    setAntialiasing(true);
+
+    auto resizeCallback = [this, window]() { setSize(window->size()); };
+    connect(window, &QQuickWindow::widthChanged, this, resizeCallback);
+    connect(window, &QQuickWindow::heightChanged, this, resizeCallback);
+    connect(window, &QQuickWindow::beforeRendering, this, &QQuickItem::update);
 }
 
 void TextItemOverlay::paint(QPainter *painter)
 {
-    qDebug() << __PRETTY_FUNCTION__;
-        
     painter->setBrush(Qt::NoBrush);
     painter->setPen(Qt::white);
-    painter->setRenderHint(QPainter::Antialiasing);
 
     for(const auto& textItem : m_textItems.keys())
     {
@@ -57,15 +53,8 @@ bool TextItemOverlay::addOverlayFor(QSharedPointer<TextItem> textItem)
             textItemInvalidated(textItemRawPointer->sharedFromThis());
         }
     ));
-    connections.push_back(connect(textItem->item(), &QQuickItem::xChanged, this, [this](){ update(); }));
-    connections.push_back(connect(textItem->item(), &QQuickItem::yChanged, this, [this](){ update(); }));
-    connections.push_back(connect(textItem->item(), &QQuickItem::widthChanged, this, [this](){ update(); }));
-    connections.push_back(connect(textItem->item(), &QQuickItem::heightChanged, this, [this](){ update(); }));
-    connections.push_back(connect(textItem->item(), &QQuickItem::visibleChanged, this, [this](){ update(); }));
 
     m_textItems.insert(textItem, std::move(connections));
-
-    update();
 
     return true;
 }
@@ -83,8 +72,6 @@ bool TextItemOverlay::removeOverlayFor(QSharedPointer<TextItem> textItem)
     }
 
     m_textItems.remove(textItem);
-
-    update();
 
     return true;
 }
