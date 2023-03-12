@@ -49,7 +49,7 @@ else()
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(ApplicationUnderTest PRIVATE QTranslationAssistant)
+target_link_libraries(ApplicationUnderTest PRIVATE TranslationAssistant)
 
 target_compile_definitions(ApplicationUnderTest
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

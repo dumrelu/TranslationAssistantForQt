@@ -1,4 +1,4 @@
-#include "qtranslationassistant.h"
+#include "translationassistant.h"
 
 #include <QDebug>
 

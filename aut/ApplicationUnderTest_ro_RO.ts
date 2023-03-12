@@ -4,8 +4,13 @@
 <context>
     <name>MyQmlType</name>
     <message>
-        <location filename="MyQmlType.qml" line="11"/>
+        <location filename="MyQmlType.qml" line="13"/>
         <source>Text2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MyQmlType.qml" line="20"/>
+        <source>Text2_changed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -19,6 +24,11 @@
     <message>
         <location filename="main.qml" line="22"/>
         <source>Text1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.qml" line="82"/>
+        <source>Text4</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

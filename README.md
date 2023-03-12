@@ -1,1 +1,1 @@
-# QTranslationAssistant
+# TranslationAssistant

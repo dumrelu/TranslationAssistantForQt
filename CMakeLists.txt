@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(QTranslationAssistant VERSION 0.1 LANGUAGES CXX)
+project(TranslationAssistant VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -14,8 +14,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools)
 
-set(QTRANSLATIONASSISTANT_SOURCES
-    include/qtranslationassistant.h src/qtranslationassistant.cpp
+set(TRANSLATIONASSISTANT_SOURCES
+    include/translationassistant.h src/translationassistant.cpp
     include/scene.h src/scene.cpp
     include/scenehooks.h src/scenehooks.cpp
     include/textitem.h src/textitem.cpp
@@ -23,22 +23,22 @@ set(QTRANSLATIONASSISTANT_SOURCES
     include/textitemoverlay.h src/textitemoverlay.cpp
 )
 
-add_library(QTranslationAssistant ${QTRANSLATIONASSISTANT_SOURCES})
+add_library(TranslationAssistant ${TRANSLATIONASSISTANT_SOURCES})
 
-target_include_directories(QTranslationAssistant PUBLIC include/)
+target_include_directories(TranslationAssistant PUBLIC include/)
 
-target_compile_definitions(QTranslationAssistant
+target_compile_definitions(TranslationAssistant
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(QTranslationAssistant
+target_link_libraries(TranslationAssistant
   PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
-target_link_libraries(QTranslationAssistant
+target_link_libraries(TranslationAssistant
   PRIVATE Qt${QT_VERSION_MAJOR}::CorePrivate)
 
 # Enable warnings
 if(MSVC)
-  target_compile_options(QTranslationAssistant PRIVATE /W4 /WX)
+  target_compile_options(TranslationAssistant PRIVATE /W4 /WX)
 else()
-  target_compile_options(QTranslationAssistant PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(TranslationAssistant PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 
 add_subdirectory(aut)

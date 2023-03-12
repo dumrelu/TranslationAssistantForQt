@@ -4,7 +4,7 @@
 #include <QLocale>
 #include <QTranslator>
 
-#include "qtranslationassistant.h"
+#include "translationassistant.h"
 
 int main(int argc, char *argv[])
 {
