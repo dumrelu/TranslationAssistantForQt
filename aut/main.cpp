@@ -32,11 +32,19 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
         
-        auto* scene = new qta::Scene{ qobject_cast<QQuickWindow*>(engine.rootObjects()[0]) };
+        auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
+        auto* scene = new qta::Scene{ window };
+        auto* overlay = new qta::TextItemOverlay(window);
         
-        QObject::connect(scene, &qta::Scene::textChanged, [](QSharedPointer<qta::TextItem> textItem)
+        QObject::connect(scene, &qta::Scene::textChanged, [overlay](QSharedPointer<qta::TextItem> textItem)
             {
-                qDebug() << "Text changed: " << textItem->text();
+                const auto text = textItem->text();
+                qDebug() << "Text changed: " << text;
+
+                if(text.startsWith("Text") || text == "ListViewText#2_changed")
+                {
+                    overlay->addOverlayFor(textItem);
+                }
             }
         );
         QObject::connect(scene, &qta::Scene::textItemInvalidated, [](QSharedPointer<qta::TextItem> textItem)
