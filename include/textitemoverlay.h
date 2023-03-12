@@ -10,6 +10,11 @@ namespace qta
 {
 
 /// @brief Draws overlays for one or more TextItems
+/**
+ *  TODO: Add individual QQuickPaintItems as children of TextItems instead
+ * of using a single QQuickPaintedItem(because we can't tell if an item covers
+ * the TextItem or not)
+*/
 class TextItemOverlay : public QQuickPaintedItem
 {
     Q_OBJECT
