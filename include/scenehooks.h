@@ -6,7 +6,7 @@
 
 #include "scene.h"
 
-namespace qta
+namespace ta
 {
 
 class SceneHooks : public QObject

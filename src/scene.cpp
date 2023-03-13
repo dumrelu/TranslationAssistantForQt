@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "scenehooks.h"
 
-namespace qta
+namespace ta
 {
 
 Scene::Scene(QQuickWindow *window)

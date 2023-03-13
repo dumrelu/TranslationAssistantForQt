@@ -5,7 +5,7 @@
 #include <QMutexLocker>
 #include <private/qhooks_p.h>
 
-namespace qta
+namespace ta
 {
 
 static QHooks::AddQObjectCallback g_existingAddQObjectHook = nullptr;

@@ -4,7 +4,7 @@
 #include <QQuickItem>
 #include <QEnableSharedFromThis>
 
-namespace qta
+namespace ta
 {
 
 /// @brief Interface to interact with QQuickItems that hold text

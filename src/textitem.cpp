@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-namespace qta
+namespace ta
 {
 
 TextItem::TextItem(QQuickItem *item)

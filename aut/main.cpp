@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[])
 {
-    qta::hello_world();
+    ta::hello_world();
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -33,10 +33,10 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
         
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
-        auto* scene = new qta::Scene{ window };
-        auto* overlay = new qta::TextItemOverlay(window);
+        auto* scene = new ta::Scene{ window };
+        auto* overlay = new ta::TextItemOverlay(window);
         
-        QObject::connect(scene, &qta::Scene::textChanged, [overlay](QSharedPointer<qta::TextItem> textItem)
+        QObject::connect(scene, &ta::Scene::textChanged, [overlay](QSharedPointer<ta::TextItem> textItem)
             {
                 const auto text = textItem->text();
                 qDebug() << "Text changed: " << text;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
                 }
             }
         );
-        QObject::connect(scene, &qta::Scene::textItemInvalidated, [](QSharedPointer<qta::TextItem> textItem)
+        QObject::connect(scene, &ta::Scene::textItemInvalidated, [](QSharedPointer<ta::TextItem> textItem)
             {
                 Q_UNUSED(textItem);
                 qDebug() << "Text item invalidated";

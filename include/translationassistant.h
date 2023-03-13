@@ -3,7 +3,7 @@
 #include "scene.h"
 #include "textitemoverlay.h"
 
-namespace qta
+namespace ta
 {
 
 void hello_world();

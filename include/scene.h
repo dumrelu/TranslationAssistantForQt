@@ -11,7 +11,7 @@
 #include "textitem.h"
 #include "textitemhandler.h"
 
-namespace qta
+namespace ta
 {
 
 class SceneHooks;

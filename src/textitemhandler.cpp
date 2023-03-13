@@ -1,6 +1,6 @@
 #include "textitemhandler.h"
 
-namespace qta
+namespace ta
 {
 
 class TextPropertyTextItem : public TextItem

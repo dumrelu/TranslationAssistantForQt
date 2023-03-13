@@ -6,7 +6,7 @@
 
 #include "textitem.h"
 
-namespace qta
+namespace ta
 {
 
 /// @brief Draws overlays for one or more TextItems

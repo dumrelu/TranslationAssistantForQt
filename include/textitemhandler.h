@@ -4,7 +4,7 @@
 
 #include "textitem.h"
 
-namespace qta
+namespace ta
 {
 
 /// @brief Interface for creating TextItems from QQuickItems

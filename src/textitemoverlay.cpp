@@ -4,7 +4,7 @@
 
 #include <limits>
 
-namespace qta
+namespace ta
 {
 
 TextItemOverlay::TextItemOverlay(QQuickWindow *window)
