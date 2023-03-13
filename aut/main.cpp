@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    QStringList uiLanguages = QLocale::system().uiLanguages();
+    uiLanguages.push_back("ro_RO");
     for (const QString &locale : uiLanguages) {
         const QString baseName = "ApplicationUnderTest_" + QLocale(locale).name();
         if (translator.load(":/i18n/" + baseName)) {
