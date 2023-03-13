@@ -15,15 +15,25 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
+    // QTranslator translator;
+    // QStringList uiLanguages = QLocale::system().uiLanguages();
+    // for (const QString &locale : uiLanguages) {
+    //     const QString baseName = "ApplicationUnderTest_" + QLocale(locale).name();
+    //     if (translator.load(":/i18n/" + baseName)) {
+    //         app.installTranslator(&translator);
+    //         break;
+    //     }
+    // }
+
     QTranslator translator;
-    QStringList uiLanguages = QLocale::system().uiLanguages();
-    uiLanguages.push_back("ro_RO");
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "ApplicationUnderTest_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            app.installTranslator(&translator);
-            break;
-        }
+    if(translator.load(QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"))
+    {
+        app.installTranslator(&translator);
+    }
+    else
+    {
+        qDebug() << "Could not load translations";
+        return 1;
     }
 
     QQmlApplicationEngine engine;

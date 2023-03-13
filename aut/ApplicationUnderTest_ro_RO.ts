@@ -11,7 +11,7 @@
     <message>
         <location filename="MyQmlType.qml" line="20"/>
         <source>Text2_changed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Text2_changed_translated</translation>
     </message>
 </context>
 <context>
