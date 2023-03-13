@@ -16,10 +16,15 @@
 </context>
 <context>
     <name>main</name>
-    <message>
+    <message numerus="yes">
         <location filename="main.qml" line="11"/>
         <source>Hello World</source>
-        <translation type="unfinished"></translation>
+        <comment>disambiguation</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
     <message>
         <location filename="main.qml" line="22"/>
