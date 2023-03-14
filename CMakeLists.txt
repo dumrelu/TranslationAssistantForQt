@@ -43,3 +43,5 @@ else()
 endif()
 
 add_subdirectory(aut)
+#TODO: command line option
+add_subdirectory(test)

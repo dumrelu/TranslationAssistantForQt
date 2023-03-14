@@ -1,5 +1,7 @@
 #include "translationfiles.h"
 
+#include <QDebug>
+
 namespace ta
 {
 
