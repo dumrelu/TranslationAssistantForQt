@@ -19,6 +19,7 @@ private slots:
     {
         QVERIFY(QFile::exists(m_executableDir + "/simple_file.ts"));
         QVERIFY(QFile::exists(m_executableDir + "/simple_file_bad_extention.notts"));
+        QVERIFY(QFile::exists(m_executableDir + "/bad_xml.ts"));
     }
 
     void testBadPath()
@@ -31,6 +32,16 @@ private slots:
     {
         ta::TranslationFiles tf;
         QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file_bad_extention.notts") == false);
+    }
+
+    void testBadXml()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/bad_xml.ts") == false);
+    }
+
+    void testSimpleXml()
+    {
     }
 
 private:
