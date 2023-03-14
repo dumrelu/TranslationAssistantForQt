@@ -15,3 +15,4 @@ target_link_libraries(translation_assistant_tests
     PRIVATE TranslationAssistant Qt${QT_VERSION_MAJOR}::Test)
 
 configure_file(files/simple_file.ts ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(files/simple_file.ts ${CMAKE_CURRENT_BINARY_DIR}/simple_file_bad_extention.notts COPYONLY)

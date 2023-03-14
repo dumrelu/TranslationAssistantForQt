@@ -2,6 +2,8 @@
 
 #include <QTest>
 
+#include "translationfiles.h"
+
 class TranslationFilesLoadTest : public QObject
 {
     Q_OBJECT
@@ -16,11 +18,19 @@ private slots:
     void initTestCase()
     {
         QVERIFY(QFile::exists(m_executableDir + "/simple_file.ts"));
+        QVERIFY(QFile::exists(m_executableDir + "/simple_file_bad_extention.notts"));
     }
 
-    void testHelloWorld()
+    void testBadPath()
     {
-        QVERIFY(false);
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile("/invalid/to/invalid/file.ts") == false);
+    }
+
+    void testFileWithNoTsExtention()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file_bad_extention.notts") == false);
     }
 
 private:
