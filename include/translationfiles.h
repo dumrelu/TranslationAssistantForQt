@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QDomDocument>
+#include <QDomElement>
 
 namespace ta
 {
@@ -17,6 +17,7 @@ public:
     bool loadTranslationFile(QString tsFilePath);
 
 private:
+    bool parseContext(QDomElement contextElement);
 };
 
 }

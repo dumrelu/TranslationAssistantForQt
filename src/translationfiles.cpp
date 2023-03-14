@@ -32,7 +32,36 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
     }
     xmlFile.close();
 
+    auto tsNodes = document.elementsByTagName("TS");
+    if(tsNodes.isEmpty())
+    {
+        qWarning() << "No <TS> node";
+        return false;
+    }
+
+    auto tsNode = tsNodes.at(0);
+    if(!tsNode.isElement())
+    {
+        return false;
+    }
+
+    auto contextNodes = tsNode.toElement().elementsByTagName("context");
+    for(auto i = 0; i < contextNodes.size(); ++i)
+    {
+        auto contextNode = contextNodes.at(i);
+        if(!contextNode.isElement())
+        {
+            //TODO: parseContext() but don't change internal state yet?
+            qDebug() << contextNode.toElement().tagName();
+        }
+    }
+
     return true;
+}
+
+bool TranslationFiles::parseContext(QDomElement contextElement)
+{
+    return false;
 }
 
 }
