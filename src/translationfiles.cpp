@@ -49,20 +49,39 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
     for(auto i = 0; i < contextNodes.size(); ++i)
     {
         auto contextNode = contextNodes.at(i);
-        if(!contextNode.isElement())
+        if(contextNode.isElement())
         {
-            //TODO: parseContext() but don't change internal state yet?
-            qDebug() << contextNode.toElement().tagName();
+            parseContext(contextNode.toElement());
         }
     }
 
     return true;
 }
 
-bool TranslationFiles::parseContext(QDomElement contextElement)
+void TranslationFiles::parseContext(QDomElement contextElement)
 {
-    Q_UNUSED(contextElement);
-    return false;
+    auto getTextByTag = [](const QDomElement& message, QString tag)
+    {
+        auto elements = message.elementsByTagName(tag);
+        if(elements.isEmpty())
+        {
+            return QString{};
+        }
+        
+        return elements.at(0).toElement().text();
+    };
+
+    auto messageNodes = contextElement.elementsByTagName("message");
+    for(auto i = 0; i < messageNodes.size(); ++i)
+    {
+        auto messageNode = messageNodes.at(i);
+        if(messageNode.isElement())
+        {
+            auto messageElement = messageNode.toElement();
+            qDebug() << "source:" << getTextByTag(messageElement, "source");
+            qDebug() << "translation:" << getTextByTag(messageElement, "translation");
+        }
+    }
 }
 
 }

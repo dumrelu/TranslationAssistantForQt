@@ -17,7 +17,7 @@ public:
     bool loadTranslationFile(QString tsFilePath);
 
 private:
-    bool parseContext(QDomElement contextElement);
+    void parseContext(QDomElement contextElement);
 };
 
 }
