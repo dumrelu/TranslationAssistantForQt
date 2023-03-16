@@ -61,6 +61,7 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
 
 bool TranslationFiles::parseContext(QDomElement contextElement)
 {
+    Q_UNUSED(contextElement);
     return false;
 }
 
