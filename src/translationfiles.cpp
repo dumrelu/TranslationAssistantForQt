@@ -32,55 +32,47 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
     }
     xmlFile.close();
 
-    auto tsNodes = document.elementsByTagName("TS");
-    if(tsNodes.isEmpty())
+    auto tsNode = document.firstChildElement("TS");
+    if(tsNode.isNull())
     {
         qWarning() << "No <TS> node";
         return false;
     }
 
-    auto tsNode = tsNodes.at(0);
-    if(!tsNode.isElement())
+    auto contextNode = tsNode.firstChildElement("context");
+    while(!contextNode.isNull())
     {
-        return false;
-    }
-
-    auto contextNodes = tsNode.toElement().elementsByTagName("context");
-    for(auto i = 0; i < contextNodes.size(); ++i)
-    {
-        auto contextNode = contextNodes.at(i);
-        if(contextNode.isElement())
-        {
-            parseContext(contextNode.toElement());
-        }
+        parseContext(contextNode);
+        contextNode = contextNode.nextSiblingElement("context");
     }
 
     return true;
 }
 
-void TranslationFiles::parseContext(QDomElement contextElement)
+void TranslationFiles::parseContext(QDomElement contextNode)
 {
-    auto getTextByTag = [](const QDomElement& message, QString tag)
+    auto nameNode = contextNode.firstChildElement("name");
+    if(!nameNode.isNull())
     {
-        auto elements = message.elementsByTagName(tag);
-        if(elements.isEmpty())
-        {
-            return QString{};
-        }
-        
-        return elements.at(0).toElement().text();
-    };
+        qDebug() << "contextName: " << nameNode.text();
+    }
 
-    auto messageNodes = contextElement.elementsByTagName("message");
-    for(auto i = 0; i < messageNodes.size(); ++i)
+    for(auto messageNode = contextNode.firstChildElement("message"); 
+        !messageNode.isNull(); 
+        messageNode = messageNode.nextSiblingElement("message")
+    )
     {
-        auto messageNode = messageNodes.at(i);
-        if(messageNode.isElement())
+        auto source = messageNode.firstChildElement("source").text();
+        auto translationNode = messageNode.firstChildElement("translation");
+        if(translationNode.childNodes().size() > 1)
         {
-            auto messageElement = messageNode.toElement();
-            qDebug() << "source:" << getTextByTag(messageElement, "source");
-            qDebug() << "translation:" << getTextByTag(messageElement, "translation");
+            //TODO: multiple translations
+            qWarning() << "Multiple translations not supported yet";
         }
+        auto translation = translationNode.text();
+        auto translationType = translationNode.attribute("type");
+
+        qDebug() << source << translation << translationType;
     }
 }
 
