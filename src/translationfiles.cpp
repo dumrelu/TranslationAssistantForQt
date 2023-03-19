@@ -42,14 +42,20 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
     auto contextNode = tsNode.firstChildElement("context");
     while(!contextNode.isNull())
     {
-        parseContext(contextNode);
+        parseContext(contextNode, tsFilePath);
         contextNode = contextNode.nextSiblingElement("context");
     }
 
     return true;
 }
 
-void TranslationFiles::parseContext(QDomElement contextNode)
+void TranslationFiles::addTranslation(TranslationData translationData)
+{
+    Q_UNUSED(translationData);
+    //TODO: generate an ID if .id == INVALID
+}
+
+void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
 {
     auto nameNode = contextNode.firstChildElement("name");
     if(!nameNode.isNull())
@@ -73,7 +79,7 @@ void TranslationFiles::parseContext(QDomElement contextNode)
         auto translation = translationNode.text();
         auto translationType = translationNode.attribute("type");
 
-        qDebug() << source << translation << translationType;
+        qDebug() << source << translation << translationType << tsFilePath;
     }
 }
 
