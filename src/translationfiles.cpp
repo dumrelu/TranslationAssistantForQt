@@ -68,6 +68,7 @@ void TranslationFiles::parseContext(QDomElement contextNode)
         {
             //TODO: multiple translations
             qWarning() << "Multiple translations not supported yet";
+            continue;
         }
         auto translation = translationNode.text();
         auto translationType = translationNode.attribute("type");
