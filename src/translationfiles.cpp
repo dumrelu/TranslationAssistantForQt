@@ -51,24 +51,54 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
 
 void TranslationFiles::addTranslation(TranslationData translationData)
 {
-    Q_UNUSED(translationData);
-    //TODO: generate an ID if .id == INVALID
+    Q_ASSERT(!translationData.context.isEmpty());
+    Q_ASSERT(!translationData.source.isEmpty());
+
+    if(translationData.id == INVALID_ID)
+    {
+        translationData.id = m_translationIDCounter++;
+    }
+    else
+    {
+        //TODO: handle reinsertions(which may be used when commiting pending changes)
+        qDebug() << __PRETTY_FUNCTION__ << "TODO: readding the same translation";
+    }
+
+    translationData.hasMarkers = translationData.source.contains("%");
+
+    if(translationData.hasMarkers)
+    {
+        m_translationsWithMarkers.insert(translationData.id);
+    }
+    m_translationsBySourceText.insert(translationBySourceTextKey(translationData), translationData.id);
+    if(!translationData.translation.isEmpty())
+    {
+        m_translationsByTranslatedText.insert(translationByTranslatedTextKey(translationData), translationData.id);
+    }
+    m_translations.insert(translationData.id, std::move(translationData));
+}
+
+QString TranslationFiles::translationBySourceTextKey(const TranslationData& translationData) const
+{
+    return translationData.context + translationData.source;
+}
+
+QString TranslationFiles::translationByTranslatedTextKey(const TranslationData& translationData) const
+{
+    return translationData.context + translationData.translation;
 }
 
 void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
 {
-    auto nameNode = contextNode.firstChildElement("name");
-    if(!nameNode.isNull())
-    {
-        qDebug() << "contextName: " << nameNode.text();
-    }
+    QString context = contextNode.firstChildElement("name").text();
 
     for(auto messageNode = contextNode.firstChildElement("message"); 
         !messageNode.isNull(); 
         messageNode = messageNode.nextSiblingElement("message")
     )
     {
-        auto source = messageNode.firstChildElement("source").text();
+        TranslationData translationData;
+
         auto translationNode = messageNode.firstChildElement("translation");
         if(translationNode.childNodes().size() > 1)
         {
@@ -76,11 +106,47 @@ void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
             qWarning() << "Multiple translations not supported yet";
             continue;
         }
-        auto translation = translationNode.text();
-        auto translationType = translationNode.attribute("type");
 
-        qDebug() << source << translation << translationType << tsFilePath;
+        translationData.context = context;
+        translationData.tsFilePath = tsFilePath;
+        translationData.source = messageNode.firstChildElement("source").text();
+        translationData.translation = translationNode.text();
+        translationData.translationType = translationNode.attribute("type");
+
+        addTranslation(std::move(translationData));
     }
+}
+
+QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
+{
+    debug << "{";
+
+    debug << "\"translations\": [";
+    bool first = true;
+    for(const auto& translationData : translationFiles.m_translations)
+    {
+        if(first)
+        {
+            debug << "{";
+            first = false;
+        }
+        else
+        {
+            debug << ",{";
+        }
+        debug << "\"context\":" << translationData.context;
+        debug << ",\"tsFilePath\":" << translationData.tsFilePath;
+        debug << ",\"source\":" << translationData.source;
+        debug << ",\"translation\":" << translationData.translation;
+        debug << ",\"translationType\":" << translationData.translationType;
+        debug << "}";
+    }
+    debug << "]";
+
+    //TODO: other data
+
+    debug << "}";
+    return debug;
 }
 
 }

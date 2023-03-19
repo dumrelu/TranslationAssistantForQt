@@ -44,6 +44,7 @@ private slots:
     {
         ta::TranslationFiles tf;
         QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts") == true);
+        qDebug() << tf;
     }
 
 private:
