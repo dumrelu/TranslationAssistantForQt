@@ -6,7 +6,7 @@
     <message>
         <location filename="MyQmlType.qml" line="13"/>
         <source>Text2</source>
-        <translation type="unfinished"></translation>
+        <translation>Text2_translated</translation>
     </message>
     <message>
         <location filename="MyQmlType.qml" line="20"/>
