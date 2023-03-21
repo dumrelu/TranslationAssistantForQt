@@ -6,6 +6,8 @@
 #include <QHash>
 #include <QSet>
 
+#include <optional>
+
 namespace ta
 {
 
@@ -16,21 +18,7 @@ public:
     using TranslationID = int;
     static constexpr TranslationID INVALID_ID = -1;
 
-    /// @brief Loads the given .ts file
-    /// @param tsFilePath A path to an existing .ts file
-    /// @return true if file was loaded
-    bool loadTranslationFile(QString tsFilePath);
-
-    /// @brief Finds all the potentially relevant translations for the given input text
-    /// @param text 
-    /// @param context If no context provided, search through all translations
-    /// @return 
-    QList<TranslationID> findTranslations(QString text, QString context = {});
-
-    /// @brief Print debug information about the current state of the class 
-    friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
-
-private:
+    /// @brief Represents a single entry from a .ts file
     struct TranslationData
     {
         TranslationID id = INVALID_ID;
@@ -41,6 +29,27 @@ private:
         QString translationType;
         bool hasMarkers = false;
     };
+
+    /// @brief Loads the given .ts file
+    /// @param tsFilePath A path to an existing .ts file
+    /// @return true if file was loaded
+    bool loadTranslationFile(QString tsFilePath);
+
+    /// @brief Finds all the potentially relevant translations for the given input text
+    /// @param text 
+    /// @param context If no context provided, search through all translations
+    /// @return Empty list if no matches
+    QList<TranslationID> findTranslations(QString text, QString context = {});
+
+    /// @brief Returns the TranslationData for the given id(if any)
+    /// @param id 
+    /// @return 
+    std::optional<TranslationData> translationData(TranslationID id) const;
+
+    /// @brief Print debug information about the current state of the class 
+    friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
+
+private:
 
     void addTranslation(TranslationData translationData);
     QString translationBySourceTextKey(const TranslationData& translationData) const;

@@ -55,6 +55,18 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
     Q_UNUSED(text);
     Q_UNUSED(context);
 
+    //TODO: check pending translations first?
+
+    return {};
+}
+
+std::optional<TranslationFiles::TranslationData> TranslationFiles::translationData(TranslationID id) const
+{
+    auto it = m_translations.find(id);
+    if(it != m_translations.end())
+    {
+        return *it;
+    }
     return {};
 }
 
