@@ -56,6 +56,7 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
     Q_UNUSED(context);
 
     //TODO: check pending translations first?
+    //TODO: use text.contains(translationData.source/translation)
 
     return {};
 }
