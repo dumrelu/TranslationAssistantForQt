@@ -62,7 +62,7 @@ private:
 
     // Translations changed by the user that haven't been yet written to the 
     //original .ts file
-    QList<TranslationData> m_pendingChanges;
+    QHash<TranslationID, TranslationData> m_pendingChanges;
 };
 
 }

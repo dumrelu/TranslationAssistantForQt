@@ -62,6 +62,12 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
 
 std::optional<TranslationFiles::TranslationData> TranslationFiles::translationData(TranslationID id) const
 {
+    auto pendingIt = m_pendingChanges.find(id);
+    if(pendingIt != m_pendingChanges.end())
+    {
+        return *pendingIt;
+    }
+
     auto it = m_translations.find(id);
     if(it != m_translations.end())
     {
