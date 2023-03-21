@@ -50,7 +50,6 @@ public:
     friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
 
 private:
-
     void addTranslation(TranslationData translationData);
     void parseContext(QDomElement contextNode, QString tsFilePath);
 
