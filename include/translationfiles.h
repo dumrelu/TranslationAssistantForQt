@@ -52,8 +52,6 @@ public:
 private:
 
     void addTranslation(TranslationData translationData);
-    QString translationBySourceTextKey(const TranslationData& translationData) const;
-    QString translationByTranslatedTextKey(const TranslationData& translationData) const;
     void parseContext(QDomElement contextNode, QString tsFilePath);
 
     TranslationID m_translationIDCounter = 0;

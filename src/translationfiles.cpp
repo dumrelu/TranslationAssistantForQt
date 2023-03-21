@@ -91,16 +91,6 @@ void TranslationFiles::addTranslation(TranslationData translationData)
     m_translations.insert(translationData.id, std::move(translationData));
 }
 
-QString TranslationFiles::translationBySourceTextKey(const TranslationData& translationData) const
-{
-    return translationData.context + translationData.source;
-}
-
-QString TranslationFiles::translationByTranslatedTextKey(const TranslationData& translationData) const
-{
-    return translationData.context + translationData.translation;
-}
-
 void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
 {
     QString context = contextNode.firstChildElement("name").text();
