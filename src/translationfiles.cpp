@@ -49,6 +49,15 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
     return true;
 }
 
+// TODO: Currently using a basic unoptimized implementation. Will need to address in the future
+QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QString text, QString context)
+{
+    Q_UNUSED(text);
+    Q_UNUSED(context);
+
+    return {};
+}
+
 void TranslationFiles::addTranslation(TranslationData translationData)
 {
     Q_ASSERT(!translationData.context.isEmpty());
@@ -66,6 +75,7 @@ void TranslationFiles::addTranslation(TranslationData translationData)
 
     translationData.hasMarkers = translationData.source.contains("%");
 
+    m_translationsByContext[translationData.context].push_back(translationData.id);
     m_translations.insert(translationData.id, std::move(translationData));
 }
 

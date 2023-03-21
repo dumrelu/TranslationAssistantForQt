@@ -21,6 +21,12 @@ public:
     /// @return true if file was loaded
     bool loadTranslationFile(QString tsFilePath);
 
+    /// @brief Finds all the potentially relevant translations for the given input text
+    /// @param text 
+    /// @param context If no context provided, search through all translations
+    /// @return 
+    QList<TranslationID> findTranslations(QString text, QString context = {});
+
     /// @brief Print debug information about the current state of the class 
     friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
 
@@ -43,6 +49,9 @@ private:
 
     TranslationID m_translationIDCounter = 0;
     QHash<TranslationID, TranslationData> m_translations;
+
+    // Data structures for optimization
+    QHash<QString /*context*/, QList<TranslationID>> m_translationsByContext; 
 
     // Translations changed by the user that haven't been yet written to the 
     //original .ts file
