@@ -8,11 +8,11 @@
 
 #include "translationfiles.h"
 
-class TranslationFilesLoadTest : public QObject
+class TranslationFilesTest : public QObject
 {
     Q_OBJECT
 public:
-    TranslationFilesLoadTest(QString executableDir)
+    TranslationFilesTest(QString executableDir)
         : m_executableDir{ std::move(executableDir) }
     {
         qDebug() << "Executable dir" << m_executableDir;

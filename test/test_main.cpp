@@ -1,4 +1,4 @@
-#include "TranslationFilesLoadTest.h"
+#include "TranslationFilesTest.h"
 
 #include <QFile>
 
@@ -21,5 +21,5 @@ int main(int argc, char* argv[])
     QFileInfo fileInfo{ QString{ argv[0] } };
     QString executableDir = fileInfo.absoluteDir().absolutePath();
 
-    execute_test<TranslationFilesLoadTest>(argc, argv, executableDir); 
+    execute_test<TranslationFilesTest>(argc, argv, executableDir); 
 }
