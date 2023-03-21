@@ -43,11 +43,6 @@ private:
 
     TranslationID m_translationIDCounter = 0;
     QHash<TranslationID, TranslationData> m_translations;
-    
-    // Data structures to speed up lookups
-    QSet<TranslationID> m_translationsWithMarkers;
-    QHash<QString/*context + source*/, TranslationID> m_translationsBySourceText;
-    QHash<QString/*context + translation*/, TranslationID> m_translationsByTranslatedText;
 
     // Translations changed by the user that haven't been yet written to the 
     //original .ts file

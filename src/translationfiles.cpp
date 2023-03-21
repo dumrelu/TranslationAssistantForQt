@@ -66,15 +66,6 @@ void TranslationFiles::addTranslation(TranslationData translationData)
 
     translationData.hasMarkers = translationData.source.contains("%");
 
-    if(translationData.hasMarkers)
-    {
-        m_translationsWithMarkers.insert(translationData.id);
-    }
-    m_translationsBySourceText.insert(translationBySourceTextKey(translationData), translationData.id);
-    if(!translationData.translation.isEmpty())
-    {
-        m_translationsByTranslatedText.insert(translationByTranslatedTextKey(translationData), translationData.id);
-    }
     m_translations.insert(translationData.id, std::move(translationData));
 }
 
@@ -142,8 +133,6 @@ QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
         debug << "}";
     }
     debug << "]";
-
-    //TODO: other data
 
     debug << "}";
     return debug;
