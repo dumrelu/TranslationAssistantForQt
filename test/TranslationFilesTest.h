@@ -81,6 +81,19 @@ private slots:
         QCOMPARE(obj4["translationType"].toString(), "unfinished");
     }
 
+    void testTranslationData()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts") == true);
+
+        auto validTranslationData = tf.translationData(0);
+        QVERIFY(validTranslationData);
+        QCOMPARE(validTranslationData->source, "Text2");
+
+        auto invalidTranslationData = tf.translationData(999);
+        QVERIFY(!invalidTranslationData);
+    }
+
 private:
     QJsonObject getState(const ta::TranslationFiles& tf)
     {
