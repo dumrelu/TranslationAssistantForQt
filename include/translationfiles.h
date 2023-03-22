@@ -52,6 +52,9 @@ public:
 private:
     void addTranslation(TranslationData translationData);
     void parseContext(QDomElement contextNode, QString tsFilePath);
+    bool isMatch(const TranslationData& translationData, const QString& text) const;
+    bool isMatch(const QString& translation, const QString& text) const;
+    QStringList splitMarkerString(const QString& markerString) const;
 
     TranslationID m_translationIDCounter = 0;
     QHash<TranslationID, TranslationData> m_translations;

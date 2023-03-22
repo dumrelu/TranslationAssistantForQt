@@ -6,6 +6,9 @@
 #include <QDomNode>
 #include <QFile>
 
+#include <algorithm>
+#include <cctype>
+
 namespace ta
 {
 
@@ -125,6 +128,65 @@ void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
 
         addTranslation(std::move(translationData));
     }
+}
+
+bool TranslationFiles::isMatch(const TranslationData& translationData, const QString& text) const
+{
+    if(translationData.hasMarkers)
+    {
+        auto allSubstringsMatch = [&text, this](const QStringList& subStrings)
+        {
+            return std::all_of(
+                subStrings.cbegin(), subStrings.cend(), 
+                [&text, this](const QString& subString)
+                {
+                    return isMatch(subString, text);
+                }
+            );
+        };
+
+        return allSubstringsMatch(splitMarkerString(translationData.source))
+            || allSubstringsMatch(splitMarkerString(translationData.translation));
+    }
+    else
+    {
+        return isMatch(translationData.source, text) || isMatch(translationData.translation, text); 
+    }
+}
+
+bool TranslationFiles::isMatch(const QString& translation, const QString& text) const
+{
+    return text.contains(translation);
+}
+
+QStringList TranslationFiles::splitMarkerString(const QString& markerString) const
+{
+    auto subStrings = markerString.split("%", Qt::SkipEmptyParts);
+    Q_ASSERT(subStrings.size() > 0);
+
+    // Markers are defined via %DD(D is a digit, e.g. %99)
+    // Remove the trailing digits after the "%" and the white space
+    for(auto& subString : subStrings)
+    {
+        for(auto i = 0; i < subString.size(); ++i)
+        {
+            if(!subString[i].isDigit())
+            {
+                if(i > 0)
+                {
+                    subString = subString.remove(0, i);
+                }
+
+                break;
+            }
+        }
+
+        subString = subString.trimmed();
+    }
+
+    subStrings.removeAll({});
+
+    return subStrings;
 }
 
 QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
