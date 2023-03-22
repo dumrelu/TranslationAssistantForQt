@@ -55,10 +55,12 @@ bool TranslationFiles::loadTranslationFile(QString tsFilePath)
 // TODO: Currently using a basic unoptimized implementation. Will need to address in the future
 QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QString text, QString context)
 {
-    Q_UNUSED(text);
-    Q_UNUSED(context);
-
     QList<TranslationID> matches;
+
+    if(text.isEmpty())
+    {
+        return matches;
+    }
 
     for(const auto& translationData : m_pendingChanges)
     {
@@ -161,6 +163,11 @@ bool TranslationFiles::isMatch(const TranslationData& translationData, const QSt
     {
         auto allSubstringsMatch = [&text, this](const QStringList& subStrings)
         {
+            if(subStrings.isEmpty())
+            {
+                return false;
+            }
+            
             return std::all_of(
                 subStrings.cbegin(), subStrings.cend(), 
                 [&text, this](const QString& subString)
@@ -181,7 +188,7 @@ bool TranslationFiles::isMatch(const TranslationData& translationData, const QSt
 
 bool TranslationFiles::isMatch(const QString& translation, const QString& text) const
 {
-    return text.contains(translation);
+    return !translation.isEmpty() && text.contains(translation);
 }
 
 QStringList TranslationFiles::splitMarkerString(const QString& markerString) const

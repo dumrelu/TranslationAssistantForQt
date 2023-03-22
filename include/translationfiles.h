@@ -36,7 +36,7 @@ public:
     bool loadTranslationFile(QString tsFilePath);
 
     /// @brief Finds all the potentially relevant translations for the given input text
-    /// @param text 
+    /// @param text Text from the source or translated string
     /// @param context If no context provided, search through all translations
     /// @return Empty list if no matches
     QList<TranslationID> findTranslations(QString text, QString context = {});

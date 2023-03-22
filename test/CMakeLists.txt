@@ -17,3 +17,4 @@ target_link_libraries(translation_assistant_tests
 configure_file(files/simple_file.ts ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(files/simple_file.ts ${CMAKE_CURRENT_BINARY_DIR}/simple_file_bad_extention.notts COPYONLY)
 configure_file(files/bad_xml.ts ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(files/find_test.ts ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)

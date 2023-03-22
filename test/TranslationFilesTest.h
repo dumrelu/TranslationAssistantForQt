@@ -24,6 +24,7 @@ private slots:
         QVERIFY(QFile::exists(m_executableDir + "/simple_file.ts"));
         QVERIFY(QFile::exists(m_executableDir + "/simple_file_bad_extention.notts"));
         QVERIFY(QFile::exists(m_executableDir + "/bad_xml.ts"));
+        QVERIFY(QFile::exists(m_executableDir + "/find_test.ts"));
     }
 
     void testBadPath()
@@ -47,7 +48,7 @@ private slots:
     void testSimpleXml()
     {
         ta::TranslationFiles tf;
-        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts") == true);
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts"));
         
         auto state = getState(tf);
         QVERIFY(state.contains("translations"));
@@ -84,7 +85,7 @@ private slots:
     void testTranslationData()
     {
         ta::TranslationFiles tf;
-        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts") == true);
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts"));
 
         auto validTranslationData = tf.translationData(0);
         QVERIFY(validTranslationData);
@@ -92,6 +93,23 @@ private slots:
 
         auto invalidTranslationData = tf.translationData(999);
         QVERIFY(!invalidTranslationData);
+    }
+
+    // TODO: different contexts, partial matches test, markers test
+    void testFindTranslationsSimple()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
+
+        // Find by source text
+        auto matchesBySource = tf.findTranslations("FirstSimpleText");
+        QCOMPARE(matchesBySource.size(), 1);
+        QCOMPARE(tf.translationData(matchesBySource[0])->source, "FirstSimpleText");
+
+        // Find by translated text
+        auto matchesByTranslation = tf.findTranslations("SecondSimpleTranslation");
+        QCOMPARE(matchesByTranslation.size(), 1);
+        QCOMPARE(tf.translationData(matchesByTranslation[0])->translation, "SecondSimpleTranslation");
     }
 
 private:
