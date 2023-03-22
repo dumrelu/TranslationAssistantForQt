@@ -58,10 +58,30 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
     Q_UNUSED(text);
     Q_UNUSED(context);
 
-    //TODO: check pending translations first?
-    //TODO: use text.contains(translationData.source/translation)
+    QList<TranslationID> matches;
 
-    return {};
+    for(const auto& translationData : m_pendingChanges)
+    {
+        if(isMatch(translationData, text, context))
+        {
+            matches.push_back(translationData.id);
+        }
+    }
+
+    for(const auto& translationData : m_translations)
+    {
+        if(m_pendingChanges.contains(translationData.id))
+        {
+            continue;
+        }
+
+        if(isMatch(translationData, text, context))
+        {
+            matches.push_back(translationData.id);
+        }
+    }
+
+    return matches;
 }
 
 std::optional<TranslationFiles::TranslationData> TranslationFiles::translationData(TranslationID id) const
@@ -130,8 +150,13 @@ void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
     }
 }
 
-bool TranslationFiles::isMatch(const TranslationData& translationData, const QString& text) const
+bool TranslationFiles::isMatch(const TranslationData& translationData, const QString& text, const QString& context) const
 {
+    if(!context.isEmpty() && translationData.context != context)
+    {
+        return false;
+    }
+
     if(translationData.hasMarkers)
     {
         auto allSubstringsMatch = [&text, this](const QStringList& subStrings)
