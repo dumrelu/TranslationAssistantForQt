@@ -160,8 +160,10 @@ private slots:
         ta::TranslationFiles tf;
         QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
 
-        //TODO
-        QVERIFY(false);
+        auto results = tf.findTranslations("Source with something something and other other other markers", "Simple");
+        QCOMPARE(1, results.size());
+        QCOMPARE(tf.translationData(results[0])->hasMarkers, true);
+        QCOMPARE(tf.translationData(results[0])->source, "Source with %1 and %2 markers");
     }
 
 private:

@@ -12,6 +12,10 @@
         <source>SecondSimpleText</source>
         <translation>SecondSimpleTranslation</translation>
     </message>
+    <message>
+        <source>Source with %1 and %2 markers</source>
+        <translation>Translation with %1 and %2 markers</translation>
+    </message>
 </context>
 <context>
     <name>Simple2</name>
