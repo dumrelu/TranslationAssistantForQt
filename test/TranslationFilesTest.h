@@ -95,7 +95,6 @@ private slots:
         QVERIFY(!invalidTranslationData);
     }
 
-    // TODO: markers test
     void testFindTranslationsSimple()
     {
         ta::TranslationFiles tf;
@@ -154,6 +153,15 @@ private slots:
         QVERIFY(tf.translationData(results[0])->source == "FirstSimpleText" || tf.translationData(results[0])->source == "SecondSimpleText");
         QVERIFY(tf.translationData(results[1])->source == "FirstSimpleText" || tf.translationData(results[1])->source == "SecondSimpleText");
         QVERIFY(tf.translationData(results[0])->source != tf.translationData(results[1])->source);
+    }
+
+    void testMarkers()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
+
+        //TODO
+        QVERIFY(false);
     }
 
 private:
