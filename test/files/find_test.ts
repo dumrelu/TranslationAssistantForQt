@@ -14,11 +14,11 @@
     </message>
 </context>
 <context>
-    <name>main</name>
+    <name>Simple2</name>
     <message>
-        <location filename="main.qml" line="22"/>
-        <source>Text1</source>
-        <translation type="unfinished"></translation>
+        <location filename="MyQmlType.qml" line="13"/>
+        <source>FirstSimpleText</source>
+        <translation>Simple2ContextFirstSimpleTextTranslation</translation>
     </message>
 </context>
 </TS>

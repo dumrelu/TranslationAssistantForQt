@@ -95,21 +95,45 @@ private slots:
         QVERIFY(!invalidTranslationData);
     }
 
-    // TODO: different contexts, partial matches test, markers test
+    // TODO: partial matches test, markers test
     void testFindTranslationsSimple()
     {
         ta::TranslationFiles tf;
         QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
 
         // Find by source text
-        auto matchesBySource = tf.findTranslations("FirstSimpleText");
+        auto matchesBySource = tf.findTranslations("FirstSimpleText", "Simple");
         QCOMPARE(matchesBySource.size(), 1);
         QCOMPARE(tf.translationData(matchesBySource[0])->source, "FirstSimpleText");
 
         // Find by translated text
-        auto matchesByTranslation = tf.findTranslations("SecondSimpleTranslation");
+        auto matchesByTranslation = tf.findTranslations("SecondSimpleTranslation", "Simple");
         QCOMPARE(matchesByTranslation.size(), 1);
         QCOMPARE(tf.translationData(matchesByTranslation[0])->translation, "SecondSimpleTranslation");
+    }
+
+    void testDifferentContext()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
+
+        auto results = tf.findTranslations("FirstSimpleText", "Simple");
+        QCOMPARE(results.size(), 1);
+        QCOMPARE("FirstSimpleText", tf.translationData(results[0])->source);
+        QCOMPARE("FirstSimpleTranslation", tf.translationData(results[0])->translation);
+        QCOMPARE("Simple", tf.translationData(results[0])->context);
+
+        results = tf.findTranslations("FirstSimpleText", "Simple2");
+        QCOMPARE(results.size(), 1);
+        QCOMPARE("FirstSimpleText", tf.translationData(results[0])->source);
+        QCOMPARE("Simple2ContextFirstSimpleTextTranslation", tf.translationData(results[0])->translation);
+        QCOMPARE("Simple2", tf.translationData(results[0])->context);
+
+        results = tf.findTranslations("FirstSimpleText");
+        QCOMPARE(results.size(), 2);
+        QVERIFY(tf.translationData(results[0])->context == "Simple" || tf.translationData(results[0])->context == "Simple2");
+        QVERIFY(tf.translationData(results[1])->context == "Simple" || tf.translationData(results[1])->context == "Simple2");
+        QVERIFY(tf.translationData(results[0])->context != tf.translationData(results[1])->context);
     }
 
 private:
