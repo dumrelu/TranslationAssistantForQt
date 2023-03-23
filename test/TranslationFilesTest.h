@@ -95,7 +95,7 @@ private slots:
         QVERIFY(!invalidTranslationData);
     }
 
-    // TODO: partial matches test, markers test
+    // TODO: markers test
     void testFindTranslationsSimple()
     {
         ta::TranslationFiles tf;
@@ -134,6 +134,26 @@ private slots:
         QVERIFY(tf.translationData(results[0])->context == "Simple" || tf.translationData(results[0])->context == "Simple2");
         QVERIFY(tf.translationData(results[1])->context == "Simple" || tf.translationData(results[1])->context == "Simple2");
         QVERIFY(tf.translationData(results[0])->context != tf.translationData(results[1])->context);
+    }
+
+    void testPartialMatches()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/find_test.ts"));
+
+        auto results = tf.findTranslations("FirstSimpleText trailing text", "Simple");
+        QCOMPARE(results.size(), 1);
+        QVERIFY(tf.translationData(results[0])->source == "FirstSimpleText");
+
+        results = tf.findTranslations("text in front FirstSimpleText", "Simple");
+        QCOMPARE(results.size(), 1);
+        QVERIFY(tf.translationData(results[0])->source == "FirstSimpleText");
+
+        results = tf.findTranslations("FirstSimpleText and SecondSimpleText", "Simple");
+        QCOMPARE(results.size(), 2);
+        QVERIFY(tf.translationData(results[0])->source == "FirstSimpleText" || tf.translationData(results[0])->source == "SecondSimpleText");
+        QVERIFY(tf.translationData(results[1])->source == "FirstSimpleText" || tf.translationData(results[1])->source == "SecondSimpleText");
+        QVERIFY(tf.translationData(results[0])->source != tf.translationData(results[1])->source);
     }
 
 private:
