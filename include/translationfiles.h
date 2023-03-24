@@ -28,6 +28,7 @@ public:
         QString translation;
         QString translationType;
         bool hasMarkers = false;
+        bool isPending = false;
     };
 
     /// @brief Loads the given .ts file
@@ -40,6 +41,16 @@ public:
     /// @param context If no context provided, search through all translations
     /// @return Empty list if no matches
     QList<TranslationID> findTranslations(QString text, QString context = {});
+
+    /// @brief Update the translation for the given translation id
+    /// @param id 
+    /// @param translation 
+    /// @return 
+    /**
+     *  Note: Use the commit() method to write the translations to
+     * the .ts file.
+    */
+    bool translate(TranslationID id, QString translation);
 
     /// @brief Returns the TranslationData for the given id(if any)
     /// @param id 
@@ -64,7 +75,7 @@ private:
 
     // Translations changed by the user that haven't been yet written to the 
     //original .ts file
-    QHash<TranslationID, TranslationData> m_pendingChanges;
+    QHash<TranslationID, TranslationData> m_pendingTranslations;
 };
 
 }

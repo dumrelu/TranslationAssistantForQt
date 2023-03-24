@@ -62,7 +62,7 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
         return matches;
     }
 
-    for(const auto& translationData : m_pendingChanges)
+    for(const auto& translationData : m_pendingTranslations)
     {
         if(isMatch(translationData, text, context))
         {
@@ -72,7 +72,7 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
 
     for(const auto& translationData : m_translations)
     {
-        if(m_pendingChanges.contains(translationData.id))
+        if(m_pendingTranslations.contains(translationData.id))
         {
             continue;
         }
@@ -86,10 +86,32 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
     return matches;
 }
 
+bool TranslationFiles::translate(TranslationID id, QString translation)
+{
+    auto pendingIt = m_pendingTranslations.find(id);
+    if(pendingIt != m_pendingTranslations.end())
+    {
+        pendingIt->translation = translation;
+        return true;
+    }
+
+    auto translationIt = m_translations.find(id);
+    if(translationIt != m_translations.end())
+    {
+        auto pendingTranslation = *translationIt;
+        pendingTranslation.translation = translation;
+
+        m_pendingTranslations.insert(id, pendingTranslation);
+        return true;
+    }
+
+    return false;
+}
+
 std::optional<TranslationFiles::TranslationData> TranslationFiles::translationData(TranslationID id) const
 {
-    auto pendingIt = m_pendingChanges.find(id);
-    if(pendingIt != m_pendingChanges.end())
+    auto pendingIt = m_pendingTranslations.find(id);
+    if(pendingIt != m_pendingTranslations.end())
     {
         return *pendingIt;
     }
@@ -167,7 +189,7 @@ bool TranslationFiles::isMatch(const TranslationData& translationData, const QSt
             {
                 return false;
             }
-            
+
             return std::all_of(
                 subStrings.cbegin(), subStrings.cend(), 
                 [&text, this](const QString& subString)
