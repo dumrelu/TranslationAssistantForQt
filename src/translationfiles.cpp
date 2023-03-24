@@ -99,6 +99,7 @@ bool TranslationFiles::translate(TranslationID id, QString translation)
     if(translationIt != m_translations.end())
     {
         auto pendingTranslation = *translationIt;
+        pendingTranslation.isPending = true;
         pendingTranslation.translation = translation;
 
         m_pendingTranslations.insert(id, pendingTranslation);

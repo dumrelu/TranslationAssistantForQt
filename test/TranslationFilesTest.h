@@ -89,7 +89,6 @@ private slots:
 
         auto validTranslationData = tf.translationData(0);
         QVERIFY(validTranslationData);
-        QCOMPARE(validTranslationData->source, "Text2");
 
         auto invalidTranslationData = tf.translationData(999);
         QVERIFY(!invalidTranslationData);
@@ -164,6 +163,31 @@ private slots:
         QCOMPARE(1, results.size());
         QCOMPARE(tf.translationData(results[0])->hasMarkers, true);
         QCOMPARE(tf.translationData(results[0])->source, "Source with %1 and %2 markers");
+    }
+
+    void testTranslate()
+    {
+        ta::TranslationFiles tf;
+        QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts"));
+
+        QVERIFY(!tf.translate(-9999, ""));
+
+        auto results = tf.findTranslations("Text2", "MyQmlType");
+        QCOMPARE(results.size(), 1);
+        QCOMPARE(tf.translationData(results[0])->isPending, false);
+        QCOMPARE(tf.translationData(results[0])->source, "Text2");
+        QCOMPARE(tf.translationData(results[0])->translation, "Text2_translated");
+        
+        QVERIFY(tf.translate(results[0], "Text2_translated_but_changed"));
+        QCOMPARE(tf.translationData(results[0])->isPending, true);
+        QCOMPARE(tf.translationData(results[0])->source, "Text2");
+        QCOMPARE(tf.translationData(results[0])->translation, "Text2_translated_but_changed");
+
+        results = tf.findTranslations("Text2_translated_but_changed", "MyQmlType");
+        QCOMPARE(results.size(), 1);
+        QCOMPARE(tf.translationData(results[0])->isPending, true);
+        QCOMPARE(tf.translationData(results[0])->source, "Text2");
+        QCOMPARE(tf.translationData(results[0])->translation, "Text2_translated_but_changed");
     }
 
 private:
