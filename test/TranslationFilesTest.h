@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QSignalSpy>
 
 #include "translationfiles.h"
 
@@ -170,7 +171,10 @@ private slots:
         ta::TranslationFiles tf;
         QVERIFY(tf.loadTranslationFile(m_executableDir + "/simple_file.ts"));
 
+        QSignalSpy spy(&tf, &ta::TranslationFiles::translationDataChanged);
+
         QVERIFY(!tf.translate(-9999, ""));
+        QCOMPARE(spy.count(), 0);
 
         auto results = tf.findTranslations("Text2", "MyQmlType");
         QCOMPARE(results.size(), 1);
@@ -182,7 +186,12 @@ private slots:
         QCOMPARE(tf.translationData(results[0])->isPending, true);
         QCOMPARE(tf.translationData(results[0])->source, "Text2");
         QCOMPARE(tf.translationData(results[0])->translation, "Text2_translated_but_changed");
+        
+        // Verify that the translationDataChanged signal is emited
+        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.takeFirst().at(0).toInt(), results[0]);
 
+        // Verify translation is updated
         results = tf.findTranslations("Text2_translated_but_changed", "MyQmlType");
         QCOMPARE(results.size(), 1);
         QCOMPARE(tf.translationData(results[0])->isPending, true);

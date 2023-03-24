@@ -88,25 +88,26 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
 
 bool TranslationFiles::translate(TranslationID id, QString translation)
 {
-    auto pendingIt = m_pendingTranslations.find(id);
-    if(pendingIt != m_pendingTranslations.end())
+    if(auto pendingIt = m_pendingTranslations.find(id) ; pendingIt != m_pendingTranslations.end())
     {
         pendingIt->translation = translation;
-        return true;
     }
-
-    auto translationIt = m_translations.find(id);
-    if(translationIt != m_translations.end())
+    else if(auto translationIt = m_translations.find(id) ; translationIt != m_translations.end())
     {
         auto pendingTranslation = *translationIt;
         pendingTranslation.isPending = true;
         pendingTranslation.translation = translation;
 
         m_pendingTranslations.insert(id, pendingTranslation);
-        return true;
+    }
+    else
+    {
+        return false;
     }
 
-    return false;
+    emit translationDataChanged(id);
+    
+    return true;
 }
 
 std::optional<TranslationFiles::TranslationData> TranslationFiles::translationData(TranslationID id) const

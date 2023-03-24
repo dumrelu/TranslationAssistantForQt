@@ -60,6 +60,11 @@ public:
     /// @brief Print debug information about the current state of the class 
     friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
 
+signals:
+    /// @brief Emitted when any TranslationData changes(e.g. calling translate)
+    /// @param id 
+    void translationDataChanged(TranslationID id);
+
 private:
     void addTranslation(TranslationData translationData);
     void parseContext(QDomElement contextNode, QString tsFilePath);
