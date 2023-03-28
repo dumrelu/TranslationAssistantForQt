@@ -22,6 +22,7 @@ set(TRANSLATIONASSISTANT_SOURCES
     include/textitemhandler.h src/textitemhandler.cpp
     include/textitemoverlay.h src/textitemoverlay.cpp
     include/translationfiles.h src/translationfiles.cpp
+    include/pendingtranslator.h src/pendingtranslator.cpp
 )
 
 add_library(TranslationAssistant ${TRANSLATIONASSISTANT_SOURCES})
