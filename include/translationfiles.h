@@ -27,6 +27,7 @@ public:
         QString source;
         QString translation;
         QString translationType;
+        QString comment;
         bool hasMarkers = false;
         bool isPending = false;
     };

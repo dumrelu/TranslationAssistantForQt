@@ -63,6 +63,7 @@ private slots:
         QCOMPARE(obj1["tsFilePath"].toString(), m_executableDir + "/simple_file.ts");
         QCOMPARE(obj1["translation"].toString(), "Text2_translated");
         QCOMPARE(obj1["translationType"].toString(), "");
+        QCOMPARE(obj1["comment"].toString(), "disambiguation for Text2");
 
         auto obj2 = findTranslation(translations, "MyQmlType", "Text2_changed");
         QVERIFY(!obj2.isEmpty());

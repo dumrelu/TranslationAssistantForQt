@@ -106,7 +106,7 @@ bool TranslationFiles::translate(TranslationID id, QString translation)
     }
 
     emit translationDataChanged(id);
-    
+
     return true;
 }
 
@@ -171,6 +171,7 @@ void TranslationFiles::parseContext(QDomElement contextNode, QString tsFilePath)
         translationData.source = messageNode.firstChildElement("source").text();
         translationData.translation = translationNode.text();
         translationData.translationType = translationNode.attribute("type");
+        translationData.comment = messageNode.firstChildElement("comment").text();
 
         addTranslation(std::move(translationData));
     }
@@ -267,6 +268,7 @@ QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
         debug << ",\"source\":" << translationData.source;
         debug << ",\"translation\":" << translationData.translation;
         debug << ",\"translationType\":" << translationData.translationType;
+        debug << ",\"comment\":" << translationData.comment;
         debug << "}";
     }
     debug << "]";

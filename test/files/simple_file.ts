@@ -7,6 +7,7 @@
         <location filename="MyQmlType.qml" line="13"/>
         <source>Text2</source>
         <translation>Text2_translated</translation>
+        <comment>disambiguation for Text2</comment>
     </message>
     <message>
         <location filename="MyQmlType.qml" line="20"/>
