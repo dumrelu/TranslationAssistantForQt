@@ -187,6 +187,11 @@ private slots:
         QCOMPARE(tf.translationData(results[0])->isPending, true);
         QCOMPARE(tf.translationData(results[0])->source, "Text2");
         QCOMPARE(tf.translationData(results[0])->translation, "Text2_translated_but_changed");
+
+        auto pendingTranslations = tf.pendingTranslations();
+        QCOMPARE(pendingTranslations.size(), 1);
+        QCOMPARE(pendingTranslations[0].source, "Text2");
+        QCOMPARE(pendingTranslations[0].isPending, true);
         
         // Verify that the translationDataChanged signal is emited
         QCOMPARE(spy.count(), 1);

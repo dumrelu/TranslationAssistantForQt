@@ -126,6 +126,11 @@ std::optional<TranslationFiles::TranslationData> TranslationFiles::translationDa
     return {};
 }
 
+QList<TranslationFiles::TranslationData> TranslationFiles::pendingTranslations() const
+{
+    return m_pendingTranslations.values();
+}
+
 void TranslationFiles::addTranslation(TranslationData translationData)
 {
     Q_ASSERT(!translationData.context.isEmpty());

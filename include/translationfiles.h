@@ -58,6 +58,10 @@ public:
     /// @return 
     std::optional<TranslationData> translationData(TranslationID id) const;
 
+    /// @brief Returns a list of all the changed TranslationData
+    /// @return 
+    QList<TranslationData> pendingTranslations() const;
+
     /// @brief Print debug information about the current state of the class 
     friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
 
