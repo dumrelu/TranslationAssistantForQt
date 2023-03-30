@@ -13,7 +13,44 @@ PendingTranslator::PendingTranslator(TranslationFiles* tf, QQmlEngine *engine)
     Q_ASSERT(engine);
     Q_ASSERT(qApp);
 
-    //TODO: connect signals
+    connect(
+        m_translationFiles, &TranslationFiles::translationDataChanged, 
+        this, &PendingTranslator::onTranslationDataChanged  
+    );
+}
+
+bool PendingTranslator::isEmpty() const
+{
+    return m_translations.isEmpty();
+}
+
+QString PendingTranslator::translate(const char *context, const char *sourceText, const char *disambiguation, int n) const
+{
+    if(n != -1)
+    {
+        // TODO: support for n != 1
+        return sourceText;
+    }
+    
+    const QString qContext = context;
+    const QString qSource = sourceText;
+    const QString qComment = disambiguation;
+
+    auto translationIt = m_translations.find(translationKey(qContext, qSource, qComment));
+    if(translationIt != m_translations.end())
+    {
+        const auto& translationDataList = *translationIt;
+        for(const auto& translationData : translationDataList)
+        {
+            if(translationData.context == qContext && translationData.source == qSource
+                && translationData.comment == qComment)
+            {
+                return translationData.translation;
+            }
+        }
+    }
+
+    return sourceText;
 }
 
 QString PendingTranslator::translationKey(const TranslationFiles::TranslationData &translationData) const
@@ -46,6 +83,13 @@ void PendingTranslator::refreshUi()
         qApp->installTranslator(this);
         m_engine->retranslate();
     }
+}
+
+void PendingTranslator::onTranslationDataChanged(TranslationFiles::TranslationID id)
+{
+    // TODO: Optimization: don't reset everything
+    Q_UNUSED(id);
+    resetTranslations();
 }
 
 }

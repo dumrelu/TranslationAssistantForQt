@@ -33,6 +33,7 @@ private:
     QString translationKey(const QString& context, const QString& source, const QString& comment) const;
     void resetTranslations();
     void refreshUi();
+    void onTranslationDataChanged(TranslationFiles::TranslationID id);
 
     TranslationFiles* m_translationFiles = nullptr;
     QQmlEngine* m_engine = nullptr;
