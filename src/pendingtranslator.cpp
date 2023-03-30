@@ -29,7 +29,23 @@ QString PendingTranslator::translationKey(const QString &context, const QString 
 
 void PendingTranslator::resetTranslations()
 {
+    m_translations.clear();
 
+    for(auto&& translationData : m_translationFiles->pendingTranslations())
+    {
+        m_translations[translationKey(translationData)].push_back(std::move(translationData));
+    }
+
+    refreshUi();
+}
+
+void PendingTranslator::refreshUi()
+{
+    if(qApp->removeTranslator(this))
+    {
+        qApp->installTranslator(this);
+        m_engine->retranslate();
+    }
 }
 
 }
