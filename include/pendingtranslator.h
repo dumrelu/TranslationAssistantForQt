@@ -29,8 +29,13 @@ public:
     QString translate(const char *context, const char *sourceText, const char *disambiguation, int n) const override;
 
 private:
+    QString translationKey(const TranslationFiles::TranslationData& translationData) const;
+    QString translationKey(const QString& context, const QString& source, const QString& comment) const;
+    void resetTranslations();
+
     TranslationFiles* m_translationFiles = nullptr;
     QQmlEngine* m_engine = nullptr;
+    QHash<QString /*context+source+disambiguation*/, QList<TranslationFiles::TranslationData>> m_translations;
 };
 
 }
