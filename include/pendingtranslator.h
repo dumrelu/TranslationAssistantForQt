@@ -4,6 +4,8 @@
 
 #include <QTranslator>
 
+class QQmlEngine;
+
 namespace ta
 {
 
@@ -17,7 +19,10 @@ class PendingTranslator : public QTranslator
 {
     Q_OBJECT
 public:
-    explicit PendingTranslator(TranslationFiles* tf);
+    /// @brief 
+    /// @param tf 
+    /// @param engine Calls engine->retranslate() on changes
+    explicit PendingTranslator(TranslationFiles* tf, QQmlEngine* engine);
 
     // QTranslator interface
     bool isEmpty() const override;
@@ -25,6 +30,7 @@ public:
 
 private:
     TranslationFiles* m_translationFiles = nullptr;
+    QQmlEngine* m_engine = nullptr;
 };
 
 }
