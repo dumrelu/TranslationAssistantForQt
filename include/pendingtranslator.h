@@ -22,7 +22,7 @@ public:
     /// @brief 
     /// @param tf 
     /// @param engine Calls engine->retranslate() on changes
-    explicit PendingTranslator(TranslationFiles* tf, QQmlEngine* engine);
+    PendingTranslator(TranslationFiles* tf, QQmlEngine* engine);
 
     // QTranslator interface
     bool isEmpty() const override;
