@@ -8,6 +8,7 @@ add_executable(
     translation_assistant_tests 
     test_main.cpp
     TranslationFilesTest.h
+    PendingTranslatorTest.h
 )
 add_test(NAME translation_assistant_tests COMMAND translation_assistant_tests)
 

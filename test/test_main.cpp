@@ -1,4 +1,5 @@
 #include "TranslationFilesTest.h"
+#include "PendingTranslatorTest.h"
 
 #include <QFile>
 
@@ -22,4 +23,5 @@ int main(int argc, char* argv[])
     QString executableDir = fileInfo.absoluteDir().absolutePath();
 
     execute_test<TranslationFilesTest>(argc, argv, executableDir); 
+    execute_test<PendingTranslatorTest>(argc, argv, executableDir);
 }

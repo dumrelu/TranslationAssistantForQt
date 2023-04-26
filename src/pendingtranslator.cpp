@@ -17,6 +17,8 @@ PendingTranslator::PendingTranslator(TranslationFiles* tf, QQmlEngine *engine)
         m_translationFiles, &TranslationFiles::translationDataChanged, 
         this, &PendingTranslator::onTranslationDataChanged  
     );
+
+    resetTranslations();
 }
 
 bool PendingTranslator::isEmpty() const
