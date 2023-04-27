@@ -37,7 +37,7 @@ void TextItemOverlay::mousePressEvent(QMouseEvent *event)
 
     emit textItemClicked(m_textItem);
 
-    // Propaget the mouse event further
+    // Propagate the mouse event further
     event->ignore();
 }
 
