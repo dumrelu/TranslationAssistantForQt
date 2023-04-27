@@ -34,6 +34,10 @@ void TextItemOverlay::paint(QPainter *painter)
 void TextItemOverlay::mousePressEvent(QMouseEvent *event)
 {
     qWarning() << "ItemClicked!" << event;
+
+    emit textItemClicked(m_textItem);
+
+    // Propaget the mouse event further
     event->ignore();
 }
 
