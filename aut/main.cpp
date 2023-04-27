@@ -45,16 +45,15 @@ int main(int argc, char *argv[])
         
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
         auto* scene = new ta::Scene{ window };
-        auto* overlay = new ta::TextItemOverlay(window);
         
-        QObject::connect(scene, &ta::Scene::textChanged, [overlay](QSharedPointer<ta::TextItem> textItem)
+        QObject::connect(scene, &ta::Scene::textChanged, [](QSharedPointer<ta::TextItem> textItem)
             {
                 const auto text = textItem->text();
                 qDebug() << "Text changed: " << text;
 
                 if(text.startsWith("Text") || text == "ListViewText#2_changed")
                 {
-                    overlay->addOverlayFor(textItem);
+                    new ta::TextItemOverlay{ textItem };
                 }
             }
         );

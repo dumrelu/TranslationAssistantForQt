@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QQuickPaintedItem>
-#include <QQuickWindow>
 #include <QSharedPointer>
 
 #include "textitem.h"
@@ -9,42 +8,24 @@
 namespace ta
 {
 
-/// @brief Draws overlays for one or more TextItems
-/**
- *  TODO: Add individual QQuickPaintItems as children of TextItems instead
- * of using a single QQuickPaintedItem(because we can't tell if an item covers
- * the TextItem or not)
-*/
+/// @brief An overlay for TextItems that can draw a rounded rectangle
+///around the text and signal when a text item is clicked.
 class TextItemOverlay : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
-    explicit TextItemOverlay(QQuickWindow* window);
+    explicit TextItemOverlay(QSharedPointer<TextItem> textItem);
 
     void paint(QPainter* painter) override;
 
-    /// @brief Draw an overlay over the specified TextItem
-    /// @param textItem 
-    /// @return True if overlay added, false otherwise(e.g. overlay already added)
-    /**
-     *  Note: If the item becomes invalid, the overlay will automatically be
-     * removed
-    */
-    bool addOverlayFor(QSharedPointer<TextItem> textItem);
+signals:
+    void textItemClicked(QSharedPointer<TextItem> textItem);
 
-    /// @brief Remove the overlay drawn over the specified TextItem
-    /// @param textItem 
-    /// @return True if overlay was removed, false otherwise(e.g. no overlay was drawn for the item)
-    bool removeOverlayFor(QSharedPointer<TextItem> textItem);
-
-    /// @brief Remove all the drawn overlays
-    void removeAllOverlays();
+protected:
+    void mousePressEvent(QMouseEvent* event) override;
 
 private:
-    void textItemInvalidated(QSharedPointer<TextItem> textItem);
-    void drawOverlay(QPainter* painter, const QSharedPointer<TextItem>& textItem) const;
-
-    QSet<QSharedPointer<TextItem>> m_textItems;
+    QSharedPointer<TextItem> m_textItem;
 };
 
 }
