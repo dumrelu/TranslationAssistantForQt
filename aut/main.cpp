@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
                 if(text.startsWith("Text") || text == "ListViewText#2_changed")
                 {
-                    new ta::TextItemOverlay{ textItem };
+                    new ta::TextItemOverlay{ textItem, true };
                 }
             }
         );

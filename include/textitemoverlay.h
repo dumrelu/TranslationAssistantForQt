@@ -14,7 +14,10 @@ class TextItemOverlay : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
-    explicit TextItemOverlay(QSharedPointer<TextItem> textItem);
+    explicit TextItemOverlay(QSharedPointer<TextItem> textItem, bool highlighted = false);
+
+    void setHighlighted(bool highlighted);
+    bool highlighted() const { return m_highlighted; }
 
     void paint(QPainter* painter) override;
 
@@ -26,6 +29,7 @@ protected:
 
 private:
     QSharedPointer<TextItem> m_textItem;
+    bool m_highlighted = false;
 };
 
 }
