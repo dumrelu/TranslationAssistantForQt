@@ -16,8 +16,11 @@ class TextItemOverlay : public QQuickPaintedItem
 public:
     explicit TextItemOverlay(QSharedPointer<TextItem> textItem, bool highlighted = false);
 
-    void setHighlighted(bool highlighted);
     bool highlighted() const { return m_highlighted; }
+    void setHighlighted(bool highlighted);
+
+    QColor highlightColor() const { return m_highlightColor; }
+    void setHighlightColor(const QColor& color);
 
     void paint(QPainter* painter) override;
 
@@ -30,6 +33,7 @@ protected:
 private:
     QSharedPointer<TextItem> m_textItem;
     bool m_highlighted = false;
+    QColor m_highlightColor = QColor{ 255, 255, 255 };
 };
 
 }

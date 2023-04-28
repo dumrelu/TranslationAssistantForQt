@@ -26,21 +26,33 @@ TextItemOverlay::TextItemOverlay(QSharedPointer<TextItem> textItem, bool highlig
 void TextItemOverlay::setHighlighted(bool highlighted)
 {
     if (m_highlighted == highlighted)
+    {
         return;
+    }
 
     m_highlighted = highlighted;
     update();
 }
 
+void TextItemOverlay::setHighlightColor(const QColor &color)
+{
+    m_highlightColor = color;
+    
+    if(m_highlighted)
+    {
+        update();
+    }
+}
+
 void TextItemOverlay::paint(QPainter *painter)
 {
-    if(!m_highlighted)
-        return;
-    
-    painter->setBrush(Qt::NoBrush);
-    painter->setPen(Qt::white);
+    if(m_highlighted)
+    {
+        painter->setBrush(Qt::NoBrush);
+        painter->setPen(m_highlightColor);
 
-    painter->drawRoundedRect(boundingRect(), 10, 10);
+        painter->drawRoundedRect(boundingRect(), 10, 10);
+    }
 }
 
 void TextItemOverlay::mousePressEvent(QMouseEvent *event)
