@@ -107,7 +107,7 @@ void Scene::insertTextItems(QQuickItem* item, QList<QSharedPointer<TextItem>> te
 
     for(auto& textItem : textItems)
     {
-        emit textChanged(textItem);
+        emit textItemCreated(textItem);
     }
 }
 

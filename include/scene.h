@@ -40,12 +40,17 @@ public:
     void stop();
 
 signals:
-    /// @brief Emitted when a text item is created or when a text item's
-    ///text changes
-    void textChanged(QSharedPointer<TextItem> textItem);
+    /// @brief Emitted when a new text item is created
+    /// @param textItem
+    void textItemCreated(QSharedPointer<TextItem> textItem);
 
     /// @brief Emitted when the textItem becomes invalid
+    /// @param textItem 
     void textItemInvalidated(QSharedPointer<TextItem> textItem);
+
+    /// @brief Emitted when text item's text changes
+    /// @param textItem 
+    void textChanged(QSharedPointer<TextItem> textItem);
 
 private:
     // Hook callback

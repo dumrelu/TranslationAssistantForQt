@@ -42,32 +42,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
         
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
-        auto* scene = new ta::Scene{ window };
-        
-        QObject::connect(scene, &ta::Scene::textChanged, [](QSharedPointer<ta::TextItem> textItem)
-            {
-                const auto text = textItem->text();
-                qDebug() << "Text changed: " << text;
+        auto* translationAssistant = new ta::TranslationAssistant{ window };
+        Q_UNUSED(translationAssistant);
 
-                const auto isHighlighted = text.startsWith("Text") || text == "ListViewText#2_changed";
-                auto overlay = new ta::TextItemOverlay{ textItem, isHighlighted };
-
-                QObject::connect(overlay, &ta::TextItemOverlay::textItemClicked, [](QSharedPointer<ta::TextItem> textItem)
-                    {
-                        const auto text = textItem->text();
-                        qDebug() << "Text clicked: " << text;
-                    }
-                );
-            }
-        );
-        QObject::connect(scene, &ta::Scene::textItemInvalidated, [](QSharedPointer<ta::TextItem> textItem)
-            {
-                Q_UNUSED(textItem);
-                qDebug() << "Text item invalidated";
-            }
-        );
-        
-        scene->start();
     }, Qt::QueuedConnection);
     engine.load(url);
 
