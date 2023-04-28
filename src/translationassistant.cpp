@@ -5,9 +5,4 @@
 namespace ta
 {
 
-void hello_world()
-{
-    qDebug() << "Hello World!";
-}
-
 }

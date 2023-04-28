@@ -7,6 +7,6 @@
 namespace ta
 {
 
-void hello_world();
+
 
 }
