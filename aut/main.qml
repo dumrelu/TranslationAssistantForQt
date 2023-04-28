@@ -37,6 +37,7 @@ Window {
             anchors.right: parent.right
             height: parent.height
             model: 1000
+            clip: true
 
             delegate: ItemDelegate {
                 id: delegate
