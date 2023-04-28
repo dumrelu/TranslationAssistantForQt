@@ -51,17 +51,15 @@ int main(int argc, char *argv[])
                 const auto text = textItem->text();
                 qDebug() << "Text changed: " << text;
 
-                if(text.startsWith("Text") || text == "ListViewText#2_changed")
-                {
-                    auto overlay = new ta::TextItemOverlay{ textItem, true };
+                const auto isHighlighted = text.startsWith("Text") || text == "ListViewText#2_changed";
+                auto overlay = new ta::TextItemOverlay{ textItem, isHighlighted };
 
-                    QObject::connect(overlay, &ta::TextItemOverlay::textItemClicked, [](QSharedPointer<ta::TextItem> textItem)
-                        {
-                            const auto text = textItem->text();
-                            qDebug() << "Text clicked: " << text;
-                        }
-                    );
-                }
+                QObject::connect(overlay, &ta::TextItemOverlay::textItemClicked, [](QSharedPointer<ta::TextItem> textItem)
+                    {
+                        const auto text = textItem->text();
+                        qDebug() << "Text clicked: " << text;
+                    }
+                );
             }
         );
         QObject::connect(scene, &ta::Scene::textItemInvalidated, [](QSharedPointer<ta::TextItem> textItem)
