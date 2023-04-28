@@ -32,12 +32,6 @@ void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
         this, &TranslationAssistant::onTextItemClicked
     );
 
-    //TODO: Remove in the future
-    if(textItem->text().startsWith("Text"))
-    {
-        overlay->setHighlighted(true);
-    }
-
     m_textItemOverlays.insert(textItem, overlay);
 }
 
@@ -48,9 +42,14 @@ void TranslationAssistant::onTextItemInvalidated(QSharedPointer<TextItem> textIt
 
 void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 {
-    Q_ASSERT(textItem);
-
     qDebug() << "Clicked on item: " << textItem->text();
+
+    auto it = m_textItemOverlays.find(textItem);
+    if(it != m_textItemOverlays.end())
+    {
+        Q_ASSERT(*it);
+        (*it)->setHighlighted(true);
+    }
 }
 
 }
