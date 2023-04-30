@@ -11,7 +11,7 @@
     <message>
         <location filename="MyQmlType.qml" line="20"/>
         <source>Text2_changed</source>
-        <translation type="unfinished">Text2_changed_translated</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -28,11 +28,13 @@
     </message>
     <message>
         <location filename="main.qml" line="22"/>
+        <location filename="../test/PendingTranslatorTest.h" line="42"/>
+        <location filename="../test/PendingTranslatorTest.h" line="48"/>
         <source>Text1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.qml" line="82"/>
+        <location filename="main.qml" line="83"/>
         <source>Text4</source>
         <translation type="unfinished"></translation>
     </message>
