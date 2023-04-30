@@ -17,7 +17,8 @@ Item {
         interval: 1000
         running: true
         onTriggered: {
-            text.text = qsTr("Text2_changed");
+            //! Binding required for qsTr retranslation to work
+            text.text = Qt.binding(function() { return qsTr("Text2_changed"); })
         }
     }
 }

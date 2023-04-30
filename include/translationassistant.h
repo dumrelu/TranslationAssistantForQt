@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "textitemoverlay.h"
 #include "translationfiles.h"
+#include "pendingtranslator.h"
 
 namespace ta
 {
@@ -26,6 +27,7 @@ private:
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
     TranslationFiles m_translationFiles;
+    PendingTranslator m_pendingTranslator;
 };
 
 }

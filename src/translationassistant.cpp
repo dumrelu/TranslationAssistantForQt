@@ -50,13 +50,27 @@ QString translationContext(const QSharedPointer<TextItem>& textItem)
     return {};
 }
 
+// Returns the QQmlEngine for the given QQuickWindow
+QQmlEngine* qmlEngineForWindow(QQuickWindow* window)
+{
+    QQmlContext* context = QQmlEngine::contextForObject(window);
+    if(context)
+    {
+        return context->engine();
+    }
+
+    return nullptr;
+}
+
 }
 
 TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent)
     : QObject{ parent }
     , m_scene{ window }
+    , m_pendingTranslator{ &m_translationFiles, qmlEngineForWindow(window) }
 {
     Q_ASSERT(window);
+    Q_ASSERT(qApp);
 
     connect(
         &m_scene, &Scene::textItemCreated,
@@ -64,6 +78,8 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     );
 
     m_scene.start();
+
+    qApp->installTranslator(&m_pendingTranslator);
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
@@ -95,8 +111,13 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     qDebug() << "Context for clicked item: " << context;
 
     auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    //TODO: Validate translations
+    //TODO: Validate translations(Instantiate a new PendingTranslator with dummy translations)
     qDebug() << "Translations for clicked item: " << possibleTranslations;
+
+    for(const auto& translationID : possibleTranslations)
+    {
+        m_translationFiles.translate(translationID, textItem->text() + "X");
+    }
 
     auto it = m_textItemOverlays.find(textItem);
     if(it != m_textItemOverlays.end())
