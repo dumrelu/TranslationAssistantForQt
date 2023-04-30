@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     // }
 
     QTranslator translator;
-    if(translator.load(QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"))
+    if(translator.load(QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.qm"))
     {
         app.installTranslator(&translator);
     }
@@ -44,6 +44,10 @@ int main(int argc, char *argv[])
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
         auto* translationAssistant = new ta::TranslationAssistant{ window };
         Q_UNUSED(translationAssistant);
+
+        translationAssistant->translationFiles().loadTranslationFile(
+            QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"
+        );
 
     }, Qt::QueuedConnection);
     engine.load(url);

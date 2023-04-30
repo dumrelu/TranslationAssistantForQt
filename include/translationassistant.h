@@ -16,6 +16,8 @@ class TranslationAssistant : public QObject
 public:
     explicit TranslationAssistant(QQuickWindow* window, QObject* parent = nullptr);
 
+    TranslationFiles& translationFiles() { return m_translationFiles; }
+
 private:
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
     void onTextItemInvalidated(QSharedPointer<TextItem> textItem);
@@ -23,6 +25,7 @@ private:
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
+    TranslationFiles m_translationFiles;
 };
 
 }

@@ -15,6 +15,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools)
 
 set(TS_FILES ApplicationUnderTest_ro_RO.ts)
+configure_file(ApplicationUnderTest_ro_RO.ts ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 set(PROJECT_SOURCES
         main.cpp

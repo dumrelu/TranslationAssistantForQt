@@ -10,7 +10,7 @@ namespace ta
 namespace
 {
 
-// Function that returns the QQmlContext for a QQuickItem
+// Returns QQmlContext for a QQuickItem
 QQmlContext* qmlContextForItem(QQuickItem* item)
 {
     QQmlContext* context = QQmlEngine::contextForObject(item);
@@ -26,6 +26,28 @@ QQmlContext* qmlContextForItem(QQuickItem* item)
     }
 
     return nullptr;
+}
+
+// Extract the qml filename from a QUrl
+QString qmlContextFromUrl(const QUrl& url)
+{
+    QString filename = url.toString();
+    //TODO: More usecases in the future
+    filename.remove("qrc:/");
+    filename.remove(".qml");
+    return filename;
+}
+
+// Returns the translation context for a TextItem or an empty string if it cannot be determined
+QString translationContext(const QSharedPointer<TextItem>& textItem)
+{
+    auto* context = qmlContextForItem(textItem->item());
+    if(context)
+    {
+        return qmlContextFromUrl(context->baseUrl());
+    }
+
+    return {};
 }
 
 }
@@ -69,12 +91,12 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 {
     qDebug() << "Clicked on item: " << textItem->text();
 
-    auto* context = qmlContextForItem(textItem->item());
-    if(context)
-    {
-        qDebug() << "Context: " << context->baseUrl();
-        return;
-    }
+    const auto context = translationContext(textItem);
+    qDebug() << "Context for clicked item: " << context;
+
+    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
+    //TODO: Validate translations
+    qDebug() << "Translations for clicked item: " << possibleTranslations;
 
     auto it = m_textItemOverlays.find(textItem);
     if(it != m_textItemOverlays.end())
