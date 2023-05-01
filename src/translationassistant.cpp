@@ -77,6 +77,11 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
         this, &TranslationAssistant::onTextItemCreated
     );
 
+    connect(
+        &m_scene, &Scene::textItemInvalidated,
+        this, &TranslationAssistant::onTextItemInvalidated
+    );
+
     m_scene.start();
 
     qApp->installTranslator(&m_pendingTranslator);
@@ -84,11 +89,6 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
 {
-    connect(
-        &m_scene, &Scene::textItemInvalidated,
-        this, &TranslationAssistant::onTextItemInvalidated
-    );
-
     auto* overlay = new TextItemOverlay{ textItem };
     connect(
         overlay, &TextItemOverlay::textItemClicked,

@@ -11,6 +11,7 @@
 namespace ta
 {
 
+// This will probably be a QAbstractListModel to expose selected translations to QML
 class TranslationAssistant : public QObject
 {
     Q_OBJECT
