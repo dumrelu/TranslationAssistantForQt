@@ -139,7 +139,10 @@ QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(
     for(const auto& translationID : translations)
     {
         auto translationData = m_translationFiles.translationData(translationID);
-        Q_ASSERT(translationData);
+        if(!translationData)
+        {
+            continue;
+        }
 
         const auto translationIDAsString = QString::number(translationID);
         const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
