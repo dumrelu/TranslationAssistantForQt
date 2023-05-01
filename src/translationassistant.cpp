@@ -135,7 +135,7 @@ QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(
     QList<TranslationFiles::TranslationID> verifiedTranslations;
     verifiedTranslations.reserve(translations.size());
 
-    const auto tempTranslationFormat = QString{ "temporaryTranslation_%1" };
+    const auto tempTranslationFormat = QString{ "temporaryTranslation_%1ID" };
     for(const auto& translationID : translations)
     {
         auto translationData = m_translationFiles.translationData(translationID);
