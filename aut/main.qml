@@ -29,7 +29,7 @@ Window {
         width: window.width / 2
         height: parent.height / 2
         
-        color: "green"
+        color: "yellow"
         
         ListView {
             anchors.top: parent.top
@@ -41,7 +41,7 @@ Window {
 
             delegate: ItemDelegate {
                 id: delegate
-                text: "ListViewText#" + index
+                text: "ListViewText#" + index + (index === 0 ? qsTr("Text1") : "")
 
                 Timer {
                     interval: 2000

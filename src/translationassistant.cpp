@@ -110,23 +110,40 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     const auto context = translationContext(textItem);
     qDebug() << "Context for clicked item: " << context;
 
-    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    auto verifiedTranslations = verifyTranslations(textItem, possibleTranslations);
-    qDebug() << "Possible translations: " << possibleTranslations;
-    qDebug() << "Verified translations: " << verifiedTranslations;
-    
+    //TODO: Update the model as well
+    m_possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
+    m_verifiedTranslations = verifyTranslations(textItem, m_possibleTranslations);
+    qDebug() << "Possible translations: " << m_possibleTranslations;
+    qDebug() << "Verified translations: " << m_verifiedTranslations;
 
-    for(const auto& translationID : verifiedTranslations)
-    {
-        m_translationFiles.translate(translationID, textItem->text() + "X");
-    }
-    qDebug() << "Updated text: " << textItem->text();
+    updateHighlights(textItem);
+}
 
-    auto it = m_textItemOverlays.find(textItem);
-    if(it != m_textItemOverlays.end())
+void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
+{
+    Q_UNUSED(textItem);
+    //TODO: Highlight
+}
+
+void TranslationAssistant::updateHighlights(QSharedPointer<TextItem> textItem)
+{
+    for(const auto& overlay : m_textItemOverlays)
     {
-        Q_ASSERT(*it);
-        (*it)->setHighlighted(true);
+        if(overlay->textItem() == textItem)
+        {
+            overlay->setHighlightColor(m_selectedTextColor);
+            overlay->setHighlighted(true);
+        }
+        //TODO: This is inneficient. Do this in bulk
+        else if(!verifyTranslations(overlay->textItem(), m_verifiedTranslations).isEmpty())
+        {
+            overlay->setHighlightColor(m_relatedTextColor);
+            overlay->setHighlighted(true);
+        }
+        else 
+        {
+            overlay->setHighlighted(false);
+        }
     }
 }
 

@@ -16,6 +16,8 @@ class TextItemOverlay : public QQuickPaintedItem
 public:
     explicit TextItemOverlay(QSharedPointer<TextItem> textItem, bool highlighted = false);
 
+    const QSharedPointer<TextItem>& textItem() const { return m_textItem; }
+
     bool highlighted() const { return m_highlighted; }
     void setHighlighted(bool highlighted);
 
