@@ -118,6 +118,7 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     {
         m_translationFiles.translate(translationID, textItem->text() + "X");
     }
+    qDebug() << "Updated text: " << textItem->text();
 
     auto it = m_textItemOverlays.find(textItem);
     if(it != m_textItemOverlays.end())
