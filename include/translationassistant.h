@@ -24,6 +24,9 @@ private:
     void onTextItemInvalidated(QSharedPointer<TextItem> textItem);
     void onTextItemClicked(QSharedPointer<TextItem> textItem);
 
+    // Check to see which of the translation from the given list are used for the given text item.
+    QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
+
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
     TranslationFiles m_translationFiles;

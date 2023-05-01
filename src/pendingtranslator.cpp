@@ -66,6 +66,13 @@ QString PendingTranslator::translationKey(const QString &context, const QString 
     return context + source + comment;
 }
 
+void PendingTranslator::addManualTranslation(const TranslationFiles::TranslationData &translationData)
+{
+    const auto key = translationKey(translationData);
+    m_translations[key].clear();
+    m_translations[key].push_back(translationData);
+}
+
 void PendingTranslator::resetTranslations()
 {
     m_translations.clear();

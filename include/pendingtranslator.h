@@ -28,11 +28,26 @@ public:
     bool isEmpty() const override;
     QString translate(const char *context, const char *sourceText, const char *disambiguation, int n) const override;
 
+    /// @brief Manually adds a translation to the pending translations.
+    /// @param translationData
+    /**
+     *  Note: Manual translations will be lost on the next update.
+    */
+    void addManualTranslation(const TranslationFiles::TranslationData& translationData);
+    
+    /// @brief Resets the pending translations to the current values
+    ///from TranslationFiles and calls refreshUi().
+    /**
+     *  Note: this is also called automatically when the TranslationFiles changes.
+    */
+    void resetTranslations();
+    
+    /// @brief Refreshes the UI by calling engine->retranslate()
+    void refreshUi();
+
 private:
     QString translationKey(const TranslationFiles::TranslationData& translationData) const;
     QString translationKey(const QString& context, const QString& source, const QString& comment) const;
-    void resetTranslations();
-    void refreshUi();
     void onTranslationDataChanged(TranslationFiles::TranslationID id);
 
     TranslationFiles* m_translationFiles = nullptr;

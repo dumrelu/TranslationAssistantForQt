@@ -111,10 +111,12 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     qDebug() << "Context for clicked item: " << context;
 
     auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    //TODO: Validate translations(Instantiate a new PendingTranslator with dummy translations)
-    qDebug() << "Translations for clicked item: " << possibleTranslations;
+    auto verifiedTranslations = verifyTranslations(textItem, possibleTranslations);
+    qDebug() << "Possible translations: " << possibleTranslations;
+    qDebug() << "Verified translations: " << verifiedTranslations;
+    
 
-    for(const auto& translationID : possibleTranslations)
+    for(const auto& translationID : verifiedTranslations)
     {
         m_translationFiles.translate(translationID, textItem->text() + "X");
     }
@@ -126,6 +128,45 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         Q_ASSERT(*it);
         (*it)->setHighlighted(true);
     }
+}
+
+QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem> &textItem, QList<TranslationFiles::TranslationID> translations)
+{
+    QList<TranslationFiles::TranslationID> verifiedTranslations;
+    verifiedTranslations.reserve(translations.size());
+
+    const auto tempTranslationFormat = QString{ "temporaryTranslation_%1" };
+    for(const auto& translationID : translations)
+    {
+        auto translationData = m_translationFiles.translationData(translationID);
+        Q_ASSERT(translationData);
+
+        const auto translationIDAsString = QString::number(translationID);
+        const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
+
+        translationData->translation = tempTranslation;
+
+        m_pendingTranslator.addManualTranslation(*translationData);
+    }
+
+    // Refresh the UI and check the updated text
+    m_pendingTranslator.refreshUi();
+    const auto updatedText = textItem->text();
+    for(const auto& translationID : translations)
+    {
+        const auto translationIDAsString = QString::number(translationID);
+        const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
+
+        if(updatedText.contains(tempTranslation))
+        {
+            verifiedTranslations.append(translationID);
+        }
+    }
+
+    // Remove the temporary translations
+    m_pendingTranslator.resetTranslations();
+
+    return verifiedTranslations;
 }
 
 }
