@@ -11,7 +11,7 @@ namespace
 {
 
 // Returns QQmlContext for a QQuickItem
-QQmlContext* qmlContextForItem(QQuickItem* item)
+QQmlContext* qmlContextForItem(const QQuickItem* item)
 {
     QQmlContext* context = QQmlEngine::contextForObject(item);
     if(context)
