@@ -199,6 +199,7 @@ void TranslationAssistant::createUiOverlay()
         qWarning() << "Failed to create TranslationAssistant.qml instance";
         return;
     }
+    overlay->setZ(1000);
 
     overlay->setParentItem(m_window->contentItem());
     overlay->setParent(this);
