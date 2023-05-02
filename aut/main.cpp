@@ -24,14 +24,15 @@ int main(int argc, char *argv[])
     // }
 
     QTranslator translator;
-    if(translator.load(QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.qm"))
+    const auto translationFile = QString{ QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.qm" };
+    if(translator.load(translationFile))
     {
         app.installTranslator(&translator);
     }
     else
     {
-        qDebug() << "Could not load translations";
-        return 1;
+        qDebug() << "Could not load translations" << translationFile;
+        // return 1;
     }
 
     QQmlApplicationEngine engine;
@@ -45,9 +46,13 @@ int main(int argc, char *argv[])
         auto* translationAssistant = new ta::TranslationAssistant{ window };
         Q_UNUSED(translationAssistant);
 
-        translationAssistant->translationFiles().loadTranslationFile(
+        auto translationLoaded = translationAssistant->translationFiles().loadTranslationFile(
             QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"
         );
+        if(!translationLoaded)
+        {
+            qCritical() << "Could not load .ts file";
+        }
 
     }, Qt::QueuedConnection);
     engine.load(url);
