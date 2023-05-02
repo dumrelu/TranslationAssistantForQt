@@ -148,8 +148,11 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 
 void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
 {
-    Q_UNUSED(textItem);
-    //TODO: Highlight
+    auto it = m_textItemOverlays.find(textItem);
+    if(it != m_textItemOverlays.end())
+    {
+        updateHighlight(it.value(), textItem);
+    }
 }
 
 void TranslationAssistant::updateHighlight(TextItemOverlay* overlay, const QSharedPointer<TextItem> &selectedTextItem)
