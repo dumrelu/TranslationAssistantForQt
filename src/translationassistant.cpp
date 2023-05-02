@@ -38,13 +38,6 @@ QQmlContext* qmlContextForItem(const QQuickItem* item)
 QString qmlContextFromUrl(const QUrl& url)
 {
     QString filename = url.toString();
-    //TODO: Fix in the future
-    if(filename.startsWith("qrc:/translation_assistant"))
-    {
-        return {};
-    }
-
-    //TODO: More usecases in the future
     filename.remove("qrc:/");
     filename.remove(".qml");
     filename = filename.split("/").last();
@@ -106,6 +99,19 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
 {
+    // Ignore items from the translation assistant itself
+    if(textItem && textItem->item())
+    {
+        if(auto* context = qmlContextForItem(textItem->item()); context)
+        {
+            const auto url = context->baseUrl().toString();
+            if(url.startsWith("qrc:/translation_assistant"))
+            {
+                return;
+            }
+        }
+    }
+
     auto* overlay = new TextItemOverlay{ textItem };
     connect(
         overlay, &TextItemOverlay::textItemClicked,
