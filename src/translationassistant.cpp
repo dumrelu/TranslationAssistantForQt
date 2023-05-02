@@ -117,6 +117,7 @@ void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
         overlay, &TextItemOverlay::textItemClicked,
         this, &TranslationAssistant::onTextItemClicked
     );
+    updateHighlight(overlay, nullptr);
 
     m_textItemOverlays.insert(textItem, overlay);
 }
@@ -151,7 +152,7 @@ void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
     auto it = m_textItemOverlays.find(textItem);
     if(it != m_textItemOverlays.end())
     {
-        updateHighlight(it.value(), textItem);
+        updateHighlight(it.value(), nullptr);
     }
 }
 
