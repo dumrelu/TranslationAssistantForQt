@@ -152,25 +152,30 @@ void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
     //TODO: Highlight
 }
 
-void TranslationAssistant::updateHighlights(const QSharedPointer<TextItem>& selectedTextItem)
+void TranslationAssistant::updateHighlight(TextItemOverlay* overlay, const QSharedPointer<TextItem> &selectedTextItem)
+{
+    if(overlay->textItem() == selectedTextItem)
+    {
+        overlay->setHighlightColor(m_selectedTextColor);
+        overlay->setHighlighted(true);
+    }
+    //TODO: This is inneficient. Do this in bulk
+    else if(!verifyTranslations(overlay->textItem(), m_verifiedTranslations).isEmpty())
+    {
+        overlay->setHighlightColor(m_relatedTextColor);
+        overlay->setHighlighted(true);
+    }
+    else 
+    {
+        overlay->setHighlighted(false);
+    }
+}
+
+void TranslationAssistant::updateHighlights(const QSharedPointer<TextItem> &selectedTextItem)
 {
     for(const auto& overlay : m_textItemOverlays)
     {
-        if(overlay->textItem() == selectedTextItem)
-        {
-            overlay->setHighlightColor(m_selectedTextColor);
-            overlay->setHighlighted(true);
-        }
-        //TODO: This is inneficient. Do this in bulk
-        else if(!verifyTranslations(overlay->textItem(), m_verifiedTranslations).isEmpty())
-        {
-            overlay->setHighlightColor(m_relatedTextColor);
-            overlay->setHighlighted(true);
-        }
-        else 
-        {
-            overlay->setHighlighted(false);
-        }
+        updateHighlight(overlay, selectedTextItem);
     }
 }
 
@@ -198,11 +203,28 @@ void TranslationAssistant::createUiOverlay()
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
 {
+    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), translationContext(textItem));
+    possibleTranslations.erase(
+        std::remove_if(
+            possibleTranslations.begin(), possibleTranslations.end(),
+            [&translations](const auto& translationID)
+            {
+                return !translations.contains(translationID);
+            }
+        ),
+        possibleTranslations.end()
+    );
+
+    if(possibleTranslations.empty())
+    {
+        return {};
+    }
+
     QList<TranslationFiles::TranslationID> verifiedTranslations;
-    verifiedTranslations.reserve(translations.size());
+    verifiedTranslations.reserve(possibleTranslations.size());
 
     const auto tempTranslationFormat = QString{ "temporaryTranslation_%1ID" };
-    for(const auto& translationID : translations)
+    for(const auto& translationID : possibleTranslations)
     {
         auto translationData = m_translationFiles.translationData(translationID);
         if(!translationData)
@@ -221,7 +243,7 @@ QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(
     // Refresh the UI and check the updated text
     m_pendingTranslator.refreshUi();
     const auto updatedText = textItem->text();
-    for(const auto& translationID : translations)
+    for(const auto& translationID : possibleTranslations)
     {
         const auto translationIDAsString = QString::number(translationID);
         const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);

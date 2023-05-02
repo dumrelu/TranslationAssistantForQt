@@ -26,6 +26,7 @@ private:
     void onTextItemClicked(QSharedPointer<TextItem> textItem);
     void onTextChanged(QSharedPointer<TextItem> textItem);
 
+    void updateHighlight(TextItemOverlay* overlay, const QSharedPointer<TextItem>& selectedTextItem);
     void updateHighlights(const QSharedPointer<TextItem>& selectedTextItem);
 
     void createUiOverlay();
