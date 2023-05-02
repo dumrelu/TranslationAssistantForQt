@@ -28,8 +28,13 @@ private:
 
     void updateHighlights(const QSharedPointer<TextItem>& selectedTextItem);
 
+    void createUiOverlay();
+
     // Check to see which of the translation from the given list are used for the given text item.
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
+
+    QQuickWindow* m_window;
+    QQmlEngine* m_qmlEngine;
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;

@@ -9,7 +9,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MyQmlType.qml" line="20"/>
+        <location filename="MyQmlType.qml" line="21"/>
         <source>Text2_changed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -28,6 +28,7 @@
     </message>
     <message>
         <location filename="main.qml" line="22"/>
+        <location filename="main.qml" line="44"/>
         <location filename="../test/PendingTranslatorTest.h" line="42"/>
         <location filename="../test/PendingTranslatorTest.h" line="48"/>
         <source>Text1</source>

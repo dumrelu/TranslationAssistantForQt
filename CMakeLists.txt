@@ -15,6 +15,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools Xml)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools Xml)
 
 set(TRANSLATIONASSISTANT_SOURCES
+    qml/translation_assistant.qrc
     include/translationassistant.h src/translationassistant.cpp
     include/scene.h src/scene.cpp
     include/scenehooks.h src/scenehooks.cpp

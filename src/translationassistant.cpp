@@ -1,8 +1,14 @@
 #include "translationassistant.h"
 
+#include <QQmlComponent>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QDebug>
+
+void initialize_qrc() 
+{ 
+    Q_INIT_RESOURCE(translation_assistant);
+}
 
 namespace ta
 {
@@ -32,9 +38,16 @@ QQmlContext* qmlContextForItem(const QQuickItem* item)
 QString qmlContextFromUrl(const QUrl& url)
 {
     QString filename = url.toString();
+    //TODO: Fix in the future
+    if(filename.startsWith("qrc:/translation_assistant"))
+    {
+        return {};
+    }
+
     //TODO: More usecases in the future
     filename.remove("qrc:/");
     filename.remove(".qml");
+    filename = filename.split("/").last();
     return filename;
 }
 
@@ -66,8 +79,10 @@ QQmlEngine* qmlEngineForWindow(QQuickWindow* window)
 
 TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent)
     : QObject{ parent }
+    , m_window{ window }
+    , m_qmlEngine{ qmlEngineForWindow(window) }
     , m_scene{ window }
-    , m_pendingTranslator{ &m_translationFiles, qmlEngineForWindow(window) }
+    , m_pendingTranslator{ &m_translationFiles, m_qmlEngine }
 {
     Q_ASSERT(window);
     Q_ASSERT(qApp);
@@ -85,6 +100,8 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     m_scene.start();
 
     qApp->installTranslator(&m_pendingTranslator);
+
+    createUiOverlay();
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
@@ -109,6 +126,10 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 
     const auto context = translationContext(textItem);
     qDebug() << "Context for clicked item: " << context;
+    if(context.isEmpty())
+    {
+        return;
+    }
 
     //TODO: Update the model as well
     m_possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
@@ -145,6 +166,28 @@ void TranslationAssistant::updateHighlights(const QSharedPointer<TextItem>& sele
             overlay->setHighlighted(false);
         }
     }
+}
+
+void TranslationAssistant::createUiOverlay()
+{
+    initialize_qrc();
+
+    QQmlComponent component{ m_qmlEngine, QUrl{ "qrc:/translation_assistant/TranslationAssistant.qml" } };
+    if(component.status() != QQmlComponent::Status::Ready)
+    {
+        qWarning() << "Failed to create TranslationAssistant.qml component" << component.errorString();
+        return;
+    }
+    
+    auto* overlay = qobject_cast<QQuickItem*>(component.create());
+    if(!overlay)
+    {
+        qWarning() << "Failed to create TranslationAssistant.qml instance";
+        return;
+    }
+
+    overlay->setParentItem(m_window->contentItem());
+    overlay->setParent(this);
 }
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
