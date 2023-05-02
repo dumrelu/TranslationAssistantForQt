@@ -125,11 +125,11 @@ void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
     //TODO: Highlight
 }
 
-void TranslationAssistant::updateHighlights(QSharedPointer<TextItem> textItem)
+void TranslationAssistant::updateHighlights(const QSharedPointer<TextItem>& selectedTextItem)
 {
     for(const auto& overlay : m_textItemOverlays)
     {
-        if(overlay->textItem() == textItem)
+        if(overlay->textItem() == selectedTextItem)
         {
             overlay->setHighlightColor(m_selectedTextColor);
             overlay->setHighlighted(true);
@@ -147,7 +147,7 @@ void TranslationAssistant::updateHighlights(QSharedPointer<TextItem> textItem)
     }
 }
 
-QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem> &textItem, QList<TranslationFiles::TranslationID> translations)
+QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
 {
     QList<TranslationFiles::TranslationID> verifiedTranslations;
     verifiedTranslations.reserve(translations.size());

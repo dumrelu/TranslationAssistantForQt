@@ -26,7 +26,7 @@ private:
     void onTextItemClicked(QSharedPointer<TextItem> textItem);
     void onTextChanged(QSharedPointer<TextItem> textItem);
 
-    void updateHighlights(QSharedPointer<TextItem> textItem);
+    void updateHighlights(const QSharedPointer<TextItem>& selectedTextItem);
 
     // Check to see which of the translation from the given list are used for the given text item.
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
