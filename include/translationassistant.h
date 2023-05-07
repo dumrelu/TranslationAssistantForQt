@@ -11,14 +11,16 @@
 namespace ta
 {
 
-// This will probably be a QAbstractListModel to expose selected translations to QML
 class TranslationAssistant : public QObject
 {
     Q_OBJECT
 public:
     explicit TranslationAssistant(QQuickWindow* window, QObject* parent = nullptr);
 
-    TranslationFiles& translationFiles() { return m_translationFiles; }
+    /// @brief Adds a translation file that will be edited by the TranslationAssistant
+    /// @param filename 
+    /// @return 
+    bool addTranslationFile(const QString& filename);
 
 private:
     void onTextItemCreated(QSharedPointer<TextItem> textItem);

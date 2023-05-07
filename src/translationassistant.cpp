@@ -97,6 +97,12 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     createUiOverlay();
 }
 
+bool TranslationAssistant::addTranslationFile(const QString &filename)
+{
+    //TODO: Reset/build model
+    return m_translationFiles.loadTranslationFile(filename);
+}
+
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
 {
     // Ignore items from the translation assistant itself
