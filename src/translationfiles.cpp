@@ -12,6 +12,11 @@
 namespace ta
 {
 
+QList<TranslationFiles::TranslationID> TranslationFiles::allTranslationIDs() const
+{
+    return m_translations.keys();
+}
+
 bool TranslationFiles::loadTranslationFile(QString tsFilePath)
 {
     if(!tsFilePath.endsWith(".ts"))

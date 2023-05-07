@@ -99,8 +99,14 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
 
 bool TranslationAssistant::addTranslationFile(const QString &filename)
 {
-    //TODO: Reset/build model
-    return m_translationFiles.loadTranslationFile(filename);
+    auto ret = m_translationFiles.loadTranslationFile(filename);
+
+    if(ret)
+    {
+        buildModel();
+    }
+
+    return ret;
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
@@ -210,6 +216,27 @@ void TranslationAssistant::createUiOverlay()
 
     overlay->setParentItem(m_window->contentItem());
     overlay->setParent(this);
+}
+
+void TranslationAssistant::buildModel()
+{
+    //TODO: reset model
+    m_allTranslations = m_translationFiles.allTranslationIDs();
+
+    // By default, sort by context
+    std::stable_sort(
+        m_allTranslations.begin(), m_allTranslations.end(),
+        [this](const auto& lhs, const auto& rhs)
+        {
+            const auto lhsData = m_translationFiles.translationData(lhs);
+            const auto rhsData = m_translationFiles.translationData(rhs);
+            static const QString emptyContext;
+            
+            return (lhsData ? lhsData->context : emptyContext) < (rhsData ? rhsData->context : emptyContext);
+        }
+    );
+    
+    //TODO: Proxy models for verified translations
 }
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)

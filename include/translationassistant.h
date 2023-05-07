@@ -32,6 +32,7 @@ private:
     void updateHighlights(const QSharedPointer<TextItem>& selectedTextItem);
 
     void createUiOverlay();
+    void buildModel();
 
     // Check to see which of the translation from the given list are used for the given text item.
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
@@ -44,6 +45,7 @@ private:
     TranslationFiles m_translationFiles;
     PendingTranslator m_pendingTranslator;
 
+    QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_possibleTranslations;
     QList<TranslationFiles::TranslationID> m_verifiedTranslations;
 
