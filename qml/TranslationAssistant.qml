@@ -1,9 +1,28 @@
-import QtQuick 2.0
+import QtQuick 2.8
+import QtQuick.Controls 2.1
 
 Item {
     id: root
 
     anchors.fill: parent
+
+    Button {
+        id: trayIndicator
+
+        anchors.top: trayContainer.top
+        anchors.topMargin: 10
+        anchors.right: trayContainer.left
+
+        width: 30
+        height: 30
+        opacity: 0.75
+
+        text: trayContainer.state === "hidden" ? "<" : ">"
+
+        onClicked: {
+            trayContainer.state = trayContainer.state === "hidden" ? "visible" : "hidden"
+        }
+    }
 
     Item {
         id: trayContainer
@@ -41,19 +60,6 @@ Item {
                 properties: "width"
                 duration: 500
                 easing.type: Easing.InOutQuad
-            }
-        }
-    }
-
-    Timer {
-        running: true
-        interval: 2000
-        repeat: true
-        onTriggered: function() {
-            if (trayContainer.state == "visible") {
-                trayContainer.state = "hidden"
-            } else {
-                trayContainer.state = "visible"
             }
         }
     }
