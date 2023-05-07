@@ -15,6 +15,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick LinguistTools Xml)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick LinguistTools Xml)
 
 set(TRANSLATIONASSISTANT_SOURCES
+    qml/translation_assistant.qrc
     include/translationassistant.h src/translationassistant.cpp
     include/scene.h src/scene.cpp
     include/scenehooks.h src/scenehooks.cpp
@@ -35,6 +36,10 @@ target_link_libraries(TranslationAssistant
   PUBLIC Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Xml)
 target_link_libraries(TranslationAssistant
   PRIVATE Qt${QT_VERSION_MAJOR}::CorePrivate)
+
+# Enable address sanitizer for Debug and RelWithDebInfo builds
+target_compile_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
+target_link_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
 
 # Enable warnings
 if(MSVC)

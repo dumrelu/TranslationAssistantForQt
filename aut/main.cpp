@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
         
+        qDebug() << engine.rootObjects();
         auto* window = qobject_cast<QQuickWindow*>(engine.rootObjects()[0]);
         auto* translationAssistant = new ta::TranslationAssistant{ window };
         Q_UNUSED(translationAssistant);
