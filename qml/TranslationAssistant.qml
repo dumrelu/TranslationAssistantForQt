@@ -34,6 +34,12 @@ Item {
         width: parent.width / 2.5
         height: parent.height
 
+        // TODO: Use a StackView
+        Page {
+            id: background
+            anchors.fill: parent
+        }
+
         TranslationListView {
             anchors.fill: parent
             model: TranslationAssistant

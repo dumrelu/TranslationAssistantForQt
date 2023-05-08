@@ -8,7 +8,7 @@ ListView {
         width: parent.width
         height: 50
         color: index % 2 ? "red" : "blue"
-        Text {
+        Label {
             anchors.centerIn: parent
             text: index
         }
