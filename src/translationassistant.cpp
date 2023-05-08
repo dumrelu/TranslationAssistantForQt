@@ -71,7 +71,7 @@ QQmlEngine* qmlEngineForWindow(QQuickWindow* window)
 }
 
 TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent)
-    : QObject{ parent }
+    : QAbstractListModel{ parent }
     , m_window{ window }
     , m_qmlEngine{ qmlEngineForWindow(window) }
     , m_scene{ window }
@@ -107,6 +107,48 @@ bool TranslationAssistant::addTranslationFile(const QString &filename)
     }
 
     return ret;
+}
+
+QHash<int, QByteArray> TranslationAssistant::roleNames() const
+{
+    return {
+        { static_cast<int>(Roles::Source), "source" },
+        { static_cast<int>(Roles::Translation), "translation" },
+        { static_cast<int>(Roles::Context), "context" },
+    };
+}
+
+int TranslationAssistant::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return static_cast<int>(m_allTranslations.size());
+}
+
+QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
+{
+    if(!index.isValid() || index.row() >= static_cast<int>(m_allTranslations.size()) || index.row() < 0)
+    {
+        return {};
+    }
+
+    const auto translationID = m_allTranslations[index.row()];
+    const auto optTranslationData = m_translationFiles.translationData(translationID);
+    if(!optTranslationData)
+    {
+        return {};
+    }
+
+    switch(static_cast<Roles>(role))
+    {
+    case Roles::Source:
+        return optTranslationData->source;
+    case Roles::Translation:
+        return optTranslationData->translation;
+    case Roles::Context:
+        return optTranslationData->context;
+    }
+
+    return {};
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)

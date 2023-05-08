@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QQuickWindow>
+#include <QAbstractListModel>
 
 #include "scene.h"
 #include "textitemoverlay.h"
@@ -11,16 +12,29 @@
 namespace ta
 {
 
-class TranslationAssistant : public QObject
+class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
 public:
+    enum Roles
+    {
+        // Qt Roles user defined
+        Source = Qt::UserRole + 1,
+        Translation, 
+        Context,
+    };
+
     explicit TranslationAssistant(QQuickWindow* window, QObject* parent = nullptr);
 
     /// @brief Adds a translation file that will be edited by the TranslationAssistant
     /// @param filename 
     /// @return 
     bool addTranslationFile(const QString& filename);
+
+    // QAbstractListModel interface
+    QHash<int, QByteArray> roleNames() const override;
+    int rowCount(const QModelIndex& parent) const override;
+    QVariant data(const QModelIndex& index, int role) const override;
 
 private:
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
