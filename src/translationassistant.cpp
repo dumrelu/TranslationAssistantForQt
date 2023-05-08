@@ -95,6 +95,8 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     qApp->installTranslator(&m_pendingTranslator);
 
     createUiOverlay();
+
+    //TODO: Proxy models for verified translations, untranslated, etc.
 }
 
 bool TranslationAssistant::addTranslationFile(const QString &filename)
@@ -103,6 +105,7 @@ bool TranslationAssistant::addTranslationFile(const QString &filename)
 
     if(ret)
     {
+        // TODO: Optimization: don't rebuild the model every time
         buildModel();
     }
 
@@ -262,7 +265,8 @@ void TranslationAssistant::createUiOverlay()
 
 void TranslationAssistant::buildModel()
 {
-    //TODO: reset model
+    beginResetModel();
+
     m_allTranslations = m_translationFiles.allTranslationIDs();
 
     // By default, sort by context
@@ -277,8 +281,8 @@ void TranslationAssistant::buildModel()
             return (lhsData ? lhsData->context : emptyContext) < (rhsData ? rhsData->context : emptyContext);
         }
     );
-    
-    //TODO: Proxy models for verified translations
+
+    endResetModel();
 }
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
