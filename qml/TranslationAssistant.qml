@@ -1,5 +1,6 @@
 import QtQuick 2.8
 import QtQuick.Controls 2.1
+import TranslationAssistant 1.0
 
 Item {
     id: root
@@ -33,9 +34,9 @@ Item {
         width: parent.width / 2.5
         height: parent.height
 
-        Rectangle {
+        TranslationListView {
             anchors.fill: parent
-            color: "red"
+            model: TranslationAssistant
         }
 
         state: "visible"

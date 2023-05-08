@@ -244,6 +244,9 @@ void TranslationAssistant::createUiOverlay()
 {
     initialize_qrc();
 
+    // Register this class as a qml singleton
+    qmlRegisterSingletonInstance<TranslationAssistant>("TranslationAssistant", 1, 0, "TranslationAssistant", this);
+
     QQmlComponent component{ m_qmlEngine, QUrl{ "qrc:/translation_assistant/TranslationAssistant.qml" } };
     if(component.status() != QQmlComponent::Status::Ready)
     {
