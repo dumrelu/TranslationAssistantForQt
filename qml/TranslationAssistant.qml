@@ -33,6 +33,7 @@ Item {
 
         width: parent.width / 2.5
         height: parent.height
+        visible: width > 0
 
         // TODO: Use a StackView
         Page {
