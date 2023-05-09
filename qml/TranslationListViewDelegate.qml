@@ -46,7 +46,5 @@ Rectangle {
                 checked: false  //TODO
             }
         }
-
-        
     }
 }
