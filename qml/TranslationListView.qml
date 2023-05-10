@@ -14,15 +14,15 @@ ListView {
 
         width: root.width - root.leftMargin - root.rightMargin
         selected: index === root.currentIndex
+        expanded: selected
 
-        onExpandedChanged: function() {
-            if (delegate.expanded) 
+        onTitleClicked: function() {
+            if (root.currentIndex !== index) 
             {
                 root.currentIndex = index;
-
                 TranslationAssistant.translationClicked(model.id);
             }
-            else if(root.currentIndex === index)
+            else
             {
                 root.currentIndex = -1;
                 TranslationAssistant.translationClicked();

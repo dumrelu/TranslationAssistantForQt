@@ -12,9 +12,12 @@ Rectangle {
     property real titleFontFactor: 1.5
     property real labelFontFactor: 0.85
 
+    signal titleClicked;
+
     height: columnLayout.height + columnLayout.anchors.topMargin * 2
 
     color: "transparent"
+    clip: true
 
     border.color: root.selected ? TranslationAssistant.selectedTextColor : "black"
     border.width: 2
@@ -56,7 +59,7 @@ Rectangle {
                     anchors.fill: parent
 
                     onClicked: {
-                        root.expanded = !root.expanded
+                        root.titleClicked();
                     }
                 }
             }
