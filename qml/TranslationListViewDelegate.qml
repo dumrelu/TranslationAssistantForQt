@@ -6,6 +6,7 @@ Rectangle {
     id: root
     
     property bool expanded: false
+    property bool selected: false
 
     property real titleFontFactor: 1.5
     property real labelFontFactor: 0.85
@@ -14,7 +15,7 @@ Rectangle {
 
     color: "transparent"
 
-    border.color: "black"
+    border.color: root.selected ? "green" : "black"
     border.width: 2
     radius: 5
 
