@@ -161,8 +161,6 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
         return false;
     }
 
-    qWarning() << "setData called for index: " << index << " with value: " << value << " and role: " << role;
-
     const auto translationID = m_allTranslations[index.row()];
 
     if(role == static_cast<int>(Roles::Translation))
