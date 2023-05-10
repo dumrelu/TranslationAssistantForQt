@@ -45,17 +45,46 @@ Item {
         ColumnLayout {
             anchors.fill: parent
 
-            Label {
+            ColumnLayout {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 30
-                
-                elide: Text.ElideRight
-                text: qsTr("Selected text item") + ": " + TranslationAssistant.selectedTranslationText
+
+                visible: TranslationAssistant.selectedTranslationText
+
+                Label {
+                    Layout.fillWidth: true
+                    
+                    elide: Text.ElideRight
+                    font.pixelSize: Qt.application.font.pixelSize * 1.3
+
+                    text: qsTr("Translations for selected item")
+                }
+
+                Label {
+                    Layout.fillWidth: true
+                    
+                    elide: Text.ElideRight
+
+                    text: qsTr("Selected text item") + ": " + TranslationAssistant.selectedTranslationText
+                }
+
+                Button {
+                    Layout.fillWidth: true
+
+                    text: qsTr("Clear selection")
+
+                    onClicked: {
+                        TranslationAssistant.selectedTranslationText = "";
+                        translationListView.currentIndex = -1;
+                    }
+                }
             }
 
             TranslationListView {
+                id: translationListView
+                
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                
                 model: !TranslationAssistant.selectedTranslationText ? TranslationAssistant : TranslationAssistant.verifiedTranslationsModel
             }
         }
