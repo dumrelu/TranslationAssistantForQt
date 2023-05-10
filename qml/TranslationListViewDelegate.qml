@@ -1,6 +1,7 @@
 import QtQuick 2.8
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.2
+import TranslationAssistant 1.0
 
 Rectangle {
     id: root
@@ -15,7 +16,7 @@ Rectangle {
 
     color: "transparent"
 
-    border.color: root.selected ? "green" : "black"
+    border.color: root.selected ? TranslationAssistant.selectedTextColor : "black"
     border.width: 2
     radius: 5
 

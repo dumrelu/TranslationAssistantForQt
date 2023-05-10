@@ -15,6 +15,9 @@ namespace ta
 class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QColor selectedTextColor READ selectedTextColor CONSTANT)
+    Q_PROPERTY(QColor relatedTextColor READ relatedTextColor CONSTANT)
+
 public:
     enum Roles
     {
@@ -30,6 +33,9 @@ public:
     /// @param filename 
     /// @return 
     bool addTranslationFile(const QString& filename);
+
+    QColor selectedTextColor() const;
+    QColor relatedTextColor() const;
 
     // QAbstractListModel interface
     QHash<int, QByteArray> roleNames() const override;

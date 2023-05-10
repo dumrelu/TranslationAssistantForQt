@@ -112,6 +112,16 @@ bool TranslationAssistant::addTranslationFile(const QString &filename)
     return ret;
 }
 
+QColor TranslationAssistant::selectedTextColor() const
+{
+    return m_selectedTextColor;
+}
+
+QColor TranslationAssistant::relatedTextColor() const
+{
+    return m_relatedTextColor;
+}
+
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
 {
     return {
