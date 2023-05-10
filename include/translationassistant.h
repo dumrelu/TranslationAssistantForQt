@@ -22,7 +22,8 @@ public:
     enum Roles
     {
         // Qt Roles user defined
-        Source = Qt::UserRole + 1,
+        ID = Qt::UserRole + 1,
+        Source, 
         Translation, 
         Context,
     };
@@ -33,6 +34,11 @@ public:
     /// @param filename 
     /// @return 
     bool addTranslationFile(const QString& filename);
+
+    /// @brief Will highlight all the text items using the given translation
+    /// @param translationID 
+    /// @return 
+    Q_INVOKABLE bool translationClicked(QVariant translationID = {});
 
     QColor selectedTextColor() const;
     QColor relatedTextColor() const;

@@ -112,6 +112,27 @@ bool TranslationAssistant::addTranslationFile(const QString &filename)
     return ret;
 }
 
+Q_INVOKABLE bool TranslationAssistant::translationClicked(QVariant translationIDVariant)
+{
+    auto translationID = TranslationFiles::INVALID_ID;
+    if(translationIDVariant.canConvert<TranslationFiles::TranslationID>())
+    {
+        translationID = translationIDVariant.value<TranslationFiles::TranslationID>();
+    }
+
+    m_possibleTranslations.clear();
+    m_verifiedTranslations.clear();
+
+    if(translationID != TranslationFiles::INVALID_ID)
+    {
+        m_verifiedTranslations.push_back(translationID);
+    }
+
+    updateHighlights(nullptr);
+
+    return true;
+}
+
 QColor TranslationAssistant::selectedTextColor() const
 {
     return m_selectedTextColor;
@@ -125,6 +146,7 @@ QColor TranslationAssistant::relatedTextColor() const
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
 {
     return {
+        { static_cast<int>(Roles::ID), "id" },
         { static_cast<int>(Roles::Source), "source" },
         { static_cast<int>(Roles::Translation), "translation" },
         { static_cast<int>(Roles::Context), "context" },
@@ -153,6 +175,8 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
 
     switch(static_cast<Roles>(role))
     {
+    case Roles::ID:
+        return translationID;
     case Roles::Source:
         return optTranslationData->source;
     case Roles::Translation:

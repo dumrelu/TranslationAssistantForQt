@@ -19,10 +19,13 @@ ListView {
             if (delegate.expanded) 
             {
                 root.currentIndex = index;
+
+                TranslationAssistant.translationClicked(model.id);
             }
             else if(root.currentIndex === index)
             {
                 root.currentIndex = -1;
+                TranslationAssistant.translationClicked();
             }
         }
     }
