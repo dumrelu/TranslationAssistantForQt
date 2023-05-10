@@ -150,8 +150,23 @@ Rectangle {
             visible: root.expanded
             wrapMode: TextArea.Wrap
 
-            placeholderText: qsTr("Enter translation here")
+            // placeholderText: qsTr("Enter translation here")
             text: model.translation
+
+            Keys.onReturnPressed: function(event) {
+                if (event.modifiers & Qt.ControlModifier)
+                {
+                    translationTextArea.editingFinished();
+                }
+                else
+                {
+                    event.accepted = false;
+                }
+            }
+
+            onEditingFinished: function() {
+                model.translation = translationTextArea.text
+            }
         }
     }
 }

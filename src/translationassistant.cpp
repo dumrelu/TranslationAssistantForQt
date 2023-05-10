@@ -129,7 +129,7 @@ int TranslationAssistant::rowCount(const QModelIndex &parent) const
 
 QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
 {
-    if(!index.isValid() || index.row() >= static_cast<int>(m_allTranslations.size()) || index.row() < 0)
+    if(!isIndexValid(index))
     {
         return {};
     }
@@ -152,6 +152,27 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
     }
 
     return {};
+}
+
+bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(!isIndexValid(index))
+    {
+        return false;
+    }
+
+    qWarning() << "setData called for index: " << index << " with value: " << value << " and role: " << role;
+
+    const auto translationID = m_allTranslations[index.row()];
+
+    if(role == static_cast<int>(Roles::Translation))
+    {
+        const auto translation = value.toString();
+        m_translationFiles.translate(translationID, translation);
+        return true;
+    }
+
+    return false;
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
@@ -286,6 +307,13 @@ void TranslationAssistant::buildModel()
     );
 
     endResetModel();
+}
+
+bool TranslationAssistant::isIndexValid(const QModelIndex &index) const
+{
+    return index.isValid() &&
+        index.row() >= 0 &&
+        index.row() < static_cast<int>(m_allTranslations.size());
 }
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)

@@ -35,6 +35,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 private:
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
@@ -47,6 +48,8 @@ private:
 
     void createUiOverlay();
     void buildModel();
+
+    bool isIndexValid(const QModelIndex& index) const;
 
     // Check to see which of the translation from the given list are used for the given text item.
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
