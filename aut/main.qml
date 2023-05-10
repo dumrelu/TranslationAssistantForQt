@@ -56,7 +56,7 @@ Window {
 
     Rectangle {
         id: rect2
-        color: "blue"
+        color: "white"
         anchors.left: rect1.right
         anchors.right: parent.right
         height: parent.height / 2

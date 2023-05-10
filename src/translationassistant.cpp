@@ -248,7 +248,6 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         return;
     }
 
-    //TODO: Update the model as well
     m_possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
     m_verifiedTranslations = verifyTranslations(textItem, m_possibleTranslations);
     qDebug() << "Possible translations: " << m_possibleTranslations;
@@ -350,7 +349,13 @@ bool TranslationAssistant::isIndexValid(const QModelIndex &index) const
 
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
 {
-    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), translationContext(textItem));
+    const auto text = textItem->text();
+    if(text.isEmpty())
+    {
+        return {};
+    }
+
+    auto possibleTranslations = m_translationFiles.findTranslations(text, translationContext(textItem));
     possibleTranslations.erase(
         std::remove_if(
             possibleTranslations.begin(), possibleTranslations.end(),
