@@ -41,14 +41,6 @@ Rectangle {
             
             spacing: 20
 
-            MouseArea {
-                anchors.fill: parent
-
-                onClicked: {
-                    root.expanded = !root.expanded
-                }
-            }
-
             Label {
                 id: titleLabel
 
@@ -57,6 +49,14 @@ Rectangle {
                 elide: Label.ElideRight
                 font.pixelSize: Qt.application.font.pixelSize * root.titleFontFactor
                 text: model.translation ? model.translation : model.source
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        root.expanded = !root.expanded
+                    }
+                }
             }
             
             CheckBox {
