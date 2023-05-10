@@ -17,6 +17,7 @@ class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QSortFilterProxyModel* verifiedTranslationsModel READ verifiedTranslationsModel CONSTANT)
+    Q_PROPERTY(QString selectedTranslationText READ selectedTranslationText WRITE setSelectedTranslationText NOTIFY selectedTranslationTextChanged)
     Q_PROPERTY(QColor selectedTextColor READ selectedTextColor CONSTANT)
     Q_PROPERTY(QColor relatedTextColor READ relatedTextColor CONSTANT)
 
@@ -43,14 +44,20 @@ public:
     Q_INVOKABLE bool translationClicked(QVariant translationID = {});
 
     QSortFilterProxyModel* verifiedTranslationsModel();
+    QString selectedTranslationText() const;
     QColor selectedTextColor() const;
     QColor relatedTextColor() const;
+
+    void setSelectedTranslationText(QString selectedTranslationText);
 
     // QAbstractListModel interface
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
+
+signals:
+    void selectedTranslationTextChanged();
 
 private:
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
@@ -81,6 +88,7 @@ private:
 
     QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_verifiedTranslations;
+    QString m_selectedTranslationText;
 
     QColor m_selectedTextColor = QColor{ 0, 255, 0 };
     QColor m_relatedTextColor = QColor{ 0, 0, 255 };

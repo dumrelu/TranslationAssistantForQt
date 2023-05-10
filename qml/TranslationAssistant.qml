@@ -1,4 +1,5 @@
 import QtQuick 2.8
+import QtQuick.Layouts 1.2
 import QtQuick.Controls 2.1
 import TranslationAssistant 1.0
 
@@ -41,9 +42,22 @@ Item {
             anchors.fill: parent
         }
 
-        TranslationListView {
+        ColumnLayout {
             anchors.fill: parent
-            model: TranslationAssistant.verifiedTranslationsModel
+
+            Label {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 30
+                
+                elide: Text.ElideRight
+                text: qsTr("Selected text item") + ": " + TranslationAssistant.selectedTranslationText
+            }
+
+            TranslationListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: !TranslationAssistant.selectedTranslationText ? TranslationAssistant : TranslationAssistant.verifiedTranslationsModel
+            }
         }
 
         state: "visible"

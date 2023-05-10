@@ -41,7 +41,7 @@ Window {
 
             delegate: ItemDelegate {
                 id: delegate
-                text: "ListViewText#" + index + (index === 0 || index === 30 ? qsTr("Text1") : "")
+                text: "ListViewText#" + index + (index === 0 || index === 30 ? qsTr("Text1") + qsTr("Text4") : "")
 
                 Timer {
                     interval: 2000

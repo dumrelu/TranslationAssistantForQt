@@ -13,19 +13,22 @@ ListView {
         id: delegate 
 
         width: root.width - root.leftMargin - root.rightMargin
-        selected: index === root.currentIndex
-        expanded: selected
-
+        expanded: index === root.currentIndex
+        selected: TranslationAssistant.selectedTranslationText ? false : expanded
+        
         onTitleClicked: function() {
             if (root.currentIndex !== index) 
             {
                 root.currentIndex = index;
-                TranslationAssistant.translationClicked(model.id);
+
+                if(!TranslationAssistant.selectedTranslationText)
+                    TranslationAssistant.translationClicked(model.id);
             }
             else
             {
                 root.currentIndex = -1;
-                TranslationAssistant.translationClicked();
+                if(!TranslationAssistant.selectedTranslationText)
+                    TranslationAssistant.translationClicked();
             }
         }
     }
