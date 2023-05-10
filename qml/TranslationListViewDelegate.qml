@@ -170,7 +170,7 @@ Rectangle {
             }
 
             onEditingFinished: function() {
-                model.translation = translationTextArea.text
+                model.translation = translationTextArea.text;
             }
         }
     }

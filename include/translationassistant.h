@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QQuickWindow>
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 
 #include "scene.h"
 #include "textitemoverlay.h"
@@ -15,6 +16,7 @@ namespace ta
 class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QSortFilterProxyModel* verifiedTranslationsModel READ verifiedTranslationsModel CONSTANT)
     Q_PROPERTY(QColor selectedTextColor READ selectedTextColor CONSTANT)
     Q_PROPERTY(QColor relatedTextColor READ relatedTextColor CONSTANT)
 
@@ -40,6 +42,7 @@ public:
     /// @return 
     Q_INVOKABLE bool translationClicked(QVariant translationID = {});
 
+    QSortFilterProxyModel* verifiedTranslationsModel();
     QColor selectedTextColor() const;
     QColor relatedTextColor() const;
 
@@ -66,8 +69,10 @@ private:
     // Check to see which of the translation from the given list are used for the given text item.
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
 
-    QQuickWindow* m_window;
-    QQmlEngine* m_qmlEngine;
+    QSortFilterProxyModel m_verifiedTranslationsModel;
+
+    QQuickWindow* m_window = nullptr;
+    QQmlEngine* m_qmlEngine = nullptr;
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
@@ -75,7 +80,6 @@ private:
     PendingTranslator m_pendingTranslator;
 
     QList<TranslationFiles::TranslationID> m_allTranslations;
-    QList<TranslationFiles::TranslationID> m_possibleTranslations;
     QList<TranslationFiles::TranslationID> m_verifiedTranslations;
 
     QColor m_selectedTextColor = QColor{ 0, 255, 0 };

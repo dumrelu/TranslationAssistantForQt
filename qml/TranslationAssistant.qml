@@ -43,7 +43,7 @@ Item {
 
         TranslationListView {
             anchors.fill: parent
-            model: TranslationAssistant
+            model: TranslationAssistant.verifiedTranslationsModel
         }
 
         state: "visible"

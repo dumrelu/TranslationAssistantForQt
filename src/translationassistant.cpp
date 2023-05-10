@@ -97,6 +97,10 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     createUiOverlay();
 
     //TODO: Proxy models for verified translations, untranslated, etc.
+    
+    m_verifiedTranslationsModel.setSourceModel(this);
+    m_verifiedTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
+    // m_verifiedTranslationsModel.setFilterRegExp(QRegExp(QStringLiteral("0|1")));
 }
 
 bool TranslationAssistant::addTranslationFile(const QString &filename)
@@ -120,7 +124,6 @@ Q_INVOKABLE bool TranslationAssistant::translationClicked(QVariant translationID
         translationID = translationIDVariant.value<TranslationFiles::TranslationID>();
     }
 
-    m_possibleTranslations.clear();
     m_verifiedTranslations.clear();
 
     if(translationID != TranslationFiles::INVALID_ID)
@@ -131,6 +134,11 @@ Q_INVOKABLE bool TranslationAssistant::translationClicked(QVariant translationID
     updateHighlights(nullptr);
 
     return true;
+}
+
+QSortFilterProxyModel *TranslationAssistant::verifiedTranslationsModel()
+{
+    return &m_verifiedTranslationsModel;
 }
 
 QColor TranslationAssistant::selectedTextColor() const
@@ -196,10 +204,20 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
     }
 
     const auto translationID = m_allTranslations[index.row()];
+    const auto optTranslationData = m_translationFiles.translationData(translationID);
+    if(!optTranslationData)
+    {
+        return false;
+    }
 
     if(role == static_cast<int>(Roles::Translation))
     {
         const auto translation = value.toString();
+        if(translation.isEmpty() || optTranslationData->translation == translation)
+        {
+            return false;
+        }
+
         m_translationFiles.translate(translationID, translation);
         return true;
     }
@@ -248,10 +266,21 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         return;
     }
 
-    m_possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    m_verifiedTranslations = verifyTranslations(textItem, m_possibleTranslations);
-    qDebug() << "Possible translations: " << m_possibleTranslations;
+    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
+    m_verifiedTranslations = verifyTranslations(textItem, possibleTranslations);
+    qDebug() << "Possible translations: " << possibleTranslations;
     qDebug() << "Verified translations: " << m_verifiedTranslations;
+
+    QString regex;
+    for(int i = 0; i < m_verifiedTranslations.size(); ++i)
+    {
+        regex += QString::number(m_verifiedTranslations[i]);
+        if(i < m_verifiedTranslations.size() - 1)
+        {
+            regex += "|";
+        }
+    }
+    m_verifiedTranslationsModel.setFilterRegularExpression(regex);
 
     updateHighlights(textItem);
 }
