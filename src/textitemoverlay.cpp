@@ -57,11 +57,15 @@ void TextItemOverlay::paint(QPainter *painter)
 
 void TextItemOverlay::mousePressEvent(QMouseEvent *event)
 {
-    // TODO: have a look at the modifiers
-    emit textItemClicked(m_textItem);
-
-    // Propagate the mouse event further
-    event->ignore();
+    if (event->modifiers() & Qt::ControlModifier)
+    {
+        emit textItemClicked(m_textItem);
+    }
+    else
+    {
+        // Propagate the mouse event further
+        event->ignore();
+    }
 }
 
 }

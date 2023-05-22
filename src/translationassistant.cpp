@@ -71,7 +71,7 @@ QQmlEngine* qmlEngineForWindow(QQuickWindow* window)
 }
 
 TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent)
-    : QObject{ parent }
+    : QAbstractListModel{ parent }
     , m_window{ window }
     , m_qmlEngine{ qmlEngineForWindow(window) }
     , m_scene{ window }
@@ -95,6 +95,150 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     qApp->installTranslator(&m_pendingTranslator);
 
     createUiOverlay();
+
+    //TODO: Proxy models for verified translations, untranslated, etc.
+    
+    m_verifiedTranslationsModel.setSourceModel(this);
+    m_verifiedTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
+    // m_verifiedTranslationsModel.setFilterRegExp(QRegExp(QStringLiteral("0|1")));
+}
+
+bool TranslationAssistant::addTranslationFile(const QString &filename)
+{
+    auto ret = m_translationFiles.loadTranslationFile(filename);
+
+    if(ret)
+    {
+        // TODO: Optimization: don't rebuild the model every time
+        buildModel();
+    }
+
+    return ret;
+}
+
+Q_INVOKABLE bool TranslationAssistant::translationClicked(QVariant translationIDVariant)
+{
+    auto translationID = TranslationFiles::INVALID_ID;
+    if(translationIDVariant.canConvert<TranslationFiles::TranslationID>())
+    {
+        translationID = translationIDVariant.value<TranslationFiles::TranslationID>();
+    }
+
+    m_verifiedTranslations.clear();
+
+    if(translationID != TranslationFiles::INVALID_ID)
+    {
+        m_verifiedTranslations.push_back(translationID);
+    }
+
+    updateHighlights(nullptr);
+
+    return true;
+}
+
+QSortFilterProxyModel *TranslationAssistant::verifiedTranslationsModel()
+{
+    return &m_verifiedTranslationsModel;
+}
+
+QString TranslationAssistant::selectedTranslationText() const
+{
+    return m_selectedTranslationText;
+}
+
+QColor TranslationAssistant::selectedTextColor() const
+{
+    return m_selectedTextColor;
+}
+
+QColor TranslationAssistant::relatedTextColor() const
+{
+    return m_relatedTextColor;
+}
+
+void TranslationAssistant::setSelectedTranslationText(QString selectedTranslationText)
+{
+    if (m_selectedTranslationText == selectedTranslationText)
+    {
+        return;
+    }
+
+    m_selectedTranslationText = std::move(selectedTranslationText);
+    emit selectedTranslationTextChanged();
+}
+
+QHash<int, QByteArray> TranslationAssistant::roleNames() const
+{
+    return {
+        { static_cast<int>(Roles::ID), "id" },
+        { static_cast<int>(Roles::Source), "source" },
+        { static_cast<int>(Roles::Translation), "translation" },
+        { static_cast<int>(Roles::Context), "context" },
+    };
+}
+
+int TranslationAssistant::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return static_cast<int>(m_allTranslations.size());
+}
+
+QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
+{
+    if(!isIndexValid(index))
+    {
+        return {};
+    }
+
+    const auto translationID = m_allTranslations[index.row()];
+    const auto optTranslationData = m_translationFiles.translationData(translationID);
+    if(!optTranslationData)
+    {
+        return {};
+    }
+
+    switch(static_cast<Roles>(role))
+    {
+    case Roles::ID:
+        return translationID;
+    case Roles::Source:
+        return optTranslationData->source;
+    case Roles::Translation:
+        return optTranslationData->translation;
+    case Roles::Context:
+        return optTranslationData->context;
+    }
+
+    return {};
+}
+
+bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(!isIndexValid(index))
+    {
+        return false;
+    }
+
+    const auto translationID = m_allTranslations[index.row()];
+    const auto optTranslationData = m_translationFiles.translationData(translationID);
+    if(!optTranslationData)
+    {
+        return false;
+    }
+
+    if(role == static_cast<int>(Roles::Translation))
+    {
+        const auto translation = value.toString();
+        if(translation.isEmpty() || optTranslationData->translation == translation)
+        {
+            return false;
+        }
+
+        m_translationFiles.translate(translationID, translation);
+        return true;
+    }
+
+    return false;
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
@@ -138,12 +282,23 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         return;
     }
 
-    //TODO: Update the model as well
-    m_possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    m_verifiedTranslations = verifyTranslations(textItem, m_possibleTranslations);
-    qDebug() << "Possible translations: " << m_possibleTranslations;
+    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
+    m_verifiedTranslations = verifyTranslations(textItem, possibleTranslations);
+    qDebug() << "Possible translations: " << possibleTranslations;
     qDebug() << "Verified translations: " << m_verifiedTranslations;
 
+    QString regex;
+    for(int i = 0; i < m_verifiedTranslations.size(); ++i)
+    {
+        regex += QString::number(m_verifiedTranslations[i]);
+        if(i < m_verifiedTranslations.size() - 1)
+        {
+            regex += "|";
+        }
+    }
+    m_verifiedTranslationsModel.setFilterRegularExpression(regex);
+
+    setSelectedTranslationText(textItem->text());
     updateHighlights(textItem);
 }
 
@@ -187,6 +342,9 @@ void TranslationAssistant::createUiOverlay()
 {
     initialize_qrc();
 
+    // Register this class as a qml singleton
+    qmlRegisterSingletonInstance<TranslationAssistant>("TranslationAssistant", 1, 0, "TranslationAssistant", this);
+
     QQmlComponent component{ m_qmlEngine, QUrl{ "qrc:/translation_assistant/TranslationAssistant.qml" } };
     if(component.status() != QQmlComponent::Status::Ready)
     {
@@ -206,9 +364,44 @@ void TranslationAssistant::createUiOverlay()
     overlay->setParent(this);
 }
 
+void TranslationAssistant::buildModel()
+{
+    beginResetModel();
+
+    m_allTranslations = m_translationFiles.allTranslationIDs();
+
+    // By default, sort by context
+    std::stable_sort(
+        m_allTranslations.begin(), m_allTranslations.end(),
+        [this](const auto& lhs, const auto& rhs)
+        {
+            const auto lhsData = m_translationFiles.translationData(lhs);
+            const auto rhsData = m_translationFiles.translationData(rhs);
+            static const QString emptyContext;
+            
+            return (lhsData ? lhsData->context : emptyContext) < (rhsData ? rhsData->context : emptyContext);
+        }
+    );
+
+    endResetModel();
+}
+
+bool TranslationAssistant::isIndexValid(const QModelIndex &index) const
+{
+    return index.isValid() &&
+        index.row() >= 0 &&
+        index.row() < static_cast<int>(m_allTranslations.size());
+}
+
 QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
 {
-    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), translationContext(textItem));
+    const auto text = textItem->text();
+    if(text.isEmpty())
+    {
+        return {};
+    }
+
+    auto possibleTranslations = m_translationFiles.findTranslations(text, translationContext(textItem));
     possibleTranslations.erase(
         std::remove_if(
             possibleTranslations.begin(), possibleTranslations.end(),

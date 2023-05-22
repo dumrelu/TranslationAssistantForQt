@@ -37,9 +37,11 @@ target_link_libraries(TranslationAssistant
 target_link_libraries(TranslationAssistant
   PRIVATE Qt${QT_VERSION_MAJOR}::CorePrivate)
 
-# Enable address sanitizer for Debug and RelWithDebInfo builds
-target_compile_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
-target_link_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
+if(NOT APPLE)
+  # Enable address sanitizer for Debug and RelWithDebInfo builds
+  target_compile_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
+  target_link_options(TranslationAssistant PUBLIC $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-fsanitize=address -fsanitize=undefined -fsanitize=leak>)
+endif()
 
 # Enable warnings
 if(MSVC)

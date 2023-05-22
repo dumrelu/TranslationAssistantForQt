@@ -32,6 +32,10 @@ public:
         bool isPending = false;
     };
 
+    /// @brief Returns a list of all the loaded translations
+    /// @return 
+    QList<TranslationID> allTranslationIDs() const;
+
     /// @brief Loads the given .ts file
     /// @param tsFilePath A path to an existing .ts file
     /// @return true if file was loaded
