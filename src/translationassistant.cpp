@@ -174,6 +174,7 @@ QHash<int, QByteArray> TranslationAssistant::roleNames() const
         { static_cast<int>(Roles::Source), "source" },
         { static_cast<int>(Roles::Translation), "translation" },
         { static_cast<int>(Roles::Context), "context" },
+        { static_cast<int>(Roles::Verified), "verified" }
     };
 }
 
@@ -207,6 +208,9 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
         return optTranslationData->translation;
     case Roles::Context:
         return optTranslationData->context;
+    case Roles::Verified:
+        //TODO: Implement this and also setData
+        return true;
     }
 
     return {};

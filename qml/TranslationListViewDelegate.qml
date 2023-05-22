@@ -67,7 +67,7 @@ Rectangle {
             CheckBox {
                 id: translationCheckBox
 
-                checked: false  //TODO
+                checked: model.verified
             }
         }
 

@@ -15,6 +15,47 @@
     </message>
 </context>
 <context>
+    <name>TranslationAssistant</name>
+    <message>
+        <location filename="../qml/TranslationAssistant.qml" line="59"/>
+        <source>Translations for selected item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationAssistant.qml" line="67"/>
+        <source>Selected text item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationAssistant.qml" line="73"/>
+        <source>Clear selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TranslationListViewDelegate</name>
+    <message>
+        <location filename="../qml/TranslationListViewDelegate.qml" line="94"/>
+        <source>Context</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationListViewDelegate.qml" line="120"/>
+        <source>Source text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationListViewDelegate.qml" line="146"/>
+        <source>Translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationListViewDelegate.qml" line="158"/>
+        <source>Enter translation here</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message numerus="yes">
         <location filename="main.qml" line="11"/>
@@ -35,6 +76,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="main.qml" line="44"/>
         <location filename="main.qml" line="83"/>
         <source>Text4</source>
         <translation type="unfinished"></translation>
