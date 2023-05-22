@@ -100,7 +100,6 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     
     m_verifiedTranslationsModel.setSourceModel(this);
     m_verifiedTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
-    // m_verifiedTranslationsModel.setFilterRegExp(QRegExp(QStringLiteral("0|1")));
 }
 
 bool TranslationAssistant::addTranslationFile(const QString &filename)
@@ -298,7 +297,7 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     qDebug() << "Possible translations: " << possibleTranslations;
     qDebug() << "Verified translations: " << m_verifiedTranslations;
 
-    QString regex;
+    QString regex = QStringLiteral("^");
     for(int i = 0; i < m_verifiedTranslations.size(); ++i)
     {
         regex += QString::number(m_verifiedTranslations[i]);
@@ -307,6 +306,9 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
             regex += "|";
         }
     }
+    regex += QStringLiteral("$");
+    qDebug() << "Regex: " << regex;
+    
     m_verifiedTranslationsModel.setFilterRegularExpression(regex);
 
     setSelectedTranslationText(textItem->text());
