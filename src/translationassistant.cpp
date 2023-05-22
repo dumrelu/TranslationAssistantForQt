@@ -209,6 +209,7 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
     case Roles::Context:
         return optTranslationData->context;
     case Roles::Verified:
+        qWarning() << "TODO: Implement this";
         //TODO: Implement this and also setData
         return true;
     }
@@ -240,6 +241,12 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
 
         m_translationFiles.translate(translationID, translation);
         return true;
+    }
+    else if(role == static_cast<int>(Roles::Verified))
+    {
+        //TODO: Implement this
+        qWarning() << "TODO: Implement this";
+        return false;
     }
 
     return false;
