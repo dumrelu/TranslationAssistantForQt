@@ -68,6 +68,17 @@ Rectangle {
                 id: translationCheckBox
 
                 checked: model.translationType === ""
+
+                onCheckedChanged: {
+                    if (checked)
+                    {
+                        model.translationType = "";
+                    }
+                    else
+                    {
+                        model.translationType = "unfinished";
+                    }
+                }
             }
         }
 

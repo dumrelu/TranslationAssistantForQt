@@ -57,6 +57,12 @@ public:
     */
     bool translate(TranslationID id, QString translation);
 
+    /// @brief Update the TranslationData for the given id
+    /// @param id 
+    /// @param translationData 
+    /// @return 
+    bool updateTranslationData(TranslationData translationData);
+
     /// @brief Returns the TranslationData for the given id(if any)
     /// @param id 
     /// @return 

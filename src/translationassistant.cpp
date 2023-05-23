@@ -222,7 +222,7 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
     }
 
     const auto translationID = m_allTranslations[index.row()];
-    const auto optTranslationData = m_translationFiles.translationData(translationID);
+    auto optTranslationData = m_translationFiles.translationData(translationID);
     if(!optTranslationData)
     {
         return false;
@@ -236,14 +236,18 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
             return false;
         }
 
-        m_translationFiles.translate(translationID, translation);
-        return true;
+        return m_translationFiles.translate(translationID, translation);
     }
     else if(role == static_cast<int>(Roles::TranslationType))
     {
-        //TODO: Implement this
-        qWarning() << "TODO: Implement this";
-        return false;
+        const auto translationType = value.toString();
+        if(optTranslationData->translationType == translationType)
+        {
+            return false;
+        }
+
+        optTranslationData->translationType = translationType;
+        return m_translationFiles.updateTranslationData(std::move(*optTranslationData));
     }
 
     return false;

@@ -93,22 +93,26 @@ QList<TranslationFiles::TranslationID> TranslationFiles::findTranslations(QStrin
 
 bool TranslationFiles::translate(TranslationID id, QString translation)
 {
-    if(auto pendingIt = m_pendingTranslations.find(id) ; pendingIt != m_pendingTranslations.end())
-    {
-        pendingIt->translation = translation;
-    }
-    else if(auto translationIt = m_translations.find(id) ; translationIt != m_translations.end())
-    {
-        auto pendingTranslation = *translationIt;
-        pendingTranslation.isPending = true;
-        pendingTranslation.translation = translation;
-
-        m_pendingTranslations.insert(id, pendingTranslation);
-    }
-    else
+    auto optTranslationData = translationData(id);
+    if(!optTranslationData)
     {
         return false;
     }
+
+    optTranslationData->translation = std::move(translation);
+    return updateTranslationData(std::move(*optTranslationData));
+}
+
+bool TranslationFiles::updateTranslationData(TranslationData translationData)
+{
+    const auto id = translationData.id;
+    if(!m_translations.contains(id))
+    {
+        return false;
+    }
+
+    translationData.isPending = true;
+    m_pendingTranslations.insert(id, std::move(translationData));
 
     emit translationDataChanged(id);
 
@@ -262,7 +266,7 @@ QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
 
     debug << "\"translations\": [";
     bool first = true;
-    for(const auto& translationData : translationFiles.m_translations)
+    for(const auto id : translationFiles.m_translations.keys())
     {
         if(first)
         {
@@ -273,12 +277,20 @@ QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles)
         {
             debug << ",{";
         }
-        debug << "\"context\":" << translationData.context;
-        debug << ",\"tsFilePath\":" << translationData.tsFilePath;
-        debug << ",\"source\":" << translationData.source;
-        debug << ",\"translation\":" << translationData.translation;
-        debug << ",\"translationType\":" << translationData.translationType;
-        debug << ",\"comment\":" << translationData.comment;
+
+        const auto optTranslationData = translationFiles.translationData(id);
+        if(!optTranslationData)
+        {
+            continue;
+        }
+
+        debug << "\"context\":" << optTranslationData->context;
+        debug << ",\"tsFilePath\":" << optTranslationData->tsFilePath;
+        debug << ",\"source\":" << optTranslationData->source;
+        debug << ",\"translation\":" << optTranslationData->translation;
+        debug << ",\"translationType\":" << optTranslationData->translationType;
+        debug << ",\"comment\":" << optTranslationData->comment;
+        debug << ",\"isPending\":" << optTranslationData->isPending;
         debug << "}";
     }
     debug << "]";
