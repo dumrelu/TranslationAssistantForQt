@@ -29,7 +29,7 @@ public:
         Source, 
         Translation, 
         Context,
-        Verified,
+        TranslationType,
     };
 
     explicit TranslationAssistant(QQuickWindow* window, QObject* parent = nullptr);

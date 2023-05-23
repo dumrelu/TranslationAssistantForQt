@@ -67,7 +67,7 @@ Rectangle {
             CheckBox {
                 id: translationCheckBox
 
-                checked: model.verified
+                checked: model.translationType === ""
             }
         }
 

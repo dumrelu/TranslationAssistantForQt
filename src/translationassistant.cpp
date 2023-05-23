@@ -173,7 +173,7 @@ QHash<int, QByteArray> TranslationAssistant::roleNames() const
         { static_cast<int>(Roles::Source), "source" },
         { static_cast<int>(Roles::Translation), "translation" },
         { static_cast<int>(Roles::Context), "context" },
-        { static_cast<int>(Roles::Verified), "verified" }
+        { static_cast<int>(Roles::TranslationType), "translationType" }
     };
 }
 
@@ -207,10 +207,8 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
         return optTranslationData->translation;
     case Roles::Context:
         return optTranslationData->context;
-    case Roles::Verified:
-        qWarning() << "TODO: Implement this";
-        //TODO: Implement this and also setData
-        return true;
+    case Roles::TranslationType:
+        return optTranslationData->translationType;
     }
 
     return {};
@@ -241,7 +239,7 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
         m_translationFiles.translate(translationID, translation);
         return true;
     }
-    else if(role == static_cast<int>(Roles::Verified))
+    else if(role == static_cast<int>(Roles::TranslationType))
     {
         //TODO: Implement this
         qWarning() << "TODO: Implement this";
@@ -308,7 +306,7 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     }
     regex += QStringLiteral("$");
     qDebug() << "Regex: " << regex;
-    
+
     m_verifiedTranslationsModel.setFilterRegularExpression(regex);
 
     setSelectedTranslationText(textItem->text());
