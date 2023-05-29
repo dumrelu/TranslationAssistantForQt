@@ -174,6 +174,8 @@ Q_INVOKABLE void TranslationAssistant::clearSelectedText()
     }
 
     m_selectedText.clear();
+    m_verifiedTranslations.clear();
+
     updateHighlights(nullptr);
 }
 
