@@ -36,56 +36,29 @@ Item {
         height: parent.height
         visible: width > 0
 
-        // TODO: Use a StackView
-        Page {
-            id: background
-            anchors.fill: parent
-        }
-
         ColumnLayout {
             anchors.fill: parent
 
-            ColumnLayout {
+            Label {
+                id: titleLabel
+                
                 Layout.fillWidth: true
 
-                visible: TranslationAssistant.selectedTranslationText
-
-                Label {
-                    Layout.fillWidth: true
-                    
-                    elide: Text.ElideRight
-                    font.pixelSize: Qt.application.font.pixelSize * 1.3
-
-                    text: qsTr("Translations for selected item")
-                }
-
-                Label {
-                    Layout.fillWidth: true
-                    
-                    elide: Text.ElideRight
-
-                    text: qsTr("Selected text item") + ": " + TranslationAssistant.selectedTranslationText
-                }
-
-                Button {
-                    Layout.fillWidth: true
-
-                    text: qsTr("Clear selection")
-
-                    onClicked: {
-                        TranslationAssistant.selectedTranslationText = "";
-                        translationListView.currentIndex = -1;
-                    }
-                }
+                font.pixelSize: Qt.application.font.pixelSize * 1.3
+                font.bold: true
+                
+                text: stackView.currentItem ? stackView.currentItem.title : "N/A"
             }
 
-            TranslationListView {
-                id: translationListView
+            StackView {
+                id: stackView
                 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                
-                model: !TranslationAssistant.selectedTranslationText ? TranslationAssistant : TranslationAssistant.verifiedTranslationsModel
+
+                clip: true
+
+                initialItem: TranslationListViewPage {}
             }
         }
 
@@ -111,6 +84,16 @@ Item {
                 properties: "width"
                 duration: 500
                 easing.type: Easing.InOutQuad
+            }
+        }
+    }
+
+    Connections {
+        target: TranslationAssistant
+
+        function onSelectedTextChanged() {
+            if(TranslationAssistant.selectedText.length > 0) {
+                stackView.push("TranslationsForSelectedTextPage.qml", { "stackView": stackView });
             }
         }
     }

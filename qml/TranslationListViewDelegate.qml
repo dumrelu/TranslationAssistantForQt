@@ -172,11 +172,11 @@ Rectangle {
             Keys.onReturnPressed: function(event) {
                 if (event.modifiers & Qt.ControlModifier)
                 {
-                    translationTextArea.editingFinished();
+                    translationTextArea.insert(translationTextArea.length, "\n");
                 }
                 else
                 {
-                    event.accepted = false;
+                    translationTextArea.editingFinished();
                 }
             }
 

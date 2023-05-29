@@ -140,9 +140,9 @@ QSortFilterProxyModel *TranslationAssistant::verifiedTranslationsModel()
     return &m_verifiedTranslationsModel;
 }
 
-QString TranslationAssistant::selectedTranslationText() const
+QString TranslationAssistant::selectedText() const
 {
-    return m_selectedTranslationText;
+    return m_selectedText;
 }
 
 QColor TranslationAssistant::selectedTextColor() const
@@ -155,15 +155,26 @@ QColor TranslationAssistant::relatedTextColor() const
     return m_relatedTextColor;
 }
 
-void TranslationAssistant::setSelectedTranslationText(QString selectedTranslationText)
+void TranslationAssistant::setSelectedText(QString selectedText)
 {
-    if (m_selectedTranslationText == selectedTranslationText)
+    if (m_selectedText == selectedText)
     {
         return;
     }
 
-    m_selectedTranslationText = std::move(selectedTranslationText);
-    emit selectedTranslationTextChanged();
+    m_selectedText = std::move(selectedText);
+    emit selectedTextChanged();
+}
+
+Q_INVOKABLE void TranslationAssistant::clearSelectedText()
+{
+    if(m_selectedText.isEmpty())
+    {
+        return;
+    }
+
+    m_selectedText.clear();
+    updateHighlights(nullptr);
 }
 
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
@@ -313,7 +324,7 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 
     m_verifiedTranslationsModel.setFilterRegularExpression(regex);
 
-    setSelectedTranslationText(textItem->text());
+    setSelectedText(textItem->text());
     updateHighlights(textItem);
 }
 

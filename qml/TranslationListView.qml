@@ -5,29 +5,33 @@ import TranslationAssistant 1.0
 ListView {
     id: root
 
+    property bool highlightSelections: true
+
     spacing: 10
     leftMargin: 10
     rightMargin: 10
+
+    clip: true
 
     delegate: TranslationListViewDelegate {
         id: delegate 
 
         width: root.width - root.leftMargin - root.rightMargin
         expanded: index === root.currentIndex
-        selected: TranslationAssistant.selectedTranslationText ? false : expanded
+        selected: root.highlightSelections ? expanded : false
         
         onTitleClicked: function() {
             if (root.currentIndex !== index) 
             {
                 root.currentIndex = index;
 
-                if(!TranslationAssistant.selectedTranslationText)
+                if(root.highlightSelections)
                     TranslationAssistant.translationClicked(model.id);
             }
             else
             {
                 root.currentIndex = -1;
-                if(!TranslationAssistant.selectedTranslationText)
+                if(root.highlightSelections)
                     TranslationAssistant.translationClicked();
             }
         }
