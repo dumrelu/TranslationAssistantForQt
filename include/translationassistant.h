@@ -17,6 +17,7 @@ class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QSortFilterProxyModel* verifiedTranslationsModel READ verifiedTranslationsModel CONSTANT)
+    Q_PROPERTY(QSortFilterProxyModel* pendingTranslationsModel READ pendingTranslationsModel CONSTANT)
     Q_PROPERTY(QString selectedText READ selectedText WRITE setSelectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(QColor selectedTextColor READ selectedTextColor CONSTANT)
     Q_PROPERTY(QColor relatedTextColor READ relatedTextColor CONSTANT)
@@ -30,6 +31,7 @@ public:
         Translation, 
         Context,
         TranslationType,
+        IsPending, 
     };
 
     explicit TranslationAssistant(QQuickWindow* window, QObject* parent = nullptr);
@@ -45,6 +47,7 @@ public:
     Q_INVOKABLE bool translationClicked(QVariant translationID = {});
 
     QSortFilterProxyModel* verifiedTranslationsModel();
+    QSortFilterProxyModel* pendingTranslationsModel();
     QString selectedText() const;
     QColor selectedTextColor() const;
     QColor relatedTextColor() const;
@@ -79,6 +82,7 @@ private:
     QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
 
     QSortFilterProxyModel m_verifiedTranslationsModel;
+    QSortFilterProxyModel m_pendingTranslationsModel;
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;

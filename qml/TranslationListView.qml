@@ -13,6 +13,8 @@ ListView {
 
     clip: true
 
+    currentIndex: -1
+
     delegate: TranslationListViewDelegate {
         id: delegate 
 

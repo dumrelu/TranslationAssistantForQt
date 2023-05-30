@@ -50,6 +50,22 @@ Item {
                 text: stackView.currentItem ? stackView.currentItem.title : "N/A"
             }
 
+            // Back button
+            Button {
+                id: backButton
+
+                Layout.fillWidth: true
+
+                enabled: stackView.depth > 1
+
+                text: qsTr("Back")
+                font.pixelSize: Qt.application.font.pixelSize * 1.3
+
+                onClicked: {
+                    stackView.pop();
+                }
+            }
+
             StackView {
                 id: stackView
                 
@@ -102,7 +118,10 @@ Item {
             font.pixelSize: Qt.application.font.pixelSize * 2
 
             onClicked: {
-                stackView.push("PendingChangesPage.qml");
+                if(stackView.currentItem && !stackView.currentItem.isPendingChangesPage)
+                {
+                    stackView.push("PendingChangesPage.qml");
+                }
             }
         }
 

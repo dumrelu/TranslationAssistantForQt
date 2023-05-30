@@ -6,11 +6,13 @@ import TranslationAssistant 1.0
 Page {
     id: root
 
+    property bool isPendingChangesPage: true
+
     title: qsTr("Pending Changes")
 
     TranslationListView {
         anchors.fill: parent
 
-        model: TranslationAssistant
+        model: TranslationAssistant.pendingTranslationsModel
     }
 }

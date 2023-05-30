@@ -100,6 +100,10 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     
     m_verifiedTranslationsModel.setSourceModel(this);
     m_verifiedTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
+
+    m_pendingTranslationsModel.setSourceModel(this);
+    m_pendingTranslationsModel.setFilterRole(static_cast<int>(Roles::IsPending));
+    m_pendingTranslationsModel.setFilterFixedString("true");
 }
 
 bool TranslationAssistant::addTranslationFile(const QString &filename)
@@ -138,6 +142,11 @@ Q_INVOKABLE bool TranslationAssistant::translationClicked(QVariant translationID
 QSortFilterProxyModel *TranslationAssistant::verifiedTranslationsModel()
 {
     return &m_verifiedTranslationsModel;
+}
+
+QSortFilterProxyModel *TranslationAssistant::pendingTranslationsModel()
+{
+    return &m_pendingTranslationsModel;
 }
 
 QString TranslationAssistant::selectedText() const
@@ -186,7 +195,8 @@ QHash<int, QByteArray> TranslationAssistant::roleNames() const
         { static_cast<int>(Roles::Source), "source" },
         { static_cast<int>(Roles::Translation), "translation" },
         { static_cast<int>(Roles::Context), "context" },
-        { static_cast<int>(Roles::TranslationType), "translationType" }
+        { static_cast<int>(Roles::TranslationType), "translationType" }, 
+        { static_cast<int>(Roles::IsPending), "isPending" }
     };
 }
 
@@ -222,6 +232,8 @@ QVariant TranslationAssistant::data(const QModelIndex &index, int role) const
         return optTranslationData->context;
     case Roles::TranslationType:
         return optTranslationData->translationType;
+    case Roles::IsPending:
+        return optTranslationData->isPending;
     }
 
     return {};
@@ -241,6 +253,7 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
         return false;
     }
 
+    auto ret = false;
     if(role == static_cast<int>(Roles::Translation))
     {
         const auto translation = value.toString();
@@ -249,7 +262,7 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
             return false;
         }
 
-        return m_translationFiles.translate(translationID, translation);
+        ret = m_translationFiles.translate(translationID, translation);
     }
     else if(role == static_cast<int>(Roles::TranslationType))
     {
@@ -260,10 +273,15 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
         }
 
         optTranslationData->translationType = translationType;
-        return m_translationFiles.updateTranslationData(std::move(*optTranslationData));
+        ret = m_translationFiles.updateTranslationData(std::move(*optTranslationData));
     }
 
-    return false;
+    if(ret)
+    {
+        emit dataChanged(index, index);
+    }
+
+    return ret;
 }
 
 void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
