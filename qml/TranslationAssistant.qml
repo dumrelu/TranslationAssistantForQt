@@ -88,6 +88,36 @@ Item {
         }
     }
 
+    RowLayout {
+
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        
+        RoundButton {
+            id: pendingChanges
+
+            text: qsTr("Pending changes")
+            font.pixelSize: Qt.application.font.pixelSize * 2
+
+            onClicked: {
+                stackView.push("PendingChangesPage.qml");
+            }
+        }
+
+        RoundButton {
+            id: saveButton
+
+            text: qsTr("Save")
+            font.pixelSize: Qt.application.font.pixelSize * 2
+
+            onClicked: {
+                console.log("Saving translations...");
+            }
+        }
+    }
+
     Connections {
         target: TranslationAssistant
 
