@@ -78,6 +78,46 @@ Item {
             }
         }
 
+        RowLayout {
+            id: buttonContainer
+
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            
+            RoundButton {
+                id: pendingChanges
+
+                Layout.fillWidth: true
+
+                text: qsTr("Pending")
+                font.pixelSize: Qt.application.font.pixelSize * 2
+
+                onClicked: {
+                    if(stackView.currentItem && !stackView.currentItem.isPendingChangesPage)
+                    {
+                        stackView.push("PendingChangesPage.qml");
+                    }
+                }
+            }
+
+            RoundButton {
+                id: saveButton
+
+                Layout.fillWidth: true
+
+                text: qsTr("Save")
+                font.pixelSize: Qt.application.font.pixelSize * 2
+
+                onClicked: {
+                    console.log("Saving translations...");
+                }
+            }
+        }
+
         state: "visible"
         states: [
             State {
@@ -100,39 +140,6 @@ Item {
                 properties: "width"
                 duration: 500
                 easing.type: Easing.InOutQuad
-            }
-        }
-    }
-
-    RowLayout {
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.right: parent.right
-        anchors.rightMargin: 10
-        
-        RoundButton {
-            id: pendingChanges
-
-            text: qsTr("Pending")
-            font.pixelSize: Qt.application.font.pixelSize * 2
-
-            onClicked: {
-                if(stackView.currentItem && !stackView.currentItem.isPendingChangesPage)
-                {
-                    stackView.push("PendingChangesPage.qml");
-                }
-            }
-        }
-
-        RoundButton {
-            id: saveButton
-
-            text: qsTr("Save")
-            font.pixelSize: Qt.application.font.pixelSize * 2
-
-            onClicked: {
-                console.log("Saving translations...");
             }
         }
     }
