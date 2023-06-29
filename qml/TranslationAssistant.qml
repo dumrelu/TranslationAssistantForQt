@@ -114,7 +114,7 @@ Item {
         RoundButton {
             id: pendingChanges
 
-            text: qsTr("Pending changes")
+            text: qsTr("Pending")
             font.pixelSize: Qt.application.font.pixelSize * 2
 
             onClicked: {
