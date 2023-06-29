@@ -1,6 +1,7 @@
 # TranslationAssistant
 
 # TODO
+- Should TranslationAssistant::onTextChanged be called?
 - Write changes pending changes to .ts
     - Maybe have a save/save as/discard button
     - Also show pending changed(another proxy model)

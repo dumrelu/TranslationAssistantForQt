@@ -22,7 +22,7 @@ public:
     /// @brief 
     /// @param tf 
     /// @param engine Calls engine->retranslate() on changes
-    PendingTranslator(TranslationFiles* tf, QQmlEngine* engine);
+    PendingTranslator(TranslationFiles* tf, QQmlEngine* engine, bool autoRefresh = true);
 
     // QTranslator interface
     bool isEmpty() const override;
@@ -35,6 +35,9 @@ public:
     */
     void addManualTranslation(const TranslationFiles::TranslationData& translationData);
     
+    /// @brief Clears all the pending translations.
+    void clearTranslations();
+
     /// @brief Resets the pending translations to the current values
     ///from TranslationFiles and calls refreshUi().
     /**

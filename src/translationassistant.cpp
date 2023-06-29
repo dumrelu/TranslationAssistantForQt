@@ -76,6 +76,8 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     , m_qmlEngine{ qmlEngineForWindow(window) }
     , m_scene{ window }
     , m_pendingTranslator{ &m_translationFiles, m_qmlEngine }
+    , m_temporaryTranslator{ &m_translationFiles, m_qmlEngine, false }
+    , m_tempTranslationRegex{ m_tempTranslationFormat.arg("(\\d+)") }
 {
     Q_ASSERT(window);
     Q_ASSERT(qApp);
@@ -325,9 +327,7 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         return;
     }
 
-    auto possibleTranslations = m_translationFiles.findTranslations(textItem->text(), context);
-    m_verifiedTranslations = verifyTranslations(textItem, possibleTranslations);
-    qDebug() << "Possible translations: " << possibleTranslations;
+    m_verifiedTranslations = getTranslationsForTextItem(textItem);
     qDebug() << "Verified translations: " << m_verifiedTranslations;
 
     QString regex = QStringLiteral("^");
@@ -359,13 +359,29 @@ void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
 
 void TranslationAssistant::updateHighlight(TextItemOverlay* overlay, const QSharedPointer<TextItem> &selectedTextItem)
 {
+    if(overlay->textItem()->text().isEmpty())
+    {
+        return;
+    }
+    
+    auto containsVerifiedTranslations = [&]()
+    {
+        const auto translations = getTranslationsForTextItem(overlay->textItem());
+        return std::any_of(
+            translations.begin(), translations.end(),
+            [&](TranslationFiles::TranslationID translationID)
+            {
+                return m_verifiedTranslations.contains(translationID);
+            }
+        );
+    };
+
     if(overlay->textItem() == selectedTextItem)
     {
         overlay->setHighlightColor(m_selectedTextColor);
         overlay->setHighlighted(true);
     }
-    //TODO: This is inneficient. Do this in bulk
-    else if(!verifyTranslations(overlay->textItem(), m_verifiedTranslations).isEmpty())
+    if(containsVerifiedTranslations())
     {
         overlay->setHighlightColor(m_relatedTextColor);
         overlay->setHighlighted(true);
@@ -378,10 +394,32 @@ void TranslationAssistant::updateHighlight(TextItemOverlay* overlay, const QShar
 
 void TranslationAssistant::updateHighlights(const QSharedPointer<TextItem> &selectedTextItem)
 {
+    installTemporaryTranslator();
     for(const auto& overlay : m_textItemOverlays)
     {
         updateHighlight(overlay, selectedTextItem);
     }
+    removeTemporaryTranslator();
+}
+
+void TranslationAssistant::installTemporaryTranslator()
+{
+    if(!m_temporaryTranslatorInstalled)
+    {
+        qApp->installTranslator(&m_temporaryTranslator);
+        m_qmlEngine->retranslate();
+        
+        m_temporaryTranslatorInstalled = true;
+    }
+}
+
+void TranslationAssistant::removeTemporaryTranslator()
+{
+    if(qApp->removeTranslator(&m_temporaryTranslator))
+    {
+        m_qmlEngine->retranslate();
+    }
+    m_temporaryTranslatorInstalled = false;
 }
 
 void TranslationAssistant::createUiOverlay()
@@ -410,6 +448,27 @@ void TranslationAssistant::createUiOverlay()
     overlay->setParent(this);
 }
 
+void TranslationAssistant::createTemporaryTranslator()
+{
+    m_temporaryTranslator.clearTranslations();
+
+    for(const auto translationID : m_allTranslations)
+    {
+        auto translationData = m_translationFiles.translationData(translationID);
+        if(!translationData)
+        {
+            continue;
+        }
+
+        const auto translationIDAsString = QString::number(translationID);
+        const auto tempTranslation = m_tempTranslationFormat.arg(translationIDAsString);
+
+        translationData->translation = tempTranslation;
+
+        m_temporaryTranslator.addManualTranslation(*translationData);
+    }
+}
+
 void TranslationAssistant::buildModel()
 {
     beginResetModel();
@@ -429,6 +488,8 @@ void TranslationAssistant::buildModel()
         }
     );
 
+    createTemporaryTranslator();
+
     endResetModel();
 }
 
@@ -439,69 +500,34 @@ bool TranslationAssistant::isIndexValid(const QModelIndex &index) const
         index.row() < static_cast<int>(m_allTranslations.size());
 }
 
-QList<TranslationFiles::TranslationID> TranslationAssistant::verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations)
+QList<TranslationFiles::TranslationID> TranslationAssistant::getTranslationsForTextItem(const QSharedPointer<TextItem>& textItem)
 {
+    bool functionInstalledTranslator = false;
+    if(!m_temporaryTranslatorInstalled)
+    {
+        installTemporaryTranslator();
+        functionInstalledTranslator = true;
+    }
+
+    QList<TranslationFiles::TranslationID> translations;
     const auto text = textItem->text();
-    if(text.isEmpty())
+    // Find all mathces in text using qt regular expressions
+    auto matchIt = m_tempTranslationRegex.globalMatch(text);
+    while(matchIt.hasNext())
     {
-        return {};
+        const auto match = matchIt.next();
+        const auto idAsStr = match.captured(1);
+        const auto id = idAsStr.toInt();
+
+        translations.push_back(static_cast<TranslationFiles::TranslationID>(id));
     }
 
-    auto possibleTranslations = m_translationFiles.findTranslations(text, translationContext(textItem));
-    possibleTranslations.erase(
-        std::remove_if(
-            possibleTranslations.begin(), possibleTranslations.end(),
-            [&translations](const auto& translationID)
-            {
-                return !translations.contains(translationID);
-            }
-        ),
-        possibleTranslations.end()
-    );
-
-    if(possibleTranslations.empty())
+    if(functionInstalledTranslator)
     {
-        return {};
+        removeTemporaryTranslator();
     }
 
-    QList<TranslationFiles::TranslationID> verifiedTranslations;
-    verifiedTranslations.reserve(possibleTranslations.size());
-
-    const auto tempTranslationFormat = QString{ "temporaryTranslation_%1ID" };
-    for(const auto& translationID : possibleTranslations)
-    {
-        auto translationData = m_translationFiles.translationData(translationID);
-        if(!translationData)
-        {
-            continue;
-        }
-
-        const auto translationIDAsString = QString::number(translationID);
-        const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
-
-        translationData->translation = tempTranslation;
-
-        m_pendingTranslator.addManualTranslation(*translationData);
-    }
-
-    // Refresh the UI and check the updated text
-    m_pendingTranslator.refreshUi();
-    const auto updatedText = textItem->text();
-    for(const auto& translationID : possibleTranslations)
-    {
-        const auto translationIDAsString = QString::number(translationID);
-        const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
-
-        if(updatedText.contains(tempTranslation))
-        {
-            verifiedTranslations.append(translationID);
-        }
-    }
-
-    // Remove the temporary translations
-    m_pendingTranslator.resetTranslations();
-
-    return verifiedTranslations;
+    return translations;
 }
 
 }

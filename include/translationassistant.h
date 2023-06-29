@@ -4,6 +4,7 @@
 #include <QQuickWindow>
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
+#include <QRegularExpression>
 
 #include "scene.h"
 #include "textitemoverlay.h"
@@ -73,13 +74,20 @@ private:
     void updateHighlight(TextItemOverlay* overlay, const QSharedPointer<TextItem>& selectedTextItem);
     void updateHighlights(const QSharedPointer<TextItem>& selectedTextItem);
 
+    void installTemporaryTranslator();
+    void removeTemporaryTranslator();
+
     void createUiOverlay();
+    void createTemporaryTranslator();
     void buildModel();
 
     bool isIndexValid(const QModelIndex& index) const;
 
-    // Check to see which of the translation from the given list are used for the given text item.
-    QList<TranslationFiles::TranslationID> verifyTranslations(const QSharedPointer<TextItem>& textItem, QList<TranslationFiles::TranslationID> translations);
+    // Using the temporary translator, get the translations for the given text item
+    /**
+     *  Installs the temporary translator if necessary.
+    */
+    QList<TranslationFiles::TranslationID> getTranslationsForTextItem(const QSharedPointer<TextItem>& textItem);
 
     QSortFilterProxyModel m_verifiedTranslationsModel;
     QSortFilterProxyModel m_pendingTranslationsModel;
@@ -91,6 +99,11 @@ private:
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
     TranslationFiles m_translationFiles;
     PendingTranslator m_pendingTranslator;
+    //TODO: This should be split into a different class because it is not really a pending translator.
+    PendingTranslator m_temporaryTranslator;
+    bool m_temporaryTranslatorInstalled = false;
+    const QString m_tempTranslationFormat = QStringLiteral("i_%1_d");
+    QRegularExpression m_tempTranslationRegex;
 
     QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_verifiedTranslations;

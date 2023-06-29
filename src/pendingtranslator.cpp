@@ -5,7 +5,7 @@
 namespace ta
 {
 
-PendingTranslator::PendingTranslator(TranslationFiles* tf, QQmlEngine *engine)
+PendingTranslator::PendingTranslator(TranslationFiles* tf, QQmlEngine *engine, bool autoRefresh)
     : m_translationFiles{ tf }
     , m_engine{ engine }
 {
@@ -13,12 +13,15 @@ PendingTranslator::PendingTranslator(TranslationFiles* tf, QQmlEngine *engine)
     Q_ASSERT(engine);
     Q_ASSERT(qApp);
 
-    connect(
-        m_translationFiles, &TranslationFiles::translationDataChanged, 
-        this, &PendingTranslator::onTranslationDataChanged  
-    );
+    if(autoRefresh)
+    {
+        connect(
+            m_translationFiles, &TranslationFiles::translationDataChanged, 
+            this, &PendingTranslator::onTranslationDataChanged  
+        );
 
-    resetTranslations();
+        resetTranslations();
+    }
 }
 
 bool PendingTranslator::isEmpty() const
@@ -52,7 +55,7 @@ QString PendingTranslator::translate(const char *context, const char *sourceText
         }
     }
 
-    return sourceText;
+    return {};
 }
 
 QString PendingTranslator::translationKey(const TranslationFiles::TranslationData &translationData) const
@@ -71,6 +74,11 @@ void PendingTranslator::addManualTranslation(const TranslationFiles::Translation
     const auto key = translationKey(translationData);
     m_translations[key].clear();
     m_translations[key].push_back(translationData);
+}
+
+void PendingTranslator::clearTranslations()
+{
+    m_translations.clear();
 }
 
 void PendingTranslator::resetTranslations()
