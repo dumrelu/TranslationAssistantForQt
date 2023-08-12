@@ -5,9 +5,27 @@
 #include <QQmlContext>
 #include <QDebug>
 
+
 void initialize_qrc() 
 { 
     Q_INIT_RESOURCE(translation_assistant);
+}
+
+namespace
+{
+
+// Returns the QQmlEngine for the given QQuickWindow
+QQmlEngine* qmlEngineForWindow(QQuickWindow* window)
+{
+    QQmlContext* context = QQmlEngine::contextForObject(window);
+    if(context)
+    {
+        return context->engine();
+    }
+
+    return nullptr;
+}
+
 }
 
 namespace ta
@@ -16,7 +34,9 @@ namespace ta
 TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent)
     : QAbstractListModel{ parent }
     , m_window{ window }
+    , m_qmlEngine{ qmlEngineForWindow(window) }
 {
+    createUiOverlay();
 }
 
 bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
@@ -166,6 +186,32 @@ bool TranslationAssistant::isIndexValid(const QModelIndex &index) const
     return index.isValid() &&
         index.row() >= 0 &&
         index.row() < static_cast<int>(m_allTranslations.size());
+}
+
+void TranslationAssistant::createUiOverlay()
+{
+    initialize_qrc();
+
+    // Register this class as a qml singleton
+    qmlRegisterSingletonInstance<TranslationAssistant>("TranslationAssistant", 1, 0, "TranslationAssistant", this);
+
+    QQmlComponent component{ m_qmlEngine, QUrl{ "qrc:/translation_assistant/TranslationAssistant.qml" } };
+    if(component.status() != QQmlComponent::Status::Ready)
+    {
+        qWarning() << "Failed to create TranslationAssistant.qml component" << component.errorString();
+        return;
+    }
+    
+    auto* overlay = qobject_cast<QQuickItem*>(component.create());
+    if(!overlay)
+    {
+        qWarning() << "Failed to create TranslationAssistant.qml instance";
+        return;
+    }
+    overlay->setZ(std::numeric_limits<qreal>::max());
+
+    overlay->setParentItem(m_window->contentItem());
+    overlay->setParent(this);
 }
 
 }

@@ -9,8 +9,14 @@ Item {
     anchors.fill: parent
 
     Rectangle {
-        color: "red"
+        color: "white"
+        anchors.right: parent.right
         height: parent.height
         width: parent.width / 3
+
+        Label {
+            text: qsTr("Translation Assistant")
+            anchors.centerIn: parent
+        }
     }
 }

@@ -50,6 +50,7 @@ public:
 private:
     void rebuildModel();
     bool isIndexValid(const QModelIndex& index) const;
+    void createUiOverlay();
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;
