@@ -1,10 +1,5 @@
 <RCC>
     <qresource prefix="/translation_assistant/">
         <file>TranslationAssistant.qml</file>
-        <file>TranslationListView.qml</file>
-        <file>TranslationListViewDelegate.qml</file>
-        <file>TranslationListViewPage.qml</file>
-        <file>TranslationsForSelectedTextPage.qml</file>
-        <file>PendingChangesPage.qml</file>
     </qresource>
 </RCC>

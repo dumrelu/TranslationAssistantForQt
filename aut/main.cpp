@@ -47,8 +47,10 @@ int main(int argc, char *argv[])
         auto* translationAssistant = new ta::TranslationAssistant{ window };
         Q_UNUSED(translationAssistant);
 
-        auto translationLoaded = translationAssistant->addTranslationFile(
-            QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"
+        auto translationLoaded = translationAssistant->addTranslationSources(
+            { 
+                QCoreApplication::applicationDirPath() + "/ApplicationUnderTest_ro_RO.ts"
+            }
         );
         if(!translationLoaded)
         {
