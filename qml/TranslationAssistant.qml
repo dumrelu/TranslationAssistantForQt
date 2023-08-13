@@ -8,31 +8,69 @@ Item {
 
     anchors.fill: parent
 
-    Rectangle {
-        color: "white"
-        anchors.right: parent.right
-        height: parent.height
-        width: parent.width / 2
+    Button {
+        id: trayIndicator
 
-        Label {
-            text: "Test Text"
+        anchors.top: trayContainer.top
+        anchors.topMargin: 10
+        anchors.right: trayContainer.left
+
+        width: 30
+        height: 30
+        hoverEnabled: true
+        opacity: hovered ? 1.0 : 0.5
+
+        text: ">"
+
+        onClicked: {
+            trayContainer.state = trayContainer.state === "hidden" ? "visible" : "hidden"
+        }
+    }
+
+    Item {
+        id: trayContainer
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        width: parent.width / 2.5
+        height: parent.height
+        visible: width > 0
+
+        Rectangle {
+            anchors.fill: parent
+
+            color: "gray"
         }
 
-        ListView {
-            id: listView
-            anchors.fill: parent
-            model: TranslationAssistant
-            delegate: ItemDelegate {
-                width: parent.width
-                height: 50
-                text: model.source + ", " + model.translation + ", " + model.isFinished
-
-                onClicked: {
-                    model.translation = "Changed";
-                    model.isFinished = true;
-
-                    TranslationAssistant.highlightTranslation(model.id);
+        state: "visible"
+        states: [
+            State {
+                name: "visible"
+            },
+            State {
+                name: "hidden"
+                
+                PropertyChanges {
+                    target: trayContainer
+                    width: 0
                 }
+
+                PropertyChanges {
+                    target: trayIndicator
+                    text: "<"
+                }
+            }
+        ]
+
+        transitions: Transition {
+            from: "*"
+            to: "*"
+
+            NumberAnimation {
+                properties: "width"
+                duration: 500
+                easing.type: Easing.InOutQuad
             }
         }
     }
