@@ -14,6 +14,7 @@ ItemDelegate {
     }
 
     onClicked: {
+        model.translation = "Some Translations";
         TranslationAssistant.highlightTranslation(model.id);
     }
 }

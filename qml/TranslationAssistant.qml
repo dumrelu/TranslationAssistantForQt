@@ -66,21 +66,37 @@ Item {
                         {
                             TranslationAssistant.clearRelevantTranslations();
                         }
+                        else if(translationListView.state === "pending_translations")
+                        {
+                            translationListView.showPending = false;
+                        }
                     }
                 }
 
                 Label {
                     id: title
                     
-                    font.pixelSize: Qt.application.font.pixelSize * 1.5
+                    font.pixelSize: Qt.application.font.pixelSize * 1.2
                     font.bold: true
                     
-                    text: qsTr("Translation Assistant")
+                    text: {
+                        if(translationListView.state === "relevant_translations")
+                        {
+                            return qsTr("Relevant Translations");
+                        }
+                        else if(translationListView.state === "pending_translations")
+                        {
+                            return qsTr("Pending Translations");
+                        }
+                        return qsTr("Translation Assistant");
+                    }
                 }
             }
 
             TranslationListView {
                 id: translationListView
+
+                property bool showPending: false
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -90,9 +106,37 @@ Item {
                 states: [
                     State {
                         name: "relevant_translations"
-                        when: translationListView.count !== TranslationAssistant.rowCount()
+                        when: !translationListView.showPending && translationListView.count !== TranslationAssistant.rowCount()
+                    }, 
+                    State {
+                        name: "pending_translations"
+                        when: translationListView.showPending
+
+                        PropertyChanges {
+                            target: translationListView
+                            model: TranslationAssistant.pendingTranslationsModel
+                        }
                     }
                 ]
+            }
+        }
+
+        RowLayout {
+            id: buttonRowLayout
+
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+
+            Button {
+                id: pendingTranslationsButton
+                
+                text: qsTr("Pending")
+
+                onClicked: {
+                    translationListView.showPending = true;
+                }
             }
         }
 

@@ -62,6 +62,10 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
 
     m_relevantTranslationsModel.setSourceModel(this);
     m_relevantTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
+
+    m_pendingTranslationsModel.setSourceModel(this);
+    m_pendingTranslationsModel.setFilterRole(static_cast<int>(Roles::IsPending));
+    m_pendingTranslationsModel.setFilterFixedString("true");
 }
 
 bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
@@ -113,6 +117,11 @@ void TranslationAssistant::clearRelevantTranslations()
 QSortFilterProxyModel *TranslationAssistant::relevantTranslationsModel()
 {
     return &m_relevantTranslationsModel;
+}
+
+QSortFilterProxyModel *TranslationAssistant::pendingTranslationsModel()
+{
+    return &m_pendingTranslationsModel;
 }
 
 QColor TranslationAssistant::selectedTextColor() const

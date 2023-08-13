@@ -17,6 +17,7 @@ class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QSortFilterProxyModel* relevantTranslationsModel READ relevantTranslationsModel CONSTANT)
+    Q_PROPERTY(QSortFilterProxyModel* pendingTranslationsModel READ pendingTranslationsModel CONSTANT)
     Q_PROPERTY(QColor selectedTextColor READ selectedTextColor NOTIFY selectedTextColorChanged)
     Q_PROPERTY(QColor relevantTextColor READ relevantTextColor NOTIFY relevantTextColorChanged)
 
@@ -59,6 +60,7 @@ public:
 
     // Getters
     QSortFilterProxyModel* relevantTranslationsModel();
+    QSortFilterProxyModel* pendingTranslationsModel();
     QColor selectedTextColor() const;
     QColor relevantTextColor() const;
 
@@ -94,6 +96,7 @@ private:
     QQmlEngine* m_qmlEngine = nullptr;
 
     QSortFilterProxyModel m_relevantTranslationsModel;
+    QSortFilterProxyModel m_pendingTranslationsModel;
 
     TranslationFiles m_translationFiles;
     QList<TranslationFiles::TranslationID> m_allTranslations;
