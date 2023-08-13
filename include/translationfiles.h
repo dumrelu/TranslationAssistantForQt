@@ -16,7 +16,7 @@ class TranslationFiles : public QObject
     Q_OBJECT
 public:
     using TranslationID = int;
-    static constexpr TranslationID INVALID_ID = 0;
+    static constexpr TranslationID INVALID_ID = -1;
 
     /// @brief Represents a single entry from a .ts file
     struct TranslationData

@@ -45,12 +45,55 @@ Item {
             color: "white"
         }
 
-        TranslationListView {
-            id: translationListView
-
-            model: TranslationAssistant.relevantTranslationsModel
+        ColumnLayout {
+            id: columnLayout
 
             anchors.fill: parent
+            anchors.margins: 10
+
+            RowLayout {
+                Button {
+                    id: backButton
+
+                    Layout.preferredWidth: 30
+                    Layout.preferredHeight: 30
+
+                    text: "<"
+                    enabled: translationListView.state !== ""
+
+                    onClicked: {
+                        if(translationListView.state === "relevant_translations")
+                        {
+                            TranslationAssistant.clearRelevantTranslations();
+                        }
+                    }
+                }
+
+                Label {
+                    id: title
+                    
+                    font.pixelSize: Qt.application.font.pixelSize * 1.5
+                    font.bold: true
+                    
+                    text: qsTr("Translation Assistant")
+                }
+            }
+
+            TranslationListView {
+                id: translationListView
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                model: TranslationAssistant.relevantTranslationsModel
+
+                states: [
+                    State {
+                        name: "relevant_translations"
+                        when: translationListView.count !== TranslationAssistant.rowCount()
+                    }
+                ]
+            }
         }
 
         state: "visible"

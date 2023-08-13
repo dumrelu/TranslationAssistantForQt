@@ -53,6 +53,10 @@ public:
     /// @return 
     Q_INVOKABLE void clearHighlights();
 
+    /// @brief Clear the currently selected relevant translations
+    /// @return 
+    Q_INVOKABLE void clearRelevantTranslations();
+
     // Getters
     QSortFilterProxyModel* relevantTranslationsModel();
     QColor selectedTextColor() const;

@@ -94,12 +94,20 @@ void TranslationAssistant::highlightTranslation(QVariant translationIDVariant)
     highlightTranslation(translationMap, translationID);
 }
 
-Q_INVOKABLE void TranslationAssistant::clearHighlights()
+void TranslationAssistant::clearHighlights()
 {
     for(const auto& textItemOverlay : m_textItemOverlays)
     {
         textItemOverlay->setHighlighted(false);
     }
+}
+
+void TranslationAssistant::clearRelevantTranslations()
+{
+    m_relevantTranslations.clear();
+    m_relevantTranslationsModel.setFilterRegularExpression("");
+
+    clearHighlights();
 }
 
 QSortFilterProxyModel *TranslationAssistant::relevantTranslationsModel()
