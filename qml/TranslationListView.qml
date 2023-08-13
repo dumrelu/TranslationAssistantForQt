@@ -21,6 +21,18 @@ ListView {
         NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.OutBounce }
     }
 
+    populate: Transition {
+        id: populateTransition
+        
+        NumberAnimation {
+            property: "y"
+            duration: 500
+            easing.type: Easing.OutBounce
+            from: 0
+            to: populateTransition.ViewTransition.destination.y
+        }
+    }
+
     delegate: TranslationDelegate {
         width: root.width
     }
