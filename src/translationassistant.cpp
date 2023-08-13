@@ -35,8 +35,26 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     : QAbstractListModel{ parent }
     , m_window{ window }
     , m_qmlEngine{ qmlEngineForWindow(window) }
+    , m_scene{ window }
 {
+    Q_ASSERT(window);
+    Q_ASSERT(qApp);
+    
     createUiOverlay();
+
+    connect(
+        &m_scene, &Scene::textItemCreated,
+        this, &TranslationAssistant::onTextItemCreated
+    );
+    connect(
+        &m_scene, &Scene::textItemInvalidated,
+        this, &TranslationAssistant::onTextItemInvalidated
+    );
+    connect(
+        &m_scene, &Scene::textChanged,
+        this, &TranslationAssistant::onTextChanged
+    );
+    m_scene.start();
 }
 
 bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
@@ -153,6 +171,55 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
     return ret;
 }
 
+void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
+{
+    Q_ASSERT(textItem);
+
+    if(isTranslationAssistantTextItem(textItem))
+    {
+        qDebug() << "Ignoring TranslationAssistant text item:" << textItem->text();
+        return;
+    }
+    qDebug() << "Text item created:" << textItem->text();
+
+    auto* overlay = new TextItemOverlay{ textItem };
+    connect(
+        overlay, &TextItemOverlay::textItemClicked,
+        this, &TranslationAssistant::onTextItemClicked
+    );
+
+    m_textItemOverlays.insert(textItem, overlay);
+}
+
+void TranslationAssistant::onTextItemInvalidated(QSharedPointer<TextItem> textItem)
+{
+    Q_ASSERT(textItem);
+
+    m_textItemOverlays.remove(textItem);
+}
+
+void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
+{
+    Q_ASSERT(textItem);
+
+    qDebug() << "Text item clicked: " << textItem->text();
+}
+
+void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
+{
+    Q_ASSERT(textItem);
+
+    // If it doesn't have an overlay, it means we should ignore this
+    //text item because it's part of the TranslationAssistant UI
+    auto it = m_textItemOverlays.find(textItem);
+    if(it == m_textItemOverlays.end())
+    {
+        return;
+    }
+
+    qDebug() << "Text changed: " << textItem->text();
+}
+
 void TranslationAssistant::rebuildModel()
 {
     beginResetModel();
@@ -212,6 +279,30 @@ void TranslationAssistant::createUiOverlay()
 
     overlay->setParentItem(m_window->contentItem());
     overlay->setParent(this);
+}
+
+bool TranslationAssistant::isTranslationAssistantTextItem(const QSharedPointer<TextItem> &textItem) const
+{
+    if(!textItem)
+    {
+        return false;
+    }
+
+    // Navigate up the parentItem chain and try to find if this
+    //textItem is a child of the TranslationAssistant overlay. We identify
+    //the overlay by checking if its QObject::parent is the 
+    //TranslationAssistant instance.
+    auto* item = textItem->item();
+    while(item)
+    {
+        if(item->parent() == this)
+        {
+            return true;
+        }
+        item = item->parentItem();
+    }
+
+    return false;
 }
 
 }

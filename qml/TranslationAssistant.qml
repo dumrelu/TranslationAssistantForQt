@@ -14,6 +14,10 @@ Item {
         height: parent.height
         width: parent.width / 2
 
+        Label {
+            text: "Test Text"
+        }
+
         ListView {
             id: listView
             anchors.fill: parent

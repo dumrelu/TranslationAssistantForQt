@@ -48,9 +48,15 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 private:
+    void onTextItemCreated(QSharedPointer<TextItem> textItem);
+    void onTextItemInvalidated(QSharedPointer<TextItem> textItem);
+    void onTextItemClicked(QSharedPointer<TextItem> textItem);
+    void onTextChanged(QSharedPointer<TextItem> textItem);
+
     void rebuildModel();
     bool isIndexValid(const QModelIndex& index) const;
     void createUiOverlay();
+    bool isTranslationAssistantTextItem(const QSharedPointer<TextItem>& textItem) const;
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;
@@ -59,8 +65,8 @@ private:
     QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_selectedTranslations;
 
-    // Scene m_scene;
-    // QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
+    Scene m_scene;
+    QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
 };
 
 }
