@@ -82,14 +82,13 @@ void TranslationAssistant::highlightTranslation(QVariant translationIDVariant)
         translationID = translationIDVariant.value<TranslationFiles::TranslationID>();
     }
 
-    m_relevantTranslations.clear();
-    if(translationID != TranslationFiles::INVALID_ID)
+    if(translationID == TranslationFiles::INVALID_ID)
     {
-        m_relevantTranslations.append(translationID);
+        return;
     }
 
     auto translationMap = identifyTranslations();
-    highlightRelevantTranslations(translationMap);
+    highlightTranslation(translationMap, translationID);
 }
 
 Q_INVOKABLE void TranslationAssistant::clearHighlights()
@@ -414,23 +413,48 @@ TranslationAssistant::TranslationMap TranslationAssistant::identifyTranslations(
     return translationsForTextItems;
 }
 
-void TranslationAssistant::highlightRelevantTranslations(const TranslationMap &translationMap)
+template <typename Predicate>
+void TranslationAssistant::highlightTranslations(const TranslationMap &translationMap, Predicate condition)
 {
-    QSet<TranslationFiles::TranslationID> relevantTranslations{ m_relevantTranslations.begin(), m_relevantTranslations.end() };
-    
     for(auto it = m_textItemOverlays.begin(); it != m_textItemOverlays.end(); ++it)
     {
         const auto& textItem = it.key();
         const auto& overlay = it.value();
 
         const auto translations = translationMap[textItem];
-        //TODO: probably not efficient to convert to a set every time
-        QSet<TranslationFiles::TranslationID> translationsSet{ translations.begin(), translations.end() };
-        const bool isRelevant = !translations.isEmpty() && translationsSet.intersect(relevantTranslations).size() > 0;
+        const bool isRelevant = condition(translations);
 
         overlay->setHighlightColor(m_relevantTextColor);
         overlay->setHighlighted(isRelevant);
     }
+}
+
+void TranslationAssistant::highlightTranslation(const TranslationMap &translationMap, const TranslationFiles::TranslationID &translationID)
+{
+    highlightTranslations(translationMap, 
+        [&translationID](const QList<TranslationFiles::TranslationID>& translations)
+        {
+            return translations.contains(translationID);
+        }
+    );
+}
+
+void TranslationAssistant::highlightRelevantTranslations(const TranslationMap &translationMap)
+{
+    QSet<TranslationFiles::TranslationID> relevantTranslations{ m_relevantTranslations.begin(), m_relevantTranslations.end() };
+    highlightTranslations(translationMap, 
+        [&relevantTranslations](const QList<TranslationFiles::TranslationID>& translations)
+        {
+            if(translations.isEmpty())
+            {
+                return false;
+            }
+
+            //TODO: probably not efficient to convert to a set every time
+            QSet<TranslationFiles::TranslationID> translationsSet{ translations.begin(), translations.end() };
+            return translationsSet.intersect(relevantTranslations).size() > 0;
+        }
+    );
 }
 
 }

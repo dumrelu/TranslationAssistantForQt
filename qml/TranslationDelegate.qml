@@ -7,4 +7,8 @@ ItemDelegate {
     id: root
 
     text: model.source
+
+    onClicked: {
+        TranslationAssistant.highlightTranslation(model.id);
+    }
 }

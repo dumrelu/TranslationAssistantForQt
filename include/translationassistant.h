@@ -76,6 +76,9 @@ private:
     void createUiOverlay();
     bool isTranslationAssistantTextItem(const QSharedPointer<TextItem>& textItem) const;
     TranslationMap identifyTranslations();
+    template <typename Predicate>
+    void highlightTranslations(const TranslationMap& translationMap, Predicate condition);
+    void highlightTranslation(const TranslationMap& translationMap, const TranslationFiles::TranslationID& translationID);
     void highlightRelevantTranslations(const TranslationMap& translationMap);
 
     QQuickWindow* m_window = nullptr;
