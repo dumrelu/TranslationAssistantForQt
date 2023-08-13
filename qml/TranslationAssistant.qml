@@ -87,6 +87,14 @@ Item {
 
                 model: TranslationAssistant.relevantTranslationsModel
 
+                add: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.OutBounce }
+                }
+
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.OutBounce }
+                }
+
                 states: [
                     State {
                         name: "relevant_translations"

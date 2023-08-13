@@ -8,6 +8,11 @@ ItemDelegate {
 
     text: model.source
 
+    Rectangle {
+        anchors.fill: parent
+        color: "white"
+    }
+
     onClicked: {
         TranslationAssistant.highlightTranslation(model.id);
     }
