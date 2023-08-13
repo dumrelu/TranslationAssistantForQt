@@ -13,6 +13,14 @@ ListView {
 
     currentIndex: -1
 
+    add: Transition {
+        NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.OutBounce }
+    }
+
+    displaced: Transition {
+        NumberAnimation { properties: "x,y"; duration: 500; easing.type: Easing.OutBounce }
+    }
+
     delegate: TranslationDelegate {
         width: root.width
     }
