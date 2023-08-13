@@ -59,6 +59,9 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     m_scene.start();
 
     qApp->installTranslator(&m_pendingTranslator);
+
+    m_relevantTranslationsModel.setSourceModel(this);
+    m_relevantTranslationsModel.setFilterRole(static_cast<int>(Roles::ID));
 }
 
 bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
@@ -99,9 +102,19 @@ Q_INVOKABLE void TranslationAssistant::clearHighlights()
     }
 }
 
+QSortFilterProxyModel *TranslationAssistant::relevantTranslationsModel()
+{
+    return &m_relevantTranslationsModel;
+}
+
 QColor TranslationAssistant::selectedTextColor() const
 {
     return m_selectedTextColor;
+}
+
+QColor TranslationAssistant::relevantTextColor() const
+{
+    return m_relevantTextColor;
 }
 
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
@@ -254,6 +267,19 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
         it.value()->setHighlightColor(m_selectedTextColor);
         it.value()->setHighlighted(true);
     }
+
+    // Update the regex for the relevantTranslationsModel
+    QString regex = QStringLiteral("^");
+    for(int i = 0; i < m_relevantTranslations.size(); ++i)
+    {
+        regex += QString::number(m_relevantTranslations[i]);
+        if(i < m_relevantTranslations.size() - 1)
+        {
+            regex += "|";
+        }
+    }
+    regex += QStringLiteral("$");
+    m_relevantTranslationsModel.setFilterRegularExpression(regex);
 }
 
 void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)

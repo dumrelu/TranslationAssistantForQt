@@ -16,7 +16,9 @@ namespace ta
 class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QSortFilterProxyModel* relevantTranslationsModel READ relevantTranslationsModel CONSTANT)
     Q_PROPERTY(QColor selectedTextColor READ selectedTextColor NOTIFY selectedTextColorChanged)
+    Q_PROPERTY(QColor relevantTextColor READ relevantTextColor NOTIFY relevantTextColorChanged)
 
 public:
     enum Roles
@@ -52,7 +54,9 @@ public:
     Q_INVOKABLE void clearHighlights();
 
     // Getters
+    QSortFilterProxyModel* relevantTranslationsModel();
     QColor selectedTextColor() const;
+    QColor relevantTextColor() const;
 
     // QAbstractListModel interface
     QHash<int, QByteArray> roleNames() const override;
@@ -62,6 +66,7 @@ public:
 
 signals:
     void selectedTextColorChanged();
+    void relevantTextColorChanged();
 
 private:
     using TranslationMap = QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>>;
@@ -83,6 +88,8 @@ private:
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;
+
+    QSortFilterProxyModel m_relevantTranslationsModel;
 
     TranslationFiles m_translationFiles;
     QList<TranslationFiles::TranslationID> m_allTranslations;

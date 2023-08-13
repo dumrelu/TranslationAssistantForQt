@@ -48,7 +48,7 @@ Item {
         TranslationListView {
             id: translationListView
 
-            model: TranslationAssistant
+            model: TranslationAssistant.relevantTranslationsModel
 
             anchors.fill: parent
         }
