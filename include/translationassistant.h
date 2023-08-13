@@ -78,6 +78,8 @@ private:
     QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_relevantTranslations;
 
+    PendingTranslator m_pendingTranslator;
+
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
     QColor m_selectedTextColor = QColor{ 0, 255, 0 };

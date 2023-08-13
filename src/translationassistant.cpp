@@ -36,6 +36,7 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
     : QAbstractListModel{ parent }
     , m_window{ window }
     , m_qmlEngine{ qmlEngineForWindow(window) }
+    , m_pendingTranslator{ &m_translationFiles, m_qmlEngine }
     , m_scene{ window }
 {
     Q_ASSERT(window);
@@ -56,6 +57,8 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
         this, &TranslationAssistant::onTextChanged
     );
     m_scene.start();
+
+    qApp->installTranslator(&m_pendingTranslator);
 }
 
 bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
