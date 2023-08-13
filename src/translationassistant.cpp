@@ -414,7 +414,7 @@ TranslationAssistant::TranslationMap TranslationAssistant::identifyTranslations(
 }
 
 template <typename Predicate>
-void TranslationAssistant::highlightTranslations(const TranslationMap &translationMap, Predicate condition)
+void TranslationAssistant::highlightTranslations(const TranslationMap &translationMap, const QColor& color, Predicate condition)
 {
     for(auto it = m_textItemOverlays.begin(); it != m_textItemOverlays.end(); ++it)
     {
@@ -424,14 +424,14 @@ void TranslationAssistant::highlightTranslations(const TranslationMap &translati
         const auto translations = translationMap[textItem];
         const bool isRelevant = condition(translations);
 
-        overlay->setHighlightColor(m_relevantTextColor);
+        overlay->setHighlightColor(color);
         overlay->setHighlighted(isRelevant);
     }
 }
 
 void TranslationAssistant::highlightTranslation(const TranslationMap &translationMap, const TranslationFiles::TranslationID &translationID)
 {
-    highlightTranslations(translationMap, 
+    highlightTranslations(translationMap, m_selectedTextColor, 
         [&translationID](const QList<TranslationFiles::TranslationID>& translations)
         {
             return translations.contains(translationID);
@@ -442,7 +442,7 @@ void TranslationAssistant::highlightTranslation(const TranslationMap &translatio
 void TranslationAssistant::highlightRelevantTranslations(const TranslationMap &translationMap)
 {
     QSet<TranslationFiles::TranslationID> relevantTranslations{ m_relevantTranslations.begin(), m_relevantTranslations.end() };
-    highlightTranslations(translationMap, 
+    highlightTranslations(translationMap, m_relevantTextColor, 
         [&relevantTranslations](const QList<TranslationFiles::TranslationID>& translations)
         {
             if(translations.isEmpty())

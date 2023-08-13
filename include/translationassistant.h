@@ -77,7 +77,7 @@ private:
     bool isTranslationAssistantTextItem(const QSharedPointer<TextItem>& textItem) const;
     TranslationMap identifyTranslations();
     template <typename Predicate>
-    void highlightTranslations(const TranslationMap& translationMap, Predicate condition);
+    void highlightTranslations(const TranslationMap& translationMap, const QColor& color, Predicate condition);
     void highlightTranslation(const TranslationMap& translationMap, const TranslationFiles::TranslationID& translationID);
     void highlightRelevantTranslations(const TranslationMap& translationMap);
 
