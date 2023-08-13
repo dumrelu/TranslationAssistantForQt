@@ -16,7 +16,7 @@ class TranslationFiles : public QObject
     Q_OBJECT
 public:
     using TranslationID = int;
-    static constexpr TranslationID INVALID_ID = -1;
+    static constexpr TranslationID INVALID_ID = 0;
 
     /// @brief Represents a single entry from a .ts file
     struct TranslationData
@@ -87,7 +87,7 @@ private:
     bool isMatch(const QString& translation, const QString& text) const;
     QStringList splitMarkerString(const QString& markerString) const;
 
-    TranslationID m_translationIDCounter = 0;
+    TranslationID m_translationIDCounter = 1;
     QHash<TranslationID, TranslationData> m_translations;
 
     // Data structures for optimization

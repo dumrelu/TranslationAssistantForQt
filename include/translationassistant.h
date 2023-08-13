@@ -4,7 +4,6 @@
 #include <QQuickWindow>
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
-#include <QRegularExpression>
 
 #include "scene.h"
 #include "textitemoverlay.h"
@@ -57,13 +56,15 @@ private:
     bool isIndexValid(const QModelIndex& index) const;
     void createUiOverlay();
     bool isTranslationAssistantTextItem(const QSharedPointer<TextItem>& textItem) const;
+    QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> identifyTranslations();
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;
 
     TranslationFiles m_translationFiles;
     QList<TranslationFiles::TranslationID> m_allTranslations;
-    QList<TranslationFiles::TranslationID> m_selectedTranslations;
+    QList<TranslationFiles::TranslationID> m_relevantTranslations;
+    TranslationFiles::TranslationID m_selectedTranslation = TranslationFiles::INVALID_ID;
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;

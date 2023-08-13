@@ -4,6 +4,7 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QDebug>
+#include <QRegularExpression>
 
 
 void initialize_qrc() 
@@ -203,6 +204,9 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
     Q_ASSERT(textItem);
 
     qDebug() << "Text item clicked: " << textItem->text();
+    
+    auto translations = identifyTranslations();
+    qDebug() << translations;
 }
 
 void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
@@ -225,7 +229,8 @@ void TranslationAssistant::rebuildModel()
     beginResetModel();
 
     m_allTranslations = m_translationFiles.allTranslationIDs();
-    m_selectedTranslations.clear();
+    m_relevantTranslations.clear();
+    m_selectedTranslation = TranslationFiles::INVALID_ID;
 
     // By default, sort alphabetically by context and then source text
     std::stable_sort(
@@ -303,6 +308,63 @@ bool TranslationAssistant::isTranslationAssistantTextItem(const QSharedPointer<T
     }
 
     return false;
+}
+
+QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> TranslationAssistant::identifyTranslations()
+{
+    QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> translationsForTextItems;
+
+    //TODO: Create a TemporaryTranslator instead of using the PendingTranslator
+    PendingTranslator temporaryTranslator{ &m_translationFiles, m_qmlEngine, false };
+    const QString tempTranslationFormat = QStringLiteral("i_%1_d");
+
+    // Generate placeholder translations containing the translation ID for
+    //all the available translations
+    for(const auto translationID : m_allTranslations)
+    {
+        auto translationData = m_translationFiles.translationData(translationID);
+        if(!translationData)
+        {
+            continue;
+        }
+
+        const auto translationIDAsString = QString::number(translationID);
+        const auto tempTranslation = tempTranslationFormat.arg(translationIDAsString);
+
+        translationData->translation = tempTranslation;
+
+        temporaryTranslator.addManualTranslation(*translationData);
+    }
+
+    // Refresh the UI to use the placeholder translations
+    qApp->installTranslator(&temporaryTranslator);
+    m_qmlEngine->retranslate();
+
+    // Using the placeholders, identify which translations are used by each item
+    QRegularExpression translationIDRegex{ tempTranslationFormat.arg("(\\d+)") };
+    for(const auto& textItem : m_textItemOverlays.keys())
+    {
+        const auto text = textItem->text();
+        QList<TranslationFiles::TranslationID> translations;
+        
+        auto matchIt = translationIDRegex.globalMatch(text);
+        while(matchIt.hasNext())
+        {
+            const auto match = matchIt.next();
+            const auto idAsStr = match.captured(1);
+            const auto id = idAsStr.toInt();
+
+            translations.push_back(static_cast<TranslationFiles::TranslationID>(id));
+        }
+
+        translationsForTextItems.insert(textItem, std::move(translations));
+    }
+
+    // Remove the placeholder translations
+    qApp->removeTranslator(&temporaryTranslator);
+    m_qmlEngine->retranslate();
+
+    return translationsForTextItems;
 }
 
 }
