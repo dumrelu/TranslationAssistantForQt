@@ -100,6 +100,11 @@ Q_INVOKABLE void TranslationAssistant::clearHighlights()
     }
 }
 
+QColor TranslationAssistant::selectedTextColor() const
+{
+    return m_selectedTextColor;
+}
+
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
 {
     return {

@@ -38,9 +38,19 @@ Item {
         visible: width > 0
 
         Rectangle {
+            id: background
+
             anchors.fill: parent
 
-            color: "gray"
+            color: "white"
+        }
+
+        TranslationListView {
+            id: translationListView
+
+            model: TranslationAssistant
+
+            anchors.fill: parent
         }
 
         state: "visible"

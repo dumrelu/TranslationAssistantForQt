@@ -16,6 +16,7 @@ namespace ta
 class TranslationAssistant : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(QColor selectedTextColor READ selectedTextColor NOTIFY selectedTextColorChanged)
 
 public:
     enum Roles
@@ -50,11 +51,17 @@ public:
     /// @return 
     Q_INVOKABLE void clearHighlights();
 
+    // Getters
+    QColor selectedTextColor() const;
+
     // QAbstractListModel interface
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
+
+signals:
+    void selectedTextColorChanged();
 
 private:
     using TranslationMap = QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>>;
