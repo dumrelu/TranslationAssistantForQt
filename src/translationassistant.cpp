@@ -71,6 +71,32 @@ bool TranslationAssistant::addTranslationSources(const QStringList &tsFileNames)
     return ret;
 }
 
+void TranslationAssistant::highlightTranslation(QVariant translationIDVariant)
+{
+    auto translationID = TranslationFiles::INVALID_ID;
+    if(translationIDVariant.canConvert<TranslationFiles::TranslationID>())
+    {
+        translationID = translationIDVariant.value<TranslationFiles::TranslationID>();
+    }
+
+    m_relevantTranslations.clear();
+    if(translationID != TranslationFiles::INVALID_ID)
+    {
+        m_relevantTranslations.append(translationID);
+    }
+
+    auto translationMap = identifyTranslations();
+    highlightRelevantTranslations(translationMap);
+}
+
+Q_INVOKABLE void TranslationAssistant::clearHighlights()
+{
+    for(const auto& textItemOverlay : m_textItemOverlays)
+    {
+        textItemOverlay->setHighlighted(false);
+    }
+}
+
 QHash<int, QByteArray> TranslationAssistant::roleNames() const
 {
     return {
@@ -205,7 +231,6 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 
     qDebug() << "Text item clicked: " << textItem->text();
     
-    m_selectedTranslation = TranslationFiles::INVALID_ID;
     m_relevantTranslations.clear();
 
     // Identify and highlight the relevant translations
@@ -245,7 +270,6 @@ void TranslationAssistant::rebuildModel()
 
     m_allTranslations = m_translationFiles.allTranslationIDs();
     m_relevantTranslations.clear();
-    m_selectedTranslation = TranslationFiles::INVALID_ID;
 
     // By default, sort alphabetically by context and then source text
     std::stable_sort(

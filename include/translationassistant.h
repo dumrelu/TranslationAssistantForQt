@@ -40,6 +40,16 @@ public:
     /// @return 
     bool addTranslationSources(const QStringList& tsFileNames);
 
+    /// @brief Highlight all the text items containing the given translation id using
+    ///the relevantTranslationColor
+    /// @param translationID 
+    /// @return 
+    Q_INVOKABLE void highlightTranslation(QVariant translationID = {});
+
+    /// @brief Clear all the highlights
+    /// @return 
+    Q_INVOKABLE void clearHighlights();
+
     // QAbstractListModel interface
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex& parent) const override;
@@ -67,7 +77,6 @@ private:
     TranslationFiles m_translationFiles;
     QList<TranslationFiles::TranslationID> m_allTranslations;
     QList<TranslationFiles::TranslationID> m_relevantTranslations;
-    TranslationFiles::TranslationID m_selectedTranslation = TranslationFiles::INVALID_ID;
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;

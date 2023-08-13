@@ -28,8 +28,10 @@ Item {
                 text: model.source + ", " + model.translation + ", " + model.isFinished
 
                 onClicked: {
-                    model.translation = "Changed"
-                    model.isFinished = true
+                    model.translation = "Changed";
+                    model.isFinished = true;
+
+                    TranslationAssistant.highlightTranslation(model.id);
                 }
             }
         }
