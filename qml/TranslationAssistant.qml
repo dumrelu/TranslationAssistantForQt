@@ -103,6 +103,10 @@ Item {
 
                 model: TranslationAssistant.relevantTranslationsModel
 
+                onModelChanged: function() {
+                    translationListView.currentIndex = -1;
+                }
+
                 states: [
                     State {
                         name: "relevant_translations"

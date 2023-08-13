@@ -17,40 +17,45 @@
 <context>
     <name>TranslationAssistant</name>
     <message>
-        <location filename="../qml/TranslationAssistant.qml" line="59"/>
-        <source>Translations for selected item</source>
+        <location filename="../qml/TranslationAssistant.qml" line="85"/>
+        <source>Relevant Translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/TranslationAssistant.qml" line="67"/>
-        <source>Selected text item</source>
+        <location filename="../qml/TranslationAssistant.qml" line="89"/>
+        <source>Pending Translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/TranslationAssistant.qml" line="73"/>
-        <source>Clear selection</source>
+        <location filename="../qml/TranslationAssistant.qml" line="91"/>
+        <source>Translation Assistant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/TranslationAssistant.qml" line="135"/>
+        <source>Pending</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>TranslationListViewDelegate</name>
+    <name>TranslationDelegate</name>
     <message>
-        <location filename="../qml/TranslationListViewDelegate.qml" line="94"/>
+        <location filename="../qml/TranslationDelegate.qml" line="100"/>
         <source>Context</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/TranslationListViewDelegate.qml" line="120"/>
+        <location filename="../qml/TranslationDelegate.qml" line="135"/>
         <source>Source text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/TranslationListViewDelegate.qml" line="146"/>
+        <location filename="../qml/TranslationDelegate.qml" line="170"/>
         <source>Translation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/TranslationListViewDelegate.qml" line="158"/>
+        <location filename="../qml/TranslationDelegate.qml" line="182"/>
         <source>Enter translation here</source>
         <translation type="unfinished"></translation>
     </message>
@@ -73,13 +78,13 @@
         <location filename="../test/PendingTranslatorTest.h" line="42"/>
         <location filename="../test/PendingTranslatorTest.h" line="48"/>
         <source>Text1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Textul1</translation>
     </message>
     <message>
         <location filename="main.qml" line="44"/>
         <location filename="main.qml" line="83"/>
         <source>Text4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Textul4</translation>
     </message>
 </context>
 </TS>
