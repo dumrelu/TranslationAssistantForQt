@@ -6,8 +6,8 @@ ListView {
     id: root
 
     spacing: 10
-    leftMargin: 10
-    rightMargin: 10
+    leftMargin: 5
+    rightMargin: 5
 
     clip: true
 
@@ -34,6 +34,19 @@ ListView {
     }
 
     delegate: TranslationDelegate {
-        width: root.width
+        width: root.width - root.leftMargin - root.rightMargin
+
+        expanded: index === root.currentIndex
+        selected: expanded
+
+        onTitleClicked: function() {
+            if (root.currentIndex === index) {
+                root.currentIndex = -1;
+                TranslationAssistant.clearHighlights();
+            } else {
+                root.currentIndex = index;
+                TranslationAssistant.highlightTranslation(model.id);
+            }
+        }
     }
 }
