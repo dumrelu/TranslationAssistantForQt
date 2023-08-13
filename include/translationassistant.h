@@ -47,6 +47,8 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
 private:
+    using TranslationMap = QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>>;
+
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
     void onTextItemInvalidated(QSharedPointer<TextItem> textItem);
     void onTextItemClicked(QSharedPointer<TextItem> textItem);
@@ -56,7 +58,8 @@ private:
     bool isIndexValid(const QModelIndex& index) const;
     void createUiOverlay();
     bool isTranslationAssistantTextItem(const QSharedPointer<TextItem>& textItem) const;
-    QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> identifyTranslations();
+    TranslationMap identifyTranslations();
+    void highlightRelevantTranslations(const TranslationMap& translationMap);
 
     QQuickWindow* m_window = nullptr;
     QQmlEngine* m_qmlEngine = nullptr;
@@ -68,6 +71,8 @@ private:
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;
+    QColor m_selectedTextColor = QColor{ 0, 255, 0 };
+    QColor m_relevantTextColor = QColor{ 0, 0, 255 };
 };
 
 }

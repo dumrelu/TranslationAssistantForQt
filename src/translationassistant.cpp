@@ -205,8 +205,23 @@ void TranslationAssistant::onTextItemClicked(QSharedPointer<TextItem> textItem)
 
     qDebug() << "Text item clicked: " << textItem->text();
     
-    auto translations = identifyTranslations();
-    qDebug() << translations;
+    m_selectedTranslation = TranslationFiles::INVALID_ID;
+    m_relevantTranslations.clear();
+
+    // Identify and highlight the relevant translations
+    auto translationMap = identifyTranslations();
+    if(auto it = translationMap.find(textItem); it != translationMap.end())
+    {
+        m_relevantTranslations = std::move(it.value());
+        highlightRelevantTranslations(translationMap);
+    }
+
+    // Highlight the selected text item
+    if(auto it = m_textItemOverlays.find(textItem); it != m_textItemOverlays.end())
+    {
+        it.value()->setHighlightColor(m_selectedTextColor);
+        it.value()->setHighlighted(true);
+    }
 }
 
 void TranslationAssistant::onTextChanged(QSharedPointer<TextItem> textItem)
@@ -310,9 +325,9 @@ bool TranslationAssistant::isTranslationAssistantTextItem(const QSharedPointer<T
     return false;
 }
 
-QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> TranslationAssistant::identifyTranslations()
+TranslationAssistant::TranslationMap TranslationAssistant::identifyTranslations()
 {
-    QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> translationsForTextItems;
+    TranslationMap translationsForTextItems;
 
     //TODO: Create a TemporaryTranslator instead of using the PendingTranslator
     PendingTranslator temporaryTranslator{ &m_translationFiles, m_qmlEngine, false };
@@ -365,6 +380,25 @@ QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>> Translat
     m_qmlEngine->retranslate();
 
     return translationsForTextItems;
+}
+
+void TranslationAssistant::highlightRelevantTranslations(const TranslationMap &translationMap)
+{
+    QSet<TranslationFiles::TranslationID> relevantTranslations{ m_relevantTranslations.begin(), m_relevantTranslations.end() };
+    
+    for(auto it = m_textItemOverlays.begin(); it != m_textItemOverlays.end(); ++it)
+    {
+        const auto& textItem = it.key();
+        const auto& overlay = it.value();
+
+        const auto translations = translationMap[textItem];
+        //TODO: probably not efficient to convert to a set every time
+        QSet<TranslationFiles::TranslationID> translationsSet{ translations.begin(), translations.end() };
+        const bool isRelevant = !translations.isEmpty() && translationsSet.intersect(relevantTranslations).size() > 0;
+
+        overlay->setHighlightColor(m_relevantTextColor);
+        overlay->setHighlighted(isRelevant);
+    }
 }
 
 }
