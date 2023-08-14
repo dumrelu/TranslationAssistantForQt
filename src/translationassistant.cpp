@@ -241,10 +241,8 @@ void TranslationAssistant::onTextItemCreated(QSharedPointer<TextItem> textItem)
 
     if(isTranslationAssistantTextItem(textItem))
     {
-        qDebug() << "Ignoring TranslationAssistant text item:" << textItem->text();
         return;
     }
-    qDebug() << "Text item created:" << textItem->text();
 
     auto* overlay = new TextItemOverlay{ textItem };
     connect(
