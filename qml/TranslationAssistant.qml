@@ -136,10 +136,23 @@ Item {
             Button {
                 id: pendingTranslationsButton
                 
+                visible: translationListView.state !== "pending_translations"
                 text: qsTr("Pending")
 
                 onClicked: {
                     translationListView.showPending = true;
+                }
+            }
+
+            Button {
+                id: clearPendingTranslationsButton
+
+                visible: translationListView.state === "pending_translations"
+                text: qsTr("Clear")
+
+                onClicked: {
+                    TranslationAssistant.clearPendingTranslations();
+                    translationListView.showPending = false;
                 }
             }
         }

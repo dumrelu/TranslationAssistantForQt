@@ -41,6 +41,19 @@ TranslationAssistant::TranslationAssistant(QQuickWindow *window, QObject *parent
 {
     Q_ASSERT(window);
     Q_ASSERT(qApp);
+
+    connect(
+        &m_translationFiles, &TranslationFiles::translationDataChanged, 
+        [this](TranslationFiles::TranslationID id)
+        {
+            auto it = m_allTranslationsIndices.find(id);
+            if(it != m_allTranslationsIndices.end())
+            {
+                const auto index = it.value();
+                emit dataChanged(createIndex(index, 0), createIndex(index, 0));
+            }
+        }
+    );
     
     createUiOverlay();
 
@@ -112,6 +125,11 @@ void TranslationAssistant::clearRelevantTranslations()
     m_relevantTranslationsModel.setFilterRegularExpression("");
 
     clearHighlights();
+}
+
+void TranslationAssistant::clearPendingTranslations()
+{
+    m_translationFiles.clearPendingTranslations();
 }
 
 QSortFilterProxyModel *TranslationAssistant::relevantTranslationsModel()
@@ -227,11 +245,6 @@ bool TranslationAssistant::setData(const QModelIndex &index, const QVariant &val
         ret = m_translationFiles.updateTranslationData(std::move(*optTranslationData));
     }
 
-    if(ret)
-    {
-        emit dataChanged(index, index);
-    }
-
     return ret;
 }
 
@@ -336,6 +349,13 @@ void TranslationAssistant::rebuildModel()
             return lhsKey < rhsKey;
         }
     );
+
+    // Update the indices map used for fast translation id to index lookups
+    m_allTranslationsIndices.clear();
+    for(auto i = 0; i < m_allTranslations.size(); ++i)
+    {
+        m_allTranslationsIndices.insert(m_allTranslations[i], i);
+    }
 
     endResetModel();
 }

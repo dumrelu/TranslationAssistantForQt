@@ -58,6 +58,10 @@ public:
     /// @return 
     Q_INVOKABLE void clearRelevantTranslations();
 
+    /// @brief Discard all the pending translations
+    /// @return 
+    Q_INVOKABLE void clearPendingTranslations();
+
     // Getters
     QSortFilterProxyModel* relevantTranslationsModel();
     QSortFilterProxyModel* pendingTranslationsModel();
@@ -100,6 +104,7 @@ private:
 
     TranslationFiles m_translationFiles;
     QList<TranslationFiles::TranslationID> m_allTranslations;
+    QHash<TranslationFiles::TranslationID, int> m_allTranslationsIndices;
     QList<TranslationFiles::TranslationID> m_relevantTranslations;
 
     PendingTranslator m_pendingTranslator;

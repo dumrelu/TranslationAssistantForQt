@@ -111,6 +111,7 @@ bool TranslationFiles::updateTranslationData(TranslationData translationData)
         return false;
     }
 
+    // TODO: If pending == current, then don't consider it pending anymore
     translationData.isPending = true;
     m_pendingTranslations.insert(id, std::move(translationData));
 
@@ -138,6 +139,17 @@ std::optional<TranslationFiles::TranslationData> TranslationFiles::translationDa
 QList<TranslationFiles::TranslationData> TranslationFiles::pendingTranslations() const
 {
     return m_pendingTranslations.values();
+}
+
+void TranslationFiles::clearPendingTranslations()
+{
+    auto pendingTranslationIDs = m_pendingTranslations.keys();
+    m_pendingTranslations.clear();
+
+    for(const auto& id : pendingTranslationIDs)
+    {
+        emit translationDataChanged(id);
+    }
 }
 
 void TranslationFiles::addTranslation(TranslationData translationData)

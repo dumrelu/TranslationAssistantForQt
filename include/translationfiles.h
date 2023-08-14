@@ -72,6 +72,9 @@ public:
     /// @return 
     QList<TranslationData> pendingTranslations() const;
 
+    /// @brief Discard all the pending translations
+    void clearPendingTranslations();
+
     /// @brief Print debug information about the current state of the class 
     friend QDebug operator<<(QDebug debug, const TranslationFiles& translationFiles);
 

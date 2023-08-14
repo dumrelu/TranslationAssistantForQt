@@ -15,52 +15,6 @@
     </message>
 </context>
 <context>
-    <name>TranslationAssistant</name>
-    <message>
-        <location filename="../qml/TranslationAssistant.qml" line="85"/>
-        <source>Relevant Translations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationAssistant.qml" line="89"/>
-        <source>Pending Translations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationAssistant.qml" line="91"/>
-        <source>Translation Assistant</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationAssistant.qml" line="135"/>
-        <source>Pending</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TranslationDelegate</name>
-    <message>
-        <location filename="../qml/TranslationDelegate.qml" line="100"/>
-        <source>Context</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationDelegate.qml" line="135"/>
-        <source>Source text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationDelegate.qml" line="170"/>
-        <source>Translation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/TranslationDelegate.qml" line="182"/>
-        <source>Enter translation here</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>main</name>
     <message numerus="yes">
         <location filename="main.qml" line="11"/>
