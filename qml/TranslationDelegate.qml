@@ -21,7 +21,7 @@ Rectangle {
 
     color: "transparent"
     border.width: 2
-    border.color: "black"
+    border.color: root.selected ? TranslationAssistant.selectedTextColor : "black"
 
     Behavior on height {
         NumberAnimation {
