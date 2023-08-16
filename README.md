@@ -1,7 +1,7 @@
 # TranslationAssistant
 
 # TODO
-- Save changes
+- Save changes + test
 - Find simpler ways to integrate in app
     - e.g. Another qml whose purpose is to only instantiate it. User will only instantiate a single QML type
     - Maybe something where no user interaction required
