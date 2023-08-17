@@ -1,6 +1,8 @@
 # TranslationAssistant
 
 # TODO
+- Should be able to change how verifications are done
+- Install directives
 - Save changes + test
 - Find simpler ways to integrate in app
     - e.g. Another qml whose purpose is to only instantiate it. User will only instantiate a single QML type
