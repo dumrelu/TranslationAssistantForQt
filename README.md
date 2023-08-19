@@ -1,7 +1,12 @@
 # TranslationAssistant
 
+When it will work: When bindings for text properties are working. So text: x + qsTr("Text"), not text = x + qsTr("Text") (use Qt.binding instead). When you have up-to-date translation files
+
+Minimum version: TBD(probably first version that supports QQmlEngine::retranslate)
+
 # TODO
 - Rename to TranslationAssistantForQml(maybe support C++ in the future)
+- Can we use .qm files?
 - Install directives
 - Save changes + test
 - Find simpler ways to integrate in app
@@ -11,3 +16,4 @@
 - TODO comments from code
 - Use onTextChanged to update the highlights(maybe using a QTimer so no spam, with max 1 update/s)
     - Note: ignore onTextChanged cause by temporary translator
+- Suggested translations via DeepL or Google Translate
