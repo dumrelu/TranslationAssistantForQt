@@ -7,7 +7,7 @@ Can be extended with different strategies to customize for you specific use case
     - translation identifiers(e.g. customization for work, minimum requirements)
     - etc
 
-Minimum version: TBD(probably first version that supports QQmlEngine::retranslate)
+Minimum version: TBD(probably first version that supports QQmlEngine::retranslate, Qt 5.10)
 
 # TODO
 - Rename to TranslationAssistantForQml(maybe support C++ in the future)
