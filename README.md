@@ -2,6 +2,11 @@
 
 When it will work: When bindings for text properties are working. So text: x + qsTr("Text"), not text = x + qsTr("Text") (use Qt.binding instead). When you have up-to-date translation files
 
+Can be extended with different strategies to customize for you specific use case:
+    - text item extraction
+    - translation identifiers(e.g. customization for work, minimum requirements)
+    - etc
+
 Minimum version: TBD(probably first version that supports QQmlEngine::retranslate)
 
 # TODO
