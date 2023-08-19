@@ -9,6 +9,7 @@
 #include "textitemoverlay.h"
 #include "translationfiles.h"
 #include "pendingtranslator.h"
+#include "translationidentifier.h"
 
 namespace ta
 {
@@ -62,6 +63,17 @@ public:
     /// @return 
     Q_INVOKABLE void clearPendingTranslations();
 
+    /// @brief Replace the strategy used to identify the translations used 
+    ///by all the text items
+    /// @param translationIdentifier 
+    void setTranslationIdentifier(std::unique_ptr<TranslationIdentifier> translationIdentifier);
+
+    /// @brief Removes the currently used translation identifier strategy and
+    ///returns the instance. Note: if you remove it, you need to replace it
+    ///by calling setTranslationIdentifier() with a new instance.
+    /// @return 
+    std::unique_ptr<TranslationIdentifier> removeTranslationIdentifier();
+
     // Getters
     QSortFilterProxyModel* relevantTranslationsModel();
     QSortFilterProxyModel* pendingTranslationsModel();
@@ -79,8 +91,6 @@ signals:
     void relevantTextColorChanged();
 
 private:
-    using TranslationMap = QHash<QSharedPointer<TextItem>, QList<TranslationFiles::TranslationID>>;
-
     void onTextItemCreated(QSharedPointer<TextItem> textItem);
     void onTextItemInvalidated(QSharedPointer<TextItem> textItem);
     void onTextItemClicked(QSharedPointer<TextItem> textItem);
@@ -108,6 +118,8 @@ private:
     QList<TranslationFiles::TranslationID> m_relevantTranslations;
 
     PendingTranslator m_pendingTranslator;
+
+    std::unique_ptr<TranslationIdentifier> m_translationIdentifier;
 
     Scene m_scene;
     QHash<QSharedPointer<TextItem>, TextItemOverlay*> m_textItemOverlays;

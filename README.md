@@ -1,7 +1,7 @@
 # TranslationAssistant
 
 # TODO
-- Should be able to change how verifications are done
+- Rename to TranslationAssistantForQml(maybe support C++ in the future)
 - Install directives
 - Save changes + test
 - Find simpler ways to integrate in app
