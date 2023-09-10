@@ -17,6 +17,7 @@ using TranslationMap = QHash<QSharedPointer<TextItem>, QList<TranslationFiles::T
 class TranslationIdentifier
 {
 public:
+    virtual ~TranslationIdentifier() = default;
     virtual TranslationMap identify(QList<QSharedPointer<TextItem>> textItems, QList<TranslationFiles::TranslationID> translations) = 0;
 };
 
