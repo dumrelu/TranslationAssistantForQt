@@ -17,9 +17,18 @@ Window {
         color: "red"
 
         Label {
+            id: text1
             anchors.centerIn: parent
             objectName: "text1"
             text: qsTr("Text1")
+        }
+
+        Label {
+            anchors.top: text1.bottom
+            anchors.topMargin: 10
+            anchors.horizontalCenter: text1.horizontalCenter
+            objectName: "text4"
+            text: qsTr("Text4")
         }
     }
 
@@ -91,11 +100,5 @@ Window {
                 textLoader.active = true;
             }
         }
-    }
-
-    BusyIndicator {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        running: true
     }
 }
