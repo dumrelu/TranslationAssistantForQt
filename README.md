@@ -4,7 +4,7 @@ This is(will be) a tool that makes it easier to translate a QML based applicatio
 
 The idea of this project is to allow you to edit translations live in your QML application, without having to use the typical flow with Qt Linguist.
 
-[![SlideShuffle](./media/sample_screenshot.png)](./media/sample_video.mp4)
+[![SlideShuffle](./media/sample_screenshot.png)](./media/sample_video.mov)
 
 In the above video you will see that the Translation Assistant adds a side menu that displays all the text that needs translations. 
 
