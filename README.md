@@ -6,7 +6,7 @@ The idea of this project is to allow you to edit translations live in your QML a
 
 [![SlideShuffle](./media/sample_screenshot.png)](./media/sample_video.mov)
 
-In the above video you will see that the Translation Assistant adds a side menu that displays all the text that needs translations. 
+In the above video(click on the image) you will see that the Translation Assistant adds a side menu that displays all the text that needs translations. 
 
 If you click on one of the items in the list, the relevant translations from the app will become selected(with a light green border). You can also go the other way around and Control + Click an item from your application it will be selected automatically in the Translation Assistant view. 
 
